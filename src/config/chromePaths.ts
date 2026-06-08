@@ -2,11 +2,18 @@ import fs from "node:fs";
 import path from "node:path";
 import { ConfigError } from "../core/errors.js";
 
-/** Built in env.ts from OS paths — chromePaths.ts does not read process.env. */
+/**
+ * Inputs for auto-detecting chrome.exe when CHROME_EXECUTABLE_PATH is unset.
+ * Populated in env.ts from the OS — these fields are not .env keys.
+ */
 export interface ChromePathSearchContext {
+  /** Node built-in: win32 | linux | darwin */
   platform: NodeJS.Platform;
+  /** Windows LOCALAPPDATA (e.g. C:\Users\<you>\AppData\Local) */
   localAppData: string;
+  /** Windows PROGRAMFILES (e.g. C:\Program Files) */
   programFiles?: string;
+  /** Windows PROGRAMFILES(X86) (e.g. C:\Program Files (x86)) */
   programFilesX86?: string;
 }
 

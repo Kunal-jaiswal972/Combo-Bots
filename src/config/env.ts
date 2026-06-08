@@ -74,6 +74,10 @@ export function getEnv(): AppEnv {
     throw error;
   }
 
+  // Chrome path discovery uses OS-provided variables (not from .env).
+  // Windows sets LOCALAPPDATA, PROGRAMFILES, PROGRAMFILES(X86) on every process.
+  // process.platform is a Node built-in ("win32" | "linux" | "darwin").
+  // Used only when CHROME_EXECUTABLE_PATH is empty — see chromePaths.ts candidates.
   const localAppData = process.env.LOCALAPPDATA ?? os.homedir();
   const chromeSearchContext = buildChromePathSearchContext(
     localAppData,
