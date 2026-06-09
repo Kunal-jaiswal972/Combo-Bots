@@ -196,8 +196,8 @@ Reuse `src/games/hoyoverse/parseRedeemMessage.ts` for Hoyoverse gift pages.
 | Web dashboard | Browser UI for tasks and history |
 | Email reporting | Post-run summary via `WorkflowEvent` hook |
 | Integration tests | CLI run-now and schedule → scheduler → workflow |
+| Multi-user + unified SQLite | Phase 9 — all data in SQLite, per-user codes + `DebugProfile/<username>` |
 | Azure deployment | Headless verify in container, VM/Container Apps, instance volumes |
-
 Implementation tracking: **[PLAN.md](./PLAN.md)**. Contributor rules: **[AGENTS.md](./AGENTS.md)**.
 
 ---
