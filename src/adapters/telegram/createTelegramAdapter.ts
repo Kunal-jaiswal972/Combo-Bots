@@ -1,4 +1,4 @@
-import { Bot } from "grammy";
+import { Bot, type Context } from "grammy";
 import { ConfigError } from "../../domain/errors.js";
 import type { RedeemTask } from "../../domain/task/redeemTask.js";
 import type { TaskScheduler } from "../../scheduling/scheduler.js";
@@ -12,10 +12,17 @@ import {
   resolveTelegramCallbackData,
   TelegramPromptPort,
 } from "./telegramPromptPort.js";
+import { logAdapter } from "../shared/adapterLogger.js";
 import {
   clearTelegramChatSession,
   getTelegramChatSession,
 } from "./telegramPromptSession.js";
+
+const TELEGRAM_ADAPTER_ID = "telegram";
+
+function resolveTelegramChatId(ctx: Context): number | undefined {
+  return ctx.chat?.id ?? ctx.callbackQuery?.message?.chat.id;
+}
 
 export interface CreateTelegramAdapterOptions {
   botToken: string;
@@ -34,8 +41,26 @@ export function createTelegramAdapter(
   const scheduler = options.scheduler;
   let running = false;
 
+  bot.use(async (ctx, next) => {
+    const chatId = resolveTelegramChatId(ctx);
+    const updateKind = ctx.callbackQuery
+      ? "callback_query"
+      : ctx.message?.text?.startsWith("/")
+        ? "command"
+        : ctx.message?.text
+          ? "message"
+          : "other";
+    logAdapter(TELEGRAM_ADAPTER_ID, `Update received (${updateKind})`, { scope: chatId });
+    await next();
+  });
+
+  bot.catch((error) => {
+    const cause = error.error instanceof Error ? error.error : new Error(String(error.error));
+    logger.error("Telegram bot error:", cause);
+  });
+
   bot.command("start", async (ctx) => {
-    const chatId = ctx.chat?.id;
+    const chatId = resolveTelegramChatId(ctx);
 
     if (chatId === undefined) {
       return;
@@ -44,6 +69,9 @@ export function createTelegramAdapter(
     const session = getTelegramChatSession(chatId);
 
     if (session.activeLoop) {
+      logAdapter(TELEGRAM_ADAPTER_ID, "Rejected /start — session already active", {
+        scope: chatId,
+      });
       await ctx.reply("A session is already in progress. Finish or send /stop first.");
       return;
     }
@@ -51,21 +79,35 @@ export function createTelegramAdapter(
     session.activeLoop = true;
     const port = new TelegramPromptPort(bot.api, chatId, session);
 
-    try {
-      await runInteractiveApp({
-        port,
-        scheduler,
-        source: "telegram",
-        title: "Auto Code Redeemer (Telegram)",
-        metadata: { telegramChatId: String(chatId) },
-      });
-    } catch (error) {
-      const cause = error instanceof Error ? error : new Error(String(error));
-      port.error("Session ended with an error.", cause);
-    } finally {
-      session.activeLoop = false;
-      session.pending = null;
-    }
+    logAdapter(TELEGRAM_ADAPTER_ID, "Starting interactive session (background)", {
+      scope: chatId,
+    });
+
+    void (async () => {
+      try {
+        await runInteractiveApp({
+          port,
+          scheduler,
+          source: "telegram",
+          title: "Auto Code Redeemer (Telegram)",
+          metadata: { telegramChatId: String(chatId) },
+        });
+        logAdapter(TELEGRAM_ADAPTER_ID, "Interactive session finished normally", {
+          scope: chatId,
+        });
+      } catch (error) {
+        const cause = error instanceof Error ? error : new Error(String(error));
+        logAdapter(TELEGRAM_ADAPTER_ID, `Session error: ${cause.message}`, {
+          scope: chatId,
+          level: "error",
+        });
+        port.error("Session ended with an error.", cause);
+      } finally {
+        session.activeLoop = false;
+        session.pending = null;
+        logAdapter(TELEGRAM_ADAPTER_ID, "Session cleanup complete", { scope: chatId });
+      }
+    })();
   });
 
   bot.command("stop", async (ctx) => {
@@ -76,6 +118,8 @@ export function createTelegramAdapter(
     }
 
     const session = getTelegramChatSession(chatId);
+
+    logAdapter(TELEGRAM_ADAPTER_ID, "Received /stop", { scope: chatId });
 
     if (session.pending) {
       session.pending.reject(new Error("Session stopped by user."));
@@ -88,47 +132,61 @@ export function createTelegramAdapter(
   });
 
   bot.on("callback_query:data", async (ctx) => {
-    const chatId = ctx.chat?.id;
+    const chatId = resolveTelegramChatId(ctx);
 
-    if (chatId === undefined) {
-      await ctx.answerCallbackQuery();
-      return;
-    }
-
-    const session = getTelegramChatSession(chatId);
-    const pending = session.pending;
-    const data = ctx.callbackQuery.data;
-    const parsed = resolveTelegramCallbackData(data);
-
-    if (!pending || !parsed) {
-      await ctx.answerCallbackQuery({ text: "Nothing waiting for that action." });
-      return;
-    }
-
-    if (pending.kind === "choose" && parsed.kind === "choose") {
-      pending.resolve(parsed.value);
-      session.pending = null;
-      await ctx.answerCallbackQuery();
-      return;
-    }
-
-    if (pending.kind === "yesNo") {
-      if (parsed.kind === "yes") {
-        pending.resolve(true);
-        session.pending = null;
+    try {
+      if (chatId === undefined) {
         await ctx.answerCallbackQuery();
         return;
       }
 
-      if (parsed.kind === "no") {
-        pending.resolve(false);
-        session.pending = null;
-        await ctx.answerCallbackQuery();
+      const session = getTelegramChatSession(chatId);
+      const pending = session.pending;
+      const data = ctx.callbackQuery.data;
+      const parsed = resolveTelegramCallbackData(data);
+
+      logAdapter(
+        TELEGRAM_ADAPTER_ID,
+        `Callback data="${data}" pending=${pending?.kind ?? "none"} parsed=${parsed?.kind ?? "none"}`,
+        { scope: chatId },
+      );
+
+      if (!pending || !parsed) {
+        await ctx.answerCallbackQuery({ text: "Nothing waiting for that action." });
         return;
       }
-    }
 
-    await ctx.answerCallbackQuery();
+      if (pending.kind === "choose" && parsed.kind === "choose") {
+        await ctx.answerCallbackQuery();
+        logAdapter(TELEGRAM_ADAPTER_ID, `Resolved choose → ${parsed.value}`, {
+          scope: chatId,
+        });
+        pending.resolve(parsed.value);
+        return;
+      }
+
+      if (pending.kind === "yesNo") {
+        if (parsed.kind === "yes") {
+          await ctx.answerCallbackQuery();
+          logAdapter(TELEGRAM_ADAPTER_ID, "Resolved yesNo → true", { scope: chatId });
+          pending.resolve(true);
+          return;
+        }
+
+        if (parsed.kind === "no") {
+          await ctx.answerCallbackQuery();
+          logAdapter(TELEGRAM_ADAPTER_ID, "Resolved yesNo → false", { scope: chatId });
+          pending.resolve(false);
+          return;
+        }
+      }
+
+      await ctx.answerCallbackQuery();
+    } catch (error) {
+      const cause = error instanceof Error ? error : new Error(String(error));
+      logger.error("Telegram callback error:", cause);
+      await ctx.answerCallbackQuery({ text: "Something went wrong. Try /stop then /start." });
+    }
   });
 
   bot.on("message:text", async (ctx) => {
@@ -153,8 +211,10 @@ export function createTelegramAdapter(
     const textKinds = new Set(["question", "username", "password"]);
 
     if (textKinds.has(pending.kind)) {
+      logAdapter(TELEGRAM_ADAPTER_ID, `Resolved ${pending.kind} from text message`, {
+        scope: chatId,
+      });
       pending.resolve(text);
-      session.pending = null;
     }
   });
 
@@ -169,7 +229,10 @@ export function createTelegramAdapter(
 
       running = true;
       logger.success("Telegram adapter started. Users can send /start to the bot.");
-      void bot.start();
+      void bot.start().catch((error: unknown) => {
+        const cause = error instanceof Error ? error : new Error(String(error));
+        logger.error("Telegram polling stopped:", cause);
+      });
     },
 
     async stop(): Promise<void> {

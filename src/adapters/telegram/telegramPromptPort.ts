@@ -1,9 +1,15 @@
 import { InlineKeyboard, type Api } from "grammy";
 import type { PromptChoice, PromptPort } from "../ports/promptPort.js";
+import {
+  createAdapterLogger,
+  type AdapterLogger,
+} from "../shared/adapterLogger.js";
 import type {
   PendingPromptKind,
   TelegramChatSession,
 } from "./telegramPromptSession.js";
+
+const TELEGRAM_ADAPTER_ID = "telegram";
 
 const CHOOSE_PREFIX = "choose:";
 const YES_PREFIX = "yesno:yes";
@@ -13,11 +19,13 @@ export class TelegramPromptPort implements PromptPort {
   private readonly api: Api;
   private readonly chatId: number;
   private readonly session: TelegramChatSession;
+  private readonly adapterLog: AdapterLogger;
 
   constructor(api: Api, chatId: number, session: TelegramChatSession) {
     this.api = api;
     this.chatId = chatId;
     this.session = session;
+    this.adapterLog = createAdapterLogger(TELEGRAM_ADAPTER_ID, chatId);
   }
 
   async choose<T extends string>(
@@ -27,6 +35,9 @@ export class TelegramPromptPort implements PromptPort {
     if (choices.length === 0) {
       throw new Error("choose requires at least one option.");
     }
+
+    const valuePromise = this.waitForString("choose");
+    this.adapterLog.debug(`Prompt choose: ${message} (${choices.length} options)`);
 
     const keyboard = new InlineKeyboard();
 
@@ -38,7 +49,7 @@ export class TelegramPromptPort implements PromptPort {
       reply_markup: keyboard,
     });
 
-    const value = await this.waitForString("choose");
+    const value = await valuePromise;
 
     const match = choices.find((choice) => choice.value === value);
 
@@ -50,11 +61,16 @@ export class TelegramPromptPort implements PromptPort {
   }
 
   async question(message: string): Promise<string> {
+    const valuePromise = this.waitForString("question");
+    this.adapterLog.debug(`Prompt question: ${message}`);
     await this.api.sendMessage(this.chatId, message);
-    return this.waitForString("question");
+    return valuePromise;
   }
 
   async yesNo(message: string, defaultYes: boolean): Promise<boolean> {
+    const answerPromise = this.waitForBoolean(defaultYes);
+    this.adapterLog.debug(`Prompt yesNo: ${message}`);
+
     const keyboard = new InlineKeyboard()
       .text("Yes", YES_PREFIX)
       .text("No", NO_PREFIX);
@@ -64,12 +80,14 @@ export class TelegramPromptPort implements PromptPort {
       reply_markup: keyboard,
     });
 
-    return this.waitForBoolean(defaultYes);
+    return answerPromise;
   }
 
   async username(message = "Username"): Promise<string> {
+    const valuePromise = this.waitForString("username");
+    this.adapterLog.debug("Prompt username");
     await this.api.sendMessage(this.chatId, `${message}:`);
-    const value = await this.waitForString("username");
+    const value = await valuePromise;
 
     if (value.trim().length === 0) {
       throw new Error("Username is required.");
@@ -79,11 +97,13 @@ export class TelegramPromptPort implements PromptPort {
   }
 
   async password(message = "Password"): Promise<string> {
+    const valuePromise = this.waitForString("password");
+    this.adapterLog.debug("Prompt password");
     await this.api.sendMessage(
       this.chatId,
       `${message}: (send your password in the next message — delete it after if you like)`,
     );
-    const value = await this.waitForString("password");
+    const value = await valuePromise;
 
     if (value.length === 0) {
       throw new Error("Password is required.");
@@ -132,6 +152,10 @@ export class TelegramPromptPort implements PromptPort {
   }
 
   private waitForString(kind: PendingPromptKind): Promise<string> {
+    if (this.session.pending) {
+      this.session.pending.reject(new Error("Replaced by a new prompt."));
+    }
+
     return new Promise<string>((resolve, reject) => {
       this.session.pending = {
         kind,
@@ -141,14 +165,22 @@ export class TelegramPromptPort implements PromptPort {
             return;
           }
 
+          this.session.pending = null;
           resolve(value);
         },
-        reject,
+        reject: (error) => {
+          this.session.pending = null;
+          reject(error);
+        },
       };
     });
   }
 
   private waitForBoolean(defaultYes: boolean): Promise<boolean> {
+    if (this.session.pending) {
+      this.session.pending.reject(new Error("Replaced by a new prompt."));
+    }
+
     return new Promise<boolean>((resolve, reject) => {
       this.session.pending = {
         kind: "yesNo",
@@ -159,9 +191,13 @@ export class TelegramPromptPort implements PromptPort {
             return;
           }
 
+          this.session.pending = null;
           resolve(value);
         },
-        reject,
+        reject: (error) => {
+          this.session.pending = null;
+          reject(error);
+        },
       };
     });
   }
