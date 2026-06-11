@@ -1,5 +1,5 @@
 import { ConfigError } from "../../../domain/errors.js";
-import type { AdapterModule } from "../../registry/adapterModule.js";
+import type { AdapterModule } from "../../registry/adapterModules.js";
 import { createTelegramAdapter } from "./telegramAdapter.js";
 import { createTelegramScheduledRunNotifier } from "../lib/telegramScheduledRunNotifier.js";
 

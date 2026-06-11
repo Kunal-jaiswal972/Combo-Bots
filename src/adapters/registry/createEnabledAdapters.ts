@@ -5,8 +5,7 @@ import type { DisplayPresenter } from "../contracts/displayPresenter.js";
 import type { PromptPort } from "../contracts/promptPort.js";
 import type { ScheduledRunNotifier } from "../contracts/scheduledRunNotifier.js";
 import type { TaskInputAdapter } from "../contracts/taskInputAdapter.js";
-import { adapterModules } from "./adapterModules.js";
-import type { AdapterModuleCreateOptions } from "./adapterModule.js";
+import { adapterModules, type AdapterModuleCreateOptions } from "./adapterModules.js";
 
 export interface CreateEnabledAdaptersOptions {
   readonly scheduler: TaskScheduler;

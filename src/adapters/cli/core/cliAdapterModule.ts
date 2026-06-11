@@ -1,4 +1,4 @@
-import type { AdapterModule } from "../../registry/adapterModule.js";
+import type { AdapterModule } from "../../registry/adapterModules.js";
 import { createCliAdapter } from "./cliAdapter.js";
 
 export const cliAdapterModule: AdapterModule = {
