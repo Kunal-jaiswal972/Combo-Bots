@@ -4,106 +4,6 @@
 
 ---
 
-## Phases 1–6b ✅ COMPLETE
-
----
-
-## Phase 7 — Event-Driven Architecture ✅ COMPLETE
-
-### Steps
-
-#### Step 1 — Domain + workflow ✅
-
-- [x] Add `domain/task/`, `domain/result/`
-- [x] Add `application/redeemWorkflow.ts`, `scrapePolicy.ts`, `taskExecutor.ts`
-- [x] Remove `EXECUTION_MODE` from workflow layer
-- [x] Delete `scrapeGate.ts`, `orchestrator.ts`
-
-#### Step 2 — Config cleanup ✅
-
-- [x] Split `env.ts` → `appConfig.ts` (infra only)
-- [x] Remove `GAME_ID`, credentials, `EXECUTION_MODE` from app config
-- [x] Delete `src/config/env.ts`, `src/types/env.ts`
-
-#### Step 3 — CLI redesign ✅
-
-- [x] `adapters/cli/cliApp.ts` — Run now / Schedule menu
-- [x] Shared flows + collectors under `adapters/shared/`
-- [x] `application/taskFactory.ts`
-- [x] Delete legacy `src/cli/`, cron scripts
-
-#### Step 4 — Scheduler ✅
-
-- [x] `scheduleSpec.ts`, `nextRunAt.ts`, `SchedulerRunner`
-- [x] Schedule flow in CLI (+ list / cancel)
-- [x] `createScheduler()` + `SCHEDULER_POLL_INTERVAL_MS`
-
-#### Step 5 — Persistence ✅
-
-- [x] SQLite — `scheduled_tasks` + `run_history` (`DATABASE_URL=file:...`)
-- [x] JSON fallback via `DATABASE_URL=json:...`
-- [x] `runTask()` records history
-
-#### Step 6 — Adapters ✅
-
-- [x] Telegram — shared `interactiveApp` + `PromptPort`; grammY bot
-- [x] `adapters/server/serverApp.ts` — `npm start`
-- [x] `deploy/Dockerfile` + `docker-compose.yml`
-- [x] Future: REST API, Discord, web dashboard - mentioned in README.md
-
-#### Step 7 — Legacy purge ✅
-
-- [x] No `orchestrator`, `EXECUTION_MODE`, `npm run cron` in `src/`
-- [x] Removed API/Discord/daemon empty folders, old `src/cli/`, `src/core/`
-- [x] `errors.ts` → `domain/errors.ts`
-- [x] `package.json` — `dev` (CLI) + `start` (production)
-- [x] Root `README.md`, slim `AGENTS.md`, `.env.example`
-
-### Phase 7 checklist
-
-- [x] Domain models + Zod schemas (`RedeemTask`, `ScheduleSpec`, `RunResult`)
-- [x] `TaskFactory`, `TaskExecutor`, `RedeemWorkflow`
-- [x] `scrapePolicy` replaces `scrapeGate`
-- [x] `appConfig` replaces credential-bearing `AppEnv`
-- [x] CLI menu: Run now + Schedule + list/cancel/history
-- [x] `SchedulerRunner` + SQLite-backed tasks
-- [x] Telegram adapter + server mode
-- [x] Legacy audit passes (build + typecheck)
-- [ ] Integration test: CLI run-now → workflow → result
-- [ ] Integration test: CLI schedule → scheduler trigger → workflow → result
-
----
-
-## Phase 8 — Pre-architecture cleanup ✅ COMPLETE
-
-- [x] Deleted legacy `scripts/`, `server/`, `src/db/`
-- [x] Removed old GitHub Actions workflow
-- [x] Removed unused errors, exports, and dead code
-
----
-
-## Phase 8.5 — Refactor & cleanup (pre–Phase 9) ✅ COMPLETE
-
-> **Goal:** Improve maintainability and adapter-ready architecture **without** new features. Complete before Phase 9. Full audit: `arch_audit.md`.
-
-| Step | Summary | Risk |
-|------|---------|------|
-| 8.5.1 ✅ | Fix layer violations (domain, browser, adapters) | Low |
-| 8.5.2 ✅ | Unify Zod schemas + move `ScheduleSpec` to domain | Low |
-| 8.5.3 ✅ | Application query services (history, tasks) | Low |
-| 8.5.4 ✅ | Extract shared JSON I/O utilities | Low |
-| 8.5.5 ✅ | Split `genshin/redeemer.ts` | Medium |
-| 8.5.6 ✅ | Scheduler strategy registry (`ScheduleDriver`) | Medium |
-| 8.5.7 ✅ | Decouple `PromptPort` from `DisplayCard` | Low |
-| 8.5.8 ✅ | Fold `services/` into `application/` | Low |
-| 8.5.9 ✅ | Split `collectDateTime.ts`; unify weekday constants | Low |
-| 8.5.10 | ~~Add unit tests~~ — skipped (not required for Phase 9) | — |
-| 8.5.11 ✅ | Remove dead code; update AGENTS.md tree | Low |
-
-**Gate:** Phase 9 may start — all required refactor steps complete.
-
----
-
 ## Phase 9 — Multi-user auth + unified SQLite storage ⏳ NOT STARTED
 
 > **Goal:** One deployment serves multiple Hoyoverse accounts with **login / sign-up / guest** flows. **All app data** (users, codes, scheduled tasks, run history) lives in SQLite — no `codes.json` or JSON task-store fallback. Logged-in users get isolated data, stored credentials, and a dedicated Chrome profile (managed by the app, invisible to the user).
@@ -124,10 +24,12 @@ On **every program start** (before main menu), show:
 2. **New account** — sign up (then logged in with full menu)
 3. **Continue as guest** — no account persisted
 
-| Mode | Main menu | Credentials | Tasks / history |
-|------|-----------|-------------|-----------------|
-| **Logged in** | Run now, Schedule, List, Cancel, History, **Account**, Exit | Auto from `users` row | Only this user's rows |
-| **Guest** | **Run now only** + Exit | Prompted every run (username, password, server) | None stored |
+
+| Mode          | Main menu                                                   | Credentials                                     | Tasks / history       |
+| ------------- | ----------------------------------------------------------- | ----------------------------------------------- | --------------------- |
+| **Logged in** | Run now, Schedule, List, Cancel, History, **Account**, Exit | Auto from `users` row                           | Only this user's rows |
+| **Guest**     | **Run now only** + Exit                                     | Prompted every run (username, password, server) | None stored           |
+
 
 **Logged-in user behavior**
 
@@ -156,10 +58,12 @@ On **every program start** (before main menu), show:
 
 **Menu visibility rule**
 
-| | Run now | Schedule | List / Cancel / History | Account | Exit |
-|---|:---:|:---:|:---:|:---:|:---:|
-| **Logged in** | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Guest** | ✅ | — | — | — | ✅ |
+
+|               | Run now | Schedule | List / Cancel / History | Account | Exit |
+| ------------- | ------- | -------- | ----------------------- | ------- | ---- |
+| **Logged in** | ✅       | ✅        | ✅                       | ✅       | ✅    |
+| **Guest**     | ✅       | —        | —                       | —       | ✅    |
+
 
 Both modes can **run now**. Only logged-in users get **schedule** (create/list/cancel tasks), **run history**, and **account** actions.
 
@@ -232,20 +136,22 @@ No `sessions` table — login state is **not** stored in the DB between process 
 
 > Work **in order**. Mark a step ✅ only after its **Verify** checks pass. Do not skip ahead — later steps depend on earlier ones.
 
-| Step | Summary | Status |
-|------|---------|--------|
-| [9.1](#step-91--schema-foundation-clean-slate) | Full schema + `users` table (wipe DB first) | ⏳ |
-| [9.2](#step-92--session-model-in-memory-only) | `SessionContext` (no persistence) | ⏳ |
-| [9.3](#step-93--sign-up--chrome-profile) | New account + auto Chrome folder | ⏳ |
-| [9.4](#step-94--startup-gate--login-cli) | Startup screen + login (CLI) | ⏳ |
-| [9.5](#step-95--guest-mode-cli) | Guest menu (Run now only) | ⏳ |
-| [9.6](#step-96--logged-in-run-now) | Run now with stored credentials | ⏳ |
-| [9.7](#step-97--user-scoped-tasks--history) | `user_id` on tasks + history | ⏳ |
-| [9.8](#step-98--sqlite-codes-per-user) | Codes in SQLite; remove JSON store | ⏳ |
-| [9.9](#step-99--scheduler-per-user) | Scheduler + Chrome per user | ⏳ |
-| [9.10](#step-910--account-menu) | Log out + delete account | ⏳ |
-| [9.11](#step-911--telegram-parity) | Same auth flows on Telegram | ⏳ |
-| [9.12](#step-912--cleanup--docs) | Remove legacy paths; docs + E2E | ⏳ |
+
+| Step                                           | Summary                                     | Status |
+| ---------------------------------------------- | ------------------------------------------- | ------ |
+| [9.1](#step-91--schema-foundation-clean-slate) | Full schema + `users` table (wipe DB first) | ⏳      |
+| [9.2](#step-92--session-model-in-memory-only)  | `SessionContext` (no persistence)           | ⏳      |
+| [9.3](#step-93--sign-up--chrome-profile)       | New account + auto Chrome folder            | ⏳      |
+| [9.4](#step-94--startup-gate--login-cli)       | Startup screen + login (CLI)                | ⏳      |
+| [9.5](#step-95--guest-mode-cli)                | Guest menu (Run now only)                   | ⏳      |
+| [9.6](#step-96--logged-in-run-now)             | Run now with stored credentials             | ⏳      |
+| [9.7](#step-97--user-scoped-tasks--history)    | `user_id` on tasks + history                | ⏳      |
+| [9.8](#step-98--sqlite-codes-per-user)         | Codes in SQLite; remove JSON store          | ⏳      |
+| [9.9](#step-99--scheduler-per-user)            | Scheduler + Chrome per user                 | ⏳      |
+| [9.10](#step-910--account-menu)                | Log out + delete account                    | ⏳      |
+| [9.11](#step-911--telegram-parity)             | Same auth flows on Telegram                 | ⏳      |
+| [9.12](#step-912--cleanup--docs)               | Remove legacy paths; docs + E2E             | ⏳      |
+
 
 ---
 
@@ -580,22 +486,23 @@ CLI / Telegram / Discord / HTTP  →  Capability router menu  →  capabilityMod
 ## Changelog
 
 
-| Date       | Phase   | Notes                                                 |
-| ---------- | ------- | ----------------------------------------------------- |
-| 2026-06-08 | 6       | Terminal prompts for manual scrape + credentials      |
-| 2026-06-08 | 6b      | Single-instance env-only; JSON code store; no MongoDB |
-| 2026-06-08 | 8       | Removed legacy folders and dead code                  |
-| 2026-06-08 | 7-plan  | Event-driven architecture documented                  |
-| 2026-06-08 | 7-step2 | `appConfig.ts`; deleted `env.ts` / `AppEnv`           |
-| 2026-06-08 | 7-step3 | CLI adapter menu, taskFactory; removed legacy bridge  |
-| 2026-06-08 | 7-step4 | SchedulerRunner + task store persistence              |
-| 2026-06-09 | 7-step5 | SQLite task + run history; server mode (`--server`)   |
-| 2026-06-09 | 7-step6 | Telegram adapter + Docker deploy files                |
-| 2026-06-09 | 7-step7 | Legacy purge; `dev`/`start` scripts; root README      |
-| 2026-06-09 | 9-plan  | Phase 9: multi-user, unified SQLite (no codes.json), migrations sketch |
-| 2026-06-09 | 9-plan  | Phase 9: login/guest flows, users table, account menu, auth practices |
-| 2026-06-09 | 9-plan  | Phase 9: no session persistence — re-login after exit (all adapters) |
-| 2026-06-09 | 9-plan  | Phase 9: sequential subtasks 9.1–9.12 with per-step verify checklist |
+| Date       | Phase   | Notes                                                                     |
+| ---------- | ------- | ------------------------------------------------------------------------- |
+| 2026-06-08 | 6       | Terminal prompts for manual scrape + credentials                          |
+| 2026-06-08 | 6b      | Single-instance env-only; JSON code store; no MongoDB                     |
+| 2026-06-08 | 8       | Removed legacy folders and dead code                                      |
+| 2026-06-08 | 7-plan  | Event-driven architecture documented                                      |
+| 2026-06-08 | 7-step2 | `appConfig.ts`; deleted `env.ts` / `AppEnv`                               |
+| 2026-06-08 | 7-step3 | CLI adapter menu, taskFactory; removed legacy bridge                      |
+| 2026-06-08 | 7-step4 | SchedulerRunner + task store persistence                                  |
+| 2026-06-09 | 7-step5 | SQLite task + run history; server mode (`--server`)                       |
+| 2026-06-09 | 7-step6 | Telegram adapter + Docker deploy files                                    |
+| 2026-06-09 | 7-step7 | Legacy purge; `dev`/`start` scripts; root README                          |
+| 2026-06-09 | 9-plan  | Phase 9: multi-user, unified SQLite (no codes.json), migrations sketch    |
+| 2026-06-09 | 9-plan  | Phase 9: login/guest flows, users table, account menu, auth practices     |
+| 2026-06-09 | 9-plan  | Phase 9: no session persistence — re-login after exit (all adapters)      |
+| 2026-06-09 | 9-plan  | Phase 9: sequential subtasks 9.1–9.12 with per-step verify checklist      |
 | 2026-06-09 | 9-plan  | Phase 9: clean-slate schema (no incremental SQL migrations; wipe test DB) |
-| 2026-06-08 | future  | Future TODO: multi-capability platform (capability registry + router) |
+| 2026-06-08 | future  | Future TODO: multi-capability platform (capability registry + router)     |
+
 
