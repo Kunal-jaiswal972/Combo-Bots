@@ -1,3 +1,4 @@
+/** @see ./README.md — bot overview, flow, storage, and layout */
 import { ConfigError } from "@/utils/errors";
 import { SCHEDULER_TASK_SOURCE } from "@/bots/code-redeem-bot/config/constants";
 import type { AppConfig } from "@/utils/env/appConfigTypes";
