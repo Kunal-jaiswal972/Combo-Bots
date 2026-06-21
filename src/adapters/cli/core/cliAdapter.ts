@@ -1,17 +1,16 @@
-import type { TaskSource } from "../../../domain/task/redeemTask.js";
-import type { TaskScheduler } from "../../../scheduling/scheduler.js";
-import type { TaskInputAdapter } from "../../contracts/taskInputAdapter.js";
-import type { DisplayPresenter } from "../../contracts/displayPresenter.js";
-import type { PromptPort } from "../../contracts/promptPort.js";
-import { runMainMenu } from "../../shared/mainMenu.js";
+import type { TaskInputAdapter } from "@/adapters/host/contracts/taskInputAdapter";
+import type { Bot } from "@/adapters/host/contracts/bot";
+import type { DisplayPresenter } from "@/adapters/host/contracts/displayPresenter";
+import type { PromptPort } from "@/adapters/host/contracts/promptPort";
+import { runBotRouter } from "@/adapters/host/core/botRouter";
 
 const CLI_ADAPTER_ID = "cli";
 
 export interface CreateCliAdapterOptions {
   readonly prompt: PromptPort;
   readonly display: DisplayPresenter;
-  readonly scheduler: TaskScheduler;
-  readonly source: TaskSource;
+  readonly bots: readonly Bot[];
+  readonly source: string;
   readonly title?: string;
   readonly metadata?: Record<string, string>;
 }
@@ -21,10 +20,10 @@ export function createCliAdapter(options: CreateCliAdapterOptions): TaskInputAda
     id: CLI_ADAPTER_ID,
     label: "CLI menu",
     async start(): Promise<void> {
-      await runMainMenu({
+      await runBotRouter({
         port: options.prompt,
         display: options.display,
-        scheduler: options.scheduler,
+        bots: options.bots,
         source: options.source,
         title: options.title,
         metadata: options.metadata,

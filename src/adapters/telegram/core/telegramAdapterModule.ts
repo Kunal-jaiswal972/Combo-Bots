@@ -1,7 +1,7 @@
-import { ConfigError } from "../../../domain/errors.js";
-import type { AdapterModule } from "../../registry/adapterModules.js";
-import { createTelegramAdapter } from "./telegramAdapter.js";
-import { createTelegramScheduledRunNotifier } from "../lib/telegramScheduledRunNotifier.js";
+import { ConfigError } from "@/utils/errors";
+import type { AdapterModule } from "@/adapters/host/registry/adapterModules";
+import { createTelegramAdapter } from "./telegramAdapter";
+import { createTelegramScheduledRunNotifier } from "@/adapters/telegram/lib/telegramScheduledRunNotifier";
 
 export const telegramAdapterModule: AdapterModule = {
   id: "telegram",
@@ -23,12 +23,18 @@ export const telegramAdapterModule: AdapterModule = {
 
     const bundle = createTelegramAdapter({
       botToken: token,
-      scheduler: options.scheduler,
+      bots: options.bots,
     });
 
     return {
       adapter: bundle.adapter,
-      scheduledRunNotifier: createTelegramScheduledRunNotifier(bundle.bot),
+      scheduledRunNotifier: createTelegramScheduledRunNotifier(bundle.bot, {
+        onScheduledRun: async (port, payload) => {
+          if (options.onScheduledRun) {
+            await options.onScheduledRun(port, payload);
+          }
+        },
+      }),
     };
   },
 };

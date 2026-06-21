@@ -2,7 +2,7 @@
 
 Node.js app that scrapes Hoyoverse promo codes and redeems them automatically via `puppeteer-core` + Chrome.
 
-Supported games: **Genshin Impact**, **Honkai: Star Rail** (add more under `src/games/`).
+Supported games: **Genshin Impact**, **Honkai: Star Rail** (add more under `src/bots/code-redeem-bot/hoyoverse/`).
 
 Game credentials and schedules are **not** stored in `.env` — they are entered via enabled input adapters at runtime.
 
@@ -17,7 +17,7 @@ npm run build          # Compile TypeScript → dist/
 npm run typecheck      # Type-check without emit
 ```
 
-Both `dev` and `start` run the **same application** (`runApplication`): scheduler plus every adapter enabled in `.env`. The only difference is `dev` uses `tsx` without a build step; `start` compiles first.
+Both `dev` and `start` run the **same application** (`runApplication`): enabled bots, scheduler, and every adapter enabled in `.env`. The only difference is `dev` uses `tsx` without a build step; `start` compiles first.
 
 ---
 
@@ -29,7 +29,7 @@ npm install
 npm run dev
 ```
 
-Ensure `.env` has `CLI_ADAPTER_ENABLED=true` (default). Use the menu: **Run now**, **Schedule**, **List**, **Cancel**, **History**, **Exit**.
+Ensure `.env` has `CLI_ADAPTER_ENABLED=true` (default). The app shows a **bot picker** first, then the Code Redeemer menu: **Run now**, **Schedule**, **List**, **Cancel**, **History**, **Exit**.
 
 Scheduled tasks fire while the process is running.
 
@@ -37,7 +37,7 @@ Scheduled tasks fire while the process is running.
 
 ## Input adapters
 
-Adapters are registered in `src/adapters/registry/adapterModules.ts`. Enable each via `.env`:
+Adapters are registered in `src/adapters/host/registry/adapterModules.ts`. Enable each via `.env`:
 
 | Variable | Adapter | Lifecycle |
 |----------|---------|-----------|
@@ -60,53 +60,53 @@ Scheduled runs notify the Telegram chat when `telegramChatId` is stored in task 
 
 ### Production (Docker)
 
+Persists DBs and Chrome profile to **`./src/data`** on the host (same path as local dev).
+
 ```bash
 cp .env.example .env
 # Set TELEGRAM_BOT_TOKEN; set CLI_ADAPTER_ENABLED=false for headless containers
 
-cd deploy
 docker compose up --build -d
 ```
 
-**Wipe all persisted data and start fresh** (SQLite DB, `codes.json`, Chrome profile under `/data`):
-
-```bash
-cd deploy
-docker compose down -v && docker compose up --build -d
-```
-
-`-v` removes the `redeemer-data` volume. Your `.env` on the host is **not** deleted. Scheduled tasks, run history, scraped codes, and the Hoyoverse login session in the Chrome profile are erased.
-
-From the repo root (same effect):
+**Wipe persisted data and start fresh** (stop containers, remove compose volumes, rebuild):
 
 ```bash
 npm run docker:reset
 ```
 
+Or manually:
+
+```bash
+docker compose down -v && docker compose up --build -d
+```
+
+Data is bind-mounted at `./src/data` — `down -v` does **not** delete host files. To fully reset SQLite DBs and the Chrome profile, delete the contents of `src/data/` on the host after stopping the container. Your `.env` on the host is not deleted.
+
 ---
 
 ## Architecture
 
-All input sources produce the same `RedeemTask` and run through one pipeline.
-
 ```text
 ┌──────────────────────────────────────────────────────────┐
-│  INPUT ADAPTERS (registry)                               │
+│  INPUT ADAPTERS (adapters/host/registry)              │
 │  CLI  │  Telegram  │  (future: Discord, HTTP API, …)     │
 └─────────────┴────────────────────────────────────────────┘
                               │
                               ▼
                  ┌────────────────────────┐
-                 │  TaskFactory           │
+                 │  botRouter             │
+                 │  (pick bot → menu)     │
                  └───────────┬────────────┘
                              ▼
                  ┌────────────────────────┐
-                 │  runRedeemTask         │
-                 │  executeRedeemRun      │
+                 │  code-redeem-bot       │
+                 │  menuActions → flows   │
+                 │  → workflows → storage │
                  └────────────────────────┘
 ```
 
-**Design rule:** Adapters only collect input and display output. All redeem logic lives in `application/executeRedeemRun.ts`.
+**Design rule:** Adapters only collect input and display output. All redeem logic lives in `src/bots/code-redeem-bot/engine/`.
 
 `RedeemTask.source`: `"cli"` | `"telegram"` | `"scheduler"`.
 
@@ -115,49 +115,32 @@ All input sources produce the same `RedeemTask` and run through one pipeline.
 ```text
 src/
 ├── index.ts                      # bootstrap → runApplication()
+├── bootstrap/
 ├── adapters/
-│   ├── registry/                 # adapterModules.ts, runApplication.ts
-│   ├── cli/                      # CLI adapter module + Clack ports
-│   ├── telegram/                 # Telegram adapter module + grammY
-│   ├── contracts/                # PromptPort, TaskInputAdapter, …
-│   └── shared/                   # mainMenu, flows, prompts, formatters
-├── application/                  # executeRedeemRun, runRedeemTask, queries
-├── scheduling/                   # SchedulerRunner, schedule drivers
-├── infrastructure/storage/       # SQLite, code store
-├── games/<gameId>/               # scraper + redeemer plug-ins
-└── browser/                      # Puppeteer lifecycle
+│   ├── host/                     # contracts, registry, router
+│   ├── cli/
+│   └── telegram/
+├── tools/                        # browser, scraper, scheduler, database
+├── utils/                        # env, errors, log, timing, date
+└── bots/
+    ├── registry.ts
+    └── code-redeem-bot/
 ```
 
-Contributor rules: **[AGENTS.md](./AGENTS.md)**. Implementation tracking: **[PLAN.md](./PLAN.md)**.
+Contributor rules: **[AGENTS.md](./AGENTS.md)**. Implementation tracking: **[PLAN.md](./PLAN.md)**. Restructure notes: **[Restructure.md](./Restructure.md)**.
 
 ---
 
 ## Adding a new input adapter
 
-1. Create `src/adapters/<name>/<name>AdapterModule.ts` implementing `AdapterModule`:
+1. Create `src/adapters/<name>/core/<name>AdapterModule.ts` implementing `AdapterModule`:
    - `isEnabled(appConfig)` — read a new `.env` flag from `appConfig.ts`
    - `lifecycle`: `"background"` (Discord, HTTP) or `"foreground"` (CLI)
    - `create()` — return `{ adapter: TaskInputAdapter, scheduledRunNotifier? }`
-2. Append the module to `src/adapters/registry/adapterModules.ts`
+2. Append the module to `src/adapters/host/registry/adapterModules.ts`
 3. Add env vars to `appConfig.ts`, `.env.example`, and this README
 
-Shared menu flows (`runMainMenu`, `runNowMenuFlow`, …) work for any adapter that implements `PromptPort` + `DisplayPresenter`.
-
-### Future HTTP API adapter (not implemented)
-
-There is **no HTTP server** in this repo today. To add a REST API later:
-
-1. Create `src/adapters/http/httpAdapterModule.ts` with `lifecycle: "background"`
-2. Implement `TaskInputAdapter.start()` to bind an HTTP server (Express/Fastify) and return without blocking
-3. Add thin routes that call `application/` services directly (`runRedeemTask`, `scheduledTaskQueries`, …) — most endpoints do **not** need `PromptPort`
-4. Add `API_ENABLED`, `API_PORT`, and auth env vars to `appConfig.ts`
-5. Register `httpAdapterModule` in `adapterModules.ts`
-
-Optional: WebSocket + `PromptPort` for interactive API sessions.
-
-### Future Discord adapter
-
-Same pattern as Telegram: `discordAdapterModule.ts`, `DiscordPromptPort`, `ScheduledRunNotifier` for `discordChannelId` metadata, register in `adapterModules.ts`.
+The shared `botRouter` works for any adapter that implements `PromptPort` + `DisplayPresenter`.
 
 ---
 
@@ -165,11 +148,14 @@ Same pattern as Telegram: `discordAdapterModule.ts`, `DiscordPromptPort`, `Sched
 
 | Data | Location |
 |------|----------|
-| Scraped codes + redeem status | `<CODE_STORE_BASE_PATH>/<gameId>/codes.json` |
-| Scheduled tasks + run history | SQLite: `DATABASE_URL=file:.../redeemer.db` |
+| Scraped codes + redeem status | SQLite `codes` table in bot DB |
+| Scheduled tasks + run history | Same bot DB (`scheduled_tasks`, `run_history`) |
+| Scheduler job queue | `scheduled_jobs` table in bot DB |
 | Chrome / Hoyoverse session | `CHROME_USER_DATA_DIR` |
 
-**JSON fallback:** `DATABASE_URL=json:./path/scheduled-tasks.json` — schedules only; **no run history**.
+**Bot database paths:** `<DATABASE_URL>/genshin.db`, `<DATABASE_URL>/hsr.db`
+
+Default dev: `src/data/genshin.db`, `src/data/hsr.db` (when `DATABASE_URL=file:./src/data`).
 
 ---
 
@@ -180,10 +166,8 @@ Copy `.env.example` → `.env`. Application config only — no game credentials.
 | Variable | Purpose |
 |----------|---------|
 | `CLI_ADAPTER_ENABLED` | Terminal menu (`true` / `false`, default `true`) |
-| `CODE_STORE_BASE_PATH` | Base dir for per-game `codes.json` |
-| `DATABASE_URL` | `file:...` (SQLite) or `json:...` (fallback) |
+| `DATABASE_URL` | Data directory — per-game DBs are `<path>/genshin.db`, `<path>/hsr.db` |
 | `SCHEDULER_POLL_INTERVAL_MS` | Scheduler poll interval (default 60000) |
-| `SCHEDULER_TIMEZONE` | IANA timezone for schedules and display (default `Asia/Kolkata`) |
 | `CHROME_*`, `HEADLESS` | Browser launch |
 | `TELEGRAM_BOT_TOKEN` | Bot token from @BotFather |
 | `TELEGRAM_ENABLED` | `false` to disable bot while keeping token |
@@ -202,13 +186,24 @@ Copy `.env.example` → `.env`. Application config only — no game credentials.
 
 ## Adding a new game
 
-1. Add id to `GameId` in `src/config/constants.ts`
-2. Create `src/games/<gameId>/` — `genshinModule.ts`, `config.ts`, `scraper.ts`, `redeemer.ts`
-3. Register in `src/games/registry.ts`
+1. Add id to `GameId` in `src/bots/code-redeem-bot/config/constants.ts`
+2. Create `src/bots/code-redeem-bot/hoyoverse/<gameId>/` — `config/`, `controllers/`, `core/` (+ module file)
+3. Register in `src/bots/code-redeem-bot/engine/gameRegistry.ts`
+
+Scrapers must use `@/tools/scraper` only. Browser steps must use `@/tools/browser` only.
+
+---
+
+## Adding a new bot
+
+1. Create `src/bots/<name>/` implementing `BotModule` (see `code-redeem-bot` as reference)
+2. Append to `src/bots/registry.ts`
+
+Details in **[AGENTS.md](./AGENTS.md)**.
 
 ---
 
 ## Stack
 
-- Node.js 20+, TypeScript (ESM, `NodeNext`)
+- Node.js 20+, TypeScript (ESM, bundler resolution + tsup)
 - `puppeteer-core`, `better-sqlite3`, `grammy`, `zod`, `@clack/prompts`

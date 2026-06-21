@@ -1,28 +1,38 @@
 import type { Bot } from "grammy";
-import type { RedeemTask } from "../../../domain/task/redeemTask.js";
-import type { ScheduledRunNotifier } from "../../contracts/scheduledRunNotifier.js";
-import { createScheduledRunHandler } from "../../shared/scheduledRunHandler.js";
-import { TelegramPromptPort } from "../core/telegramPromptPort.js";
-import { getTelegramChatSession } from "./telegramPromptSession.js";
+import type {
+  SchedulableRunPayload,
+  ScheduledRunNotifier,
+} from "@/adapters/host/contracts/scheduledRunNotifier";
+import type { PromptPort } from "@/adapters/host/contracts/promptPort";
+import { TelegramPromptPort } from "@/adapters/telegram/core/telegramPromptPort";
+import { getTelegramChatSession } from "./telegramPromptSession";
 
-function resolveTelegramChatId(task: RedeemTask): number | null {
-  const chatIdRaw = task.metadata?.telegramChatId;
+function resolveTelegramChatId(payload: SchedulableRunPayload): number | null {
+  const chatIdRaw = payload.metadata?.telegramChatId;
   const chatId =
     chatIdRaw !== undefined ? Number.parseInt(chatIdRaw, 10) : Number.NaN;
 
   return Number.isNaN(chatId) ? null : chatId;
 }
 
+export interface TelegramScheduledRunNotifierOptions {
+  readonly onScheduledRun: (
+    port: PromptPort,
+    payload: SchedulableRunPayload,
+  ) => Promise<void>;
+}
+
 export function createTelegramScheduledRunNotifier(
   bot: Bot,
+  options: TelegramScheduledRunNotifierOptions,
 ): ScheduledRunNotifier {
   return {
-    canNotify(task: RedeemTask): boolean {
-      return resolveTelegramChatId(task) !== null;
+    canNotify(payload: SchedulableRunPayload): boolean {
+      return resolveTelegramChatId(payload) !== null;
     },
 
-    async notify(task: RedeemTask): Promise<void> {
-      const chatId = resolveTelegramChatId(task);
+    async notify(payload: SchedulableRunPayload): Promise<void> {
+      const chatId = resolveTelegramChatId(payload);
 
       if (chatId === null) {
         return;
@@ -30,8 +40,7 @@ export function createTelegramScheduledRunNotifier(
 
       const session = getTelegramChatSession(chatId);
       const port = new TelegramPromptPort(bot.api, chatId, session);
-      const handler = createScheduledRunHandler(port);
-      await handler(task);
+      await options.onScheduledRun(port, payload);
     },
   };
 }

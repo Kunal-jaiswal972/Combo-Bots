@@ -1,9 +1,11 @@
-import type { AdapterModule } from "../../registry/adapterModules.js";
-import { createCliAdapter } from "./cliAdapter.js";
-import type { CliPorts } from "./cliPorts.js";
+import type { AdapterModule } from "@/adapters/host/registry/adapterModules";
+import { createCliAdapter } from "./cliAdapter";
+import type { TerminalPorts } from "@/adapters/host/core/terminalPorts";
+
+const CLI_ADAPTER_ID = "cli";
 
 export const cliAdapterModule: AdapterModule = {
-  id: "cli",
+  id: CLI_ADAPTER_ID,
   label: "CLI menu",
   lifecycle: "foreground",
 
@@ -12,14 +14,14 @@ export const cliAdapterModule: AdapterModule = {
   },
 
   create(options) {
-    const ports: CliPorts = options.terminal;
+    const ports: TerminalPorts = options.terminal;
 
     return {
       adapter: createCliAdapter({
         prompt: ports.prompt,
         display: ports.display,
-        scheduler: options.scheduler,
-        source: "cli",
+        bots: options.bots,
+        source: CLI_ADAPTER_ID,
       }),
     };
   },

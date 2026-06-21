@@ -1,19 +1,19 @@
 import { Bot, type Context } from "grammy";
-import type { TaskScheduler } from "../../../scheduling/scheduler.js";
-import { logger } from "../../../utils/utils.js";
-import type { TaskInputAdapter } from "../../contracts/taskInputAdapter.js";
-import { runMainMenu } from "../../shared/mainMenu.js";
-import { PROMPT_BACK_TEXT } from "../../contracts/promptBack.js";
+import { logger } from "@/utils";
+import type { Bot as RegisteredBot } from "@/adapters/host/contracts/bot";
+import type { TaskInputAdapter } from "@/adapters/host/contracts/taskInputAdapter";
+import { runBotRouter } from "@/adapters/host/core/botRouter";
+import { PROMPT_BACK_TEXT } from "@/adapters/host/contracts/promptBack";
 import {
   rejectTelegramPromptBack,
   resolveTelegramCallbackData,
   TelegramPromptPort,
-} from "./telegramPromptPort.js";
-import { logAdapter } from "../../shared/adapterLogger.js";
+} from "./telegramPromptPort";
+import { logAdapter } from "@/adapters/host/core/adapterLogger";
 import {
   clearTelegramChatSession,
   getTelegramChatSession,
-} from "../lib/telegramPromptSession.js";
+} from "@/adapters/telegram/lib/telegramPromptSession";
 
 const TELEGRAM_ADAPTER_ID = "telegram";
 
@@ -23,7 +23,7 @@ function resolveTelegramChatId(ctx: Context): number | undefined {
 
 export interface CreateTelegramAdapterOptions {
   botToken: string;
-  scheduler: TaskScheduler;
+  bots: readonly RegisteredBot[];
 }
 
 export interface TelegramAdapterBundle {
@@ -35,7 +35,6 @@ export function createTelegramAdapter(
   options: CreateTelegramAdapterOptions,
 ): TelegramAdapterBundle {
   const bot = new Bot(options.botToken);
-  const scheduler = options.scheduler;
   let running = false;
 
   bot.use(async (ctx, next) => {
@@ -82,10 +81,10 @@ export function createTelegramAdapter(
 
     void (async () => {
       try {
-        await runMainMenu({
+        await runBotRouter({
           port,
           display: port,
-          scheduler,
+          bots: options.bots,
           source: "telegram",
           title: "Auto Code Redeemer (Telegram)",
           metadata: { telegramChatId: String(chatId) },

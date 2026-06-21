@@ -1,12 +1,12 @@
 import * as clack from "@clack/prompts";
-import { registerActivePromptCloser } from "../../../infrastructure/ui/promptShutdown.js";
-import type { PromptOptions } from "../../contracts/promptPort.js";
+import { registerActivePromptCloser } from "@/adapters/host/core/promptShutdown";
+import type { PromptOptions } from "@/adapters/host/contracts/promptPort";
 import {
   PROMPT_BACK_CHOICE_VALUE,
   PROMPT_BACK_LABEL,
   PROMPT_BACK_TEXT,
   PromptBackError,
-} from "../../contracts/promptBack.js";
+} from "@/adapters/host/contracts/promptBack";
 
 function isBackText(answer: string): boolean {
   return answer.trim().toLowerCase() === PROMPT_BACK_TEXT;

@@ -5,11 +5,11 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsup",
     "dev": "tsx src/index.ts",
     "start": "npm run build && node dist/index.js",
-    "typecheck": "cross-env NODE_OPTIONS=--max-old-space-size=4096 tsc -p tsconfig.typecheck.json --noEmit",
-    "docker:reset": "docker compose -f deploy/docker-compose.yml down -v && docker compose -f deploy/docker-compose.yml up --build -d"
+    "typecheck": "cross-env NODE_OPTIONS=--max-old-space-size=4096 tsc -p tsconfig.json --noEmit",
+    "docker:reset": "docker compose down -v && docker compose up --build -d"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +23,7 @@
     "better-sqlite3": "^12.10.0",
     "chalk": "^5.4.1",
     "cheerio": "^1.0.0",
-    "date-fns": "^4.4.0",
+    "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "dotenv": "^16.4.7",
     "grammy": "^1.43.0",
@@ -34,6 +34,7 @@
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^22.10.5",
     "cross-env": "^7.0.3",
+    "tsup": "^8.4.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   }
