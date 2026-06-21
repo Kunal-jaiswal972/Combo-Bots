@@ -1,15 +1,15 @@
-import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants.js";
-import { RedeemStatus } from "@/bots/code-redeem-bot/config/constants.js";
-import { getGameModule } from "@/bots/code-redeem-bot/engine/gameRegistry.js";
-import { getStorage } from "@/bots/code-redeem-bot/controllers/storage.js";
-import type { RedeemSummary } from "@/bots/code-redeem-bot/types.js";
-import type { CodeRedeemResult } from "@/bots/code-redeem-bot/types.js";
+import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
+import { RedeemStatus } from "@/bots/code-redeem-bot/config/constants";
+import { getGameModule } from "@/bots/code-redeem-bot/engine/gameRegistry";
+import { getStorage } from "@/bots/code-redeem-bot/controllers/storage";
+import type { RedeemSummary } from "@/bots/code-redeem-bot/types";
+import type { CodeRedeemResult } from "@/bots/code-redeem-bot/types";
 import type {
   RedeemCodesOptions,
   RedeemWithGameEngineOptions,
-} from "@/bots/code-redeem-bot/types.js";
-import { formatRedeemSummaryLogLine } from "@/bots/code-redeem-bot/utils/runResult.js";
-import { formatAccountLabel, logger } from "@/shared/utils.js";
+} from "@/bots/code-redeem-bot/types";
+import { formatRedeemSummaryLogLine } from "@/bots/code-redeem-bot/utils/runResult";
+import { formatAccountLabel, logger } from "@/utils";
 
 function countResults(results: CodeRedeemResult[]): Omit<RedeemSummary, "codesAttempted"> {
   const counts = {

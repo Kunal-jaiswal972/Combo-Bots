@@ -1,8 +1,8 @@
 import {
   GenshinServer,
   type GenshinServerValue,
-} from "@/bots/code-redeem-bot/config/constants.js";
-import { genshinElements } from "./elements.js";
+} from "@/bots/code-redeem-bot/config/constants";
+import { genshinElements } from "./elements";
 
 export const genshinConfig = {
   redeemPageUrl: "https://genshin.hoyoverse.com/en/gift",

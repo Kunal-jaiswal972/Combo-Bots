@@ -1,15 +1,15 @@
 import type Database from "better-sqlite3";
-import type { GameIdValue } from "../../config/constants.js";
+import type { GameIdValue } from "../../config/constants";
 import {
   gameDatabaseIds,
   resolveGameDatabasePath,
-} from "../../config/database.js";
+} from "../../config/database";
 import {
   closeAllDatabases,
   getNativeDatabase,
   openDatabase,
-} from "@/shared/tools/database.js";
-import { runMigrations } from "./migrations.js";
+} from "@/tools/database";
+import { runMigrations } from "./migrations";
 
 const migratedPaths = new Set<string>();
 

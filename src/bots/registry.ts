@@ -1,5 +1,5 @@
-import { codeRedeemBotModule } from "@/bots/code-redeem-bot.js";
-import type { BotModule } from "@/shared/adapters/host/contracts/bot.js";
+import { codeRedeemBotModule } from "@/bots/code-redeem-bot";
+import type { BotModule } from "@/adapters/host/contracts/bot";
 
 /**
  * Central bot registry. To add a bot:

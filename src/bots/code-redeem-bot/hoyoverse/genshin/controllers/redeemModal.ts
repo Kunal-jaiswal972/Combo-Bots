@@ -1,7 +1,7 @@
 import type { Page } from "puppeteer-core";
-import { BrowserDelays } from "@/shared/tools/browser/constants.js";
-import { formatWaitMs, logger, sleep } from "@/shared/utils.js";
-import { genshinConfig } from "../config/config.js";
+import { BrowserDelays } from "@/tools/browser/constants";
+import { formatWaitMs, logger, sleep } from "@/utils";
+import { genshinConfig } from "../config/config";
 
 export async function isRedeemModalOpen(page: Page): Promise<boolean> {
   return page.evaluate((modalSelector) => {

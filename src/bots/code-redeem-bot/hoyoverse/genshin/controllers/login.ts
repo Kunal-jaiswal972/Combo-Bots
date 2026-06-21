@@ -1,13 +1,13 @@
 import type { Browser, Page } from "puppeteer-core";
-import { BrowserDelays } from "@/shared/tools/browser/constants.js";
-import { RedeemError } from "@/shared/utils/errors.js";
+import { BrowserDelays } from "@/tools/browser/constants";
+import { RedeemError } from "@/utils/errors";
 import {
   clickElement,
   enterText,
   getIframeContentFrame,
   openPage,
   waitForNetworkIdle,
-} from "@/shared/tools/browser.js";
+} from "@/tools/browser";
 import {
   formatAccountLabel,
   getRandomDelay,
@@ -15,8 +15,8 @@ import {
   maskSecret,
   sleep,
   waitUntil,
-} from "@/shared/utils.js";
-import { genshinConfig } from "../config/config.js";
+} from "@/utils";
+import { genshinConfig } from "../config/config";
 
 export async function isLoggedIn(page: Page): Promise<boolean> {
   const userButton = await waitUntil({

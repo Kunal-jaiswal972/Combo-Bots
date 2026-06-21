@@ -1,20 +1,20 @@
-import { BrowserDelays } from "@/shared/tools/browser/constants.js";
-import { RedeemError } from "@/shared/utils/errors.js";
-import type { ChromeSession } from "@/shared/tools/browser.js";
+import { BrowserDelays } from "@/tools/browser/constants";
+import { RedeemError } from "@/utils/errors";
+import type { ChromeSession } from "@/tools/browser";
 import type {
   CodeRedeemResult,
   GameRedeemOptions,
-} from "@/bots/code-redeem-bot/types.js";
+} from "@/bots/code-redeem-bot/types";
 import {
   formatAccountLabel,
   logger,
   sleep,
-} from "@/shared/utils.js";
-import { genshinConfig, isGenshinServer } from "../config/config.js";
-import { ensureLoggedIn } from "../controllers/login.js";
-import { redeemSingleCode } from "../controllers/redeemCode.js";
-import { ensureRedeemModalClosed } from "../controllers/redeemModal.js";
-import { selectServer } from "../controllers/selectServer.js";
+} from "@/utils";
+import { genshinConfig, isGenshinServer } from "../config/config";
+import { ensureLoggedIn } from "../controllers/login";
+import { redeemSingleCode } from "../controllers/redeemCode";
+import { ensureRedeemModalClosed } from "../controllers/redeemModal";
+import { selectServer } from "../controllers/selectServer";
 
 export async function redeemGenshinCodes(
   session: ChromeSession,

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { GameId, type GameIdValue } from "../config/constants.js";
+import { GameId, type GameIdValue } from "../config/constants";
 
 export const credentialsSchema = z.preprocess((value) => {
   if (typeof value !== "object" || value === null) {

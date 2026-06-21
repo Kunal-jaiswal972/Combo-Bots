@@ -1,13 +1,13 @@
-import { GameId, type GameIdValue } from "@/bots/code-redeem-bot/config/constants.js";
-import type { ChromeSession } from "@/shared/tools/browser.js";
+import { GameId, type GameIdValue } from "@/bots/code-redeem-bot/config/constants";
+import type { ChromeSession } from "@/tools/browser";
 import type {
   CodeRedeemResult,
   GameRedeemOptions,
   ScrapedCodeRow,
-} from "@/bots/code-redeem-bot/types.js";
-import { ConfigError } from "@/shared/utils/errors.js";
-import { genshinGameModule } from "../hoyoverse/genshin/core/genshinModule.js";
-import { hsrGameModule } from "../hoyoverse/hsr/hsrModule.js";
+} from "@/bots/code-redeem-bot/types";
+import { ConfigError } from "@/utils/errors";
+import { genshinGameModule } from "../hoyoverse/genshin/core/genshinModule";
+import { hsrGameModule } from "../hoyoverse/hsr/hsrModule";
 
 export type GameScraper = () => Promise<ScrapedCodeRow[]>;
 

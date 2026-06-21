@@ -1,14 +1,14 @@
 import { randomUUID } from "node:crypto";
-import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants.js";
-import { validateGameCredentials } from "@/bots/code-redeem-bot/hoyoverse/shared/credentials.js";
+import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
+import { validateGameCredentials } from "@/bots/code-redeem-bot/hoyoverse/shared/credentials";
 import {
   redeemTaskSchema,
   type GameLoginCredentials,
   type RedeemTask,
   type ScrapePolicy,
   type TaskSource,
-} from "@/bots/code-redeem-bot/types.js";
-import { validateTaskSource } from "@/shared/adapters/host/registry/taskSource.js";
+} from "@/bots/code-redeem-bot/types";
+import { validateTaskSource } from "@/adapters/host/registry/taskSource";
 
 export interface CreateRedeemTaskInput {
   gameId: GameIdValue;

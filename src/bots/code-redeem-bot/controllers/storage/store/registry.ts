@@ -2,11 +2,11 @@ import type {
   CodesStore,
   RunHistoryStore,
   ScheduledTaskStore,
-} from "@/bots/code-redeem-bot/types.js";
-import { bootstrapGameDatabases } from "../db.js";
-import { createCodesStore } from "./codesStore.js";
-import { createRunHistoryStore } from "./runHistoryStore.js";
-import { createScheduledTaskStore } from "./scheduledTaskStore.js";
+} from "@/bots/code-redeem-bot/types";
+import { bootstrapGameDatabases } from "../db";
+import { createCodesStore } from "./codesStore";
+import { createRunHistoryStore } from "./runHistoryStore";
+import { createScheduledTaskStore } from "./scheduledTaskStore";
 
 export interface BotStorage {
   readonly codes: CodesStore;

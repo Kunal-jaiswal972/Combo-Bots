@@ -1,11 +1,11 @@
-import type { ScheduledTask } from "@/bots/code-redeem-bot/types.js";
-import { getGameModule } from "@/bots/code-redeem-bot/engine/gameRegistry.js";
+import type { ScheduledTask } from "@/bots/code-redeem-bot/types";
+import { getGameModule } from "@/bots/code-redeem-bot/engine/gameRegistry";
 import {
   formatScheduleDescription,
   formatUpcomingRuns,
-} from "@/shared/tools/scheduler/scheduleDisplay.js";
-import { formatScheduleInstant } from "@/shared/utils.js";
-import type { DisplayCard, DisplayCardRow } from "@/shared/adapters/host/contracts/displayCard.js";
+} from "@/tools/scheduler/scheduleDisplay";
+import { formatScheduleInstant } from "@/utils";
+import type { DisplayCard, DisplayCardRow } from "@/adapters/host/contracts/displayCard";
 
 export function buildScheduledTaskCard(task: ScheduledTask): DisplayCard {
   const game = getGameModule(task.payloadTemplate.gameId);

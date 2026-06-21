@@ -9,7 +9,7 @@ export {
   type GameIdValue,
   type GenshinServerValue,
   type RedeemStatusValue,
-} from "../config/constants.js";
+} from "../config/constants";
 
 export type {
   GameLoginCredentials,
@@ -17,7 +17,7 @@ export type {
   RedeemTaskTemplate,
   ScrapePolicy,
   TaskSource,
-} from "./domain.js";
+} from "./domain";
 export {
   credentialsSchema,
   gameIdSchema,
@@ -26,10 +26,10 @@ export {
   redeemTaskTemplateSchema,
   scrapePolicySchema,
   taskSourceSchema,
-} from "./domain.js";
+} from "./domain";
 
-export type { ScheduledTask, ScheduledTaskRecord } from "./schedule.js";
-export { scheduledTaskRecordSchema } from "./schedule.js";
+export type { ScheduledTask, ScheduledTaskRecord } from "./schedule";
+export { scheduledTaskRecordSchema } from "./schedule";
 
 export type {
   CodeRedeemResult,
@@ -41,7 +41,7 @@ export type {
   RunResult,
   RunResultStatus,
   ScrapeStats,
-} from "./run.js";
+} from "./run";
 export {
   codeRedeemResultSchema,
   redeemSummarySchema,
@@ -49,15 +49,15 @@ export {
   runResultSchema,
   runResultStatusSchema,
   scrapeStatsSchema,
-} from "./run.js";
+} from "./run";
 
 export type {
   CodeStoreEntry,
   CodeStoreMergeResult,
   NormalizedScrapedCode,
   ScrapedCodeRow,
-} from "./codes.js";
-export { scrapedCodeRowSchema } from "./codes.js";
+} from "./codes";
+export { scrapedCodeRowSchema } from "./codes";
 
 export type {
   CodesStore,
@@ -66,4 +66,4 @@ export type {
   RecordRunHistoryOptions,
   RunHistoryStore,
   ScheduledTaskStore,
-} from "./storage.js";
+} from "./storage";

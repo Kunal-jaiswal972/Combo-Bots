@@ -4,15 +4,15 @@ import {
   RedeemStatus,
   type GameIdValue,
   type RedeemStatusValue,
-} from "../../../config/constants.js";
-import type { CodeRedeemResult, CodeStoreMergeResult } from "@/bots/code-redeem-bot/types.js";
+} from "../../../config/constants";
+import type { CodeRedeemResult, CodeStoreMergeResult } from "@/bots/code-redeem-bot/types";
 import type {
   CodesStore,
   MergeScrapedCodesOptions,
   PersistRedeemResultOptions,
-} from "@/bots/code-redeem-bot/types.js";
-import { getTodayRunDate } from "@/shared/utils.js";
-import { openGameDatabase } from "../db.js";
+} from "@/bots/code-redeem-bot/types";
+import { getTodayRunDate } from "@/utils";
+import { openGameDatabase } from "../db";
 
 const skipRedeemStatuses: RedeemStatusValue[] = [
   RedeemStatus.REDEEMED,

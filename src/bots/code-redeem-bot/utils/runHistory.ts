@@ -1,9 +1,9 @@
-import type { RunResult, RunHistoryEntry } from "@/bots/code-redeem-bot/types.js";
-import type { ScheduledTask } from "@/bots/code-redeem-bot/types.js";
-import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants.js";
-import { getGameModule } from "@/bots/code-redeem-bot/engine/gameRegistry.js";
-import { formatScheduleInstant } from "@/shared/utils.js";
-import type { DisplayCard, DisplayCardRow } from "@/shared/adapters/host/contracts/displayCard.js";
+import type { RunResult, RunHistoryEntry } from "@/bots/code-redeem-bot/types";
+import type { ScheduledTask } from "@/bots/code-redeem-bot/types";
+import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
+import { getGameModule } from "@/bots/code-redeem-bot/engine/gameRegistry";
+import { formatScheduleInstant } from "@/utils";
+import type { DisplayCard, DisplayCardRow } from "@/adapters/host/contracts/displayCard";
 
 function formatRunStatusLabel(status: RunResult["status"]): string {
   switch (status) {

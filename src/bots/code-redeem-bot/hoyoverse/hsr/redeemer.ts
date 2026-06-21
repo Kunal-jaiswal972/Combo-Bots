@@ -1,7 +1,7 @@
-import { RedeemStatus } from "@/bots/code-redeem-bot/config/constants.js";
-import type { ChromeSession } from "@/shared/tools/browser.js";
-import type { CodeRedeemResult, GameRedeemOptions } from "@/bots/code-redeem-bot/types.js";
-import { hsrStubCodes } from "./config.js";
+import { RedeemStatus } from "@/bots/code-redeem-bot/config/constants";
+import type { ChromeSession } from "@/tools/browser";
+import type { CodeRedeemResult, GameRedeemOptions } from "@/bots/code-redeem-bot/types";
+import { hsrStubCodes } from "./config";
 
 export async function redeemHsrCodes(
   _session: ChromeSession,

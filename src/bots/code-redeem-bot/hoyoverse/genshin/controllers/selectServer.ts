@@ -1,16 +1,16 @@
 import type { Page } from "puppeteer-core";
-import { BrowserDelays } from "@/shared/tools/browser/constants.js";
-import { type GenshinServerValue } from "@/bots/code-redeem-bot/config/constants.js";
+import { BrowserDelays } from "@/tools/browser/constants";
+import { type GenshinServerValue } from "@/bots/code-redeem-bot/config/constants";
 import {
   evaluateClick,
   readElementText,
-} from "@/shared/tools/browser.js";
-import { logger, sleep } from "@/shared/utils.js";
+} from "@/tools/browser";
+import { logger, sleep } from "@/utils";
 import {
   genshinServerNthChild,
   getServerMenuSelector,
   genshinConfig,
-} from "../config/config.js";
+} from "../config/config";
 
 function serverLabelMatches(label: string, server: GenshinServerValue): boolean {
   const normalizedLabel = label.toLowerCase();

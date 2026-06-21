@@ -1,10 +1,10 @@
-import { createRedeemTask } from "@/bots/code-redeem-bot/engine/createRedeemTask.js";
-import { runRedeemTask } from "@/bots/code-redeem-bot/engine/run/runRedeemTask.js";
-import type { TaskSource } from "@/bots/code-redeem-bot/types.js";
-import type { PromptPort } from "@/shared/adapters/host/contracts/promptPort.js";
-import { displayRunResult } from "@/bots/code-redeem-bot/controllers/io/displayRunResult.js";
-import { promptCredentials } from "@/bots/code-redeem-bot/controllers/io/prompts/credentials.js";
-import { promptGameSelection } from "@/bots/code-redeem-bot/controllers/io/prompts/gameSelection.js";
+import { createRedeemTask } from "@/bots/code-redeem-bot/engine/createRedeemTask";
+import { runRedeemTask } from "@/bots/code-redeem-bot/engine/run/runRedeemTask";
+import type { TaskSource } from "@/bots/code-redeem-bot/types";
+import type { PromptPort } from "@/adapters/host/contracts/promptPort";
+import { displayRunResult } from "@/bots/code-redeem-bot/controllers/io/displayRunResult";
+import { promptCredentials } from "@/bots/code-redeem-bot/controllers/io/prompts/credentials";
+import { promptGameSelection } from "@/bots/code-redeem-bot/controllers/io/prompts/gameSelection";
 
 export interface RunNowMenuOptions {
   port: PromptPort;

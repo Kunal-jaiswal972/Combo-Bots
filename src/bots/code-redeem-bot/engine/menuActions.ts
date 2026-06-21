@@ -1,19 +1,19 @@
-import type { SchedulerRunner } from "@/shared/tools/scheduler/schedulerRunner.js";
+import type { SchedulerRunner } from "@/tools/scheduler/schedulerRunner";
 import type {
   RedeemTask,
   RedeemTaskTemplate,
-} from "@/bots/code-redeem-bot/types.js";
-import type { BotContext, BotMenuAction } from "@/shared/adapters/host/contracts/bot.js";
-import { runNowMenu } from "./menu/runNow.js";
-import { scheduleMenu } from "./menu/schedule.js";
+} from "@/bots/code-redeem-bot/types";
+import type { BotContext, BotMenuAction } from "@/adapters/host/contracts/bot";
+import { runNowMenu } from "./menu/runNow";
+import { scheduleMenu } from "./menu/schedule";
 import {
   cancelScheduledTask,
   listScheduledTasks,
-} from "../controllers/scheduling/queries/scheduledTasks.js";
-import { listRecentRunHistoryWithTasks } from "../controllers/scheduling/queries/runHistory.js";
-import { showRunHistoryList } from "../controllers/io/runHistoryList.js";
-import { showScheduledTaskList } from "../controllers/io/scheduledTaskList.js";
-import { formatScheduledTaskChoiceLabel } from "../utils/scheduledTask.js";
+} from "../controllers/scheduling/queries/scheduledTasks";
+import { listRecentRunHistoryWithTasks } from "../controllers/scheduling/queries/runHistory";
+import { showRunHistoryList } from "../controllers/io/runHistoryList";
+import { showScheduledTaskList } from "../controllers/io/scheduledTaskList";
+import { formatScheduledTaskChoiceLabel } from "../utils/scheduledTask";
 
 export function buildMenuActions(
   scheduler: SchedulerRunner<RedeemTaskTemplate, RedeemTask>,

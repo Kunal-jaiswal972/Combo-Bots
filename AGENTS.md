@@ -14,23 +14,23 @@ Rules and structure for AI agents and contributors. User-facing docs: **[README.
 ### Do
 
 - Validate all external input with **Zod**
-- Read `process.env` only in **`src/shared/utils/env/appConfig.ts`** (via `getAppConfig()`)
+- Read `process.env` only in **`src/utils/env/appConfig.ts`** (via `getAppConfig()`)
 - Use **options objects** when a function has 3+ parameters
 - Keep game-specific URLs/selectors in **`src/bots/<bot>/hoyoverse/<game>/config/`**
-- Use **`.js` extensions** in import paths (ESM + `NodeNext` — resolves to compiled output)
-- Import barrel folders as **`@/shared/tools/scraper.js`**, not `.../index.js` (see Import conventions)
+- Use **extensionless** imports (`@/tools/scraper`, `./dom/query`) — **no `.js` suffix**; `moduleResolution: "bundler"` + **tsup** resolve paths and barrels
+- Import via **`@/`** only for cross-folder paths (`@/*` → `src/*` in `tsconfig.json`); same-folder imports stay relative
 - Keep adapters **thin**: collect input, route to bots, display output — no redeem/scrape logic
 - Put redeem/scrape logic in **bot `engine/`** and **`hoyoverse/<game>/`**, never in adapters
-- Use typed errors from **`@/shared/utils/errors.js`**
+- Use typed errors from **`@/utils/errors`**
 - Fail gracefully — guard missing data, handle loading/error/empty states in UI adapters
 - Register bots in **`src/bots/registry.ts`**; register games in the bot's **`engine/gameRegistry.ts`**
 
 ### Do not
 
 - Add credentials to `.env` or the database in plaintext outside normal runtime entry
-- Put redeem/scrape logic in adapters or shared tools
-- Use full `puppeteer` package (use `puppeteer-core` only, wrapped in `@/shared/tools/browser.js`)
-- Import from `bots/` inside `shared/tools`, `shared/adapters`, or `shared/adapters/host` (host layer is bot-agnostic)
+- Put redeem/scrape logic in adapters or tools
+- Use full `puppeteer` package (use `puppeteer-core` only, wrapped in `@/tools/browser`)
+- Import from `bots/` inside `tools`, `adapters`, or `adapters/host` (host layer is bot-agnostic)
 - Reintroduce `EXECUTION_MODE`, `GAME_ID`, env-based credentials, or JSON `codes.json` stores
 - Leave legacy shims or `@deprecated` re-exports — delete replaced code in the same change
 - Use `any` or non-null assertions (`!`)
@@ -61,17 +61,16 @@ src/
 ├── index.ts                          # bootstrap → runApplication()
 ├── bootstrap/
 │   └── runApplication.ts             # composition root: wires bots + adapters
-├── shared/
-│   ├── adapters/
-│   │   ├── host/                   # contracts, registry, router — hosts plug-in adapters
-│   │   ├── cli/
-│   │   └── telegram/
-│   ├── tools/
-│   │   ├── browser/                  # launch, actions, lifecycle, paths (opaque handles)
-│   │   ├── scraper/                  # fetchHtml + cheerio query helpers
-│   │   ├── scheduler/                # generic scheduler + drivers + scheduleSpec
-│   │   └── database/                 # SQLite connection, CRUD, parseUrl
-│   └── utils/                        # env, errors, log, timing, date (index barrel)
+├── adapters/
+│   ├── host/                         # contracts, registry, router — hosts plug-in adapters
+│   ├── cli/
+│   └── telegram/
+├── tools/
+│   ├── browser/
+│   ├── scraper/
+│   ├── scheduler/
+│   └── database/
+├── utils/                            # env, errors, log, timing, date (index barrel)
 └── bots/
     ├── registry.ts                   # botModules — append new bots here
     └── code-redeem-bot/              # reference implementation
@@ -111,42 +110,25 @@ Per-game DBs live directly under `<DATABASE_URL>` (default dev: `src/data/`). Ov
 
 ## Import conventions
 
-Cross-folder imports use the `@/` alias (`"@/*": ["src/*"]` in `tsconfig.json`). Same-folder imports stay relative (`./foo.js`).
-
-**Barrel folders** have an `index.ts` re-export. Import them without `/index.js`:
+Cross-folder imports use **`@/`** (`"@/*": ["src/*"]` in `tsconfig.json`). Same-folder imports stay relative. **No file extensions** in import paths.
 
 ```typescript
-import { fetchHtml } from "@/shared/tools/scraper.js";
-import type { RedeemTask } from "@/bots/code-redeem-bot/types.js";
-import { bootstrapStorage } from "@/bots/code-redeem-bot/controllers/storage.js";
+import { fetchHtml } from "@/tools/scraper";
+import type { RedeemTask } from "@/bots/code-redeem-bot/types";
+import { openDatabase } from "./connection/open";
 ```
 
-TypeScript does not resolve `foo.js` → `foo/index.ts` through `@/*` alone. Explicit `paths` entries in `tsconfig.json` map each barrel:
+`moduleResolution: "bundler"` resolves barrel folders (`scraper/index.ts`) and concrete files automatically — no per-barrel `paths` entries.
 
-| Import path | Resolves to |
-|-------------|-------------|
-| `@/bots/code-redeem-bot.js` | `bots/code-redeem-bot/index.ts` |
-| `@/bots/code-redeem-bot/types.js` | `bots/code-redeem-bot/types/index.ts` |
-| `@/bots/code-redeem-bot/controllers/storage.js` | `bots/code-redeem-bot/controllers/storage/index.ts` |
-| `@/shared/utils.js` | `shared/utils/index.ts` |
-| `@/shared/utils/env.js` | `shared/utils/env/index.ts` |
-| `@/shared/utils/errors.js` | `shared/utils/errors.ts` |
-| `@/shared/tools/browser.js` | `shared/tools/browser/index.ts` |
-| `@/shared/tools/scraper.js` | `shared/tools/scraper/index.ts` |
-| `@/shared/tools/database.js` | `shared/tools/database/index.ts` |
-| `@/shared/tools/scheduler.js` | `shared/tools/scheduler/index.ts` |
-
-When adding a new barrel folder imported via `@/`, add a matching `paths` entry. Build uses `tsc && tsc-alias` to rewrite aliases in `dist/`.
-
-**Do not** add root shim files like `types.ts` that only re-export a folder — use `types/index.ts` + path mapping.
+Production build: **tsup** bundles `src/index.ts` → `dist/index.js` (npm dependencies stay external).
 
 ---
 
 ## Commands
 
 ```bash
-npm run dev      # tsx, hot path for local work
-npm start        # build + node dist/
+npm run dev      # tsx watch (bundler tsconfig)
+npm start        # tsup build + node dist/index.js
 npm run build && npm run typecheck
 ```
 
@@ -157,17 +139,17 @@ npm run build && npm run typecheck
 ```text
 src/index.ts → bootstrap/runApplication (composition root — wires bots + adapters)
 adapters (cli/telegram) → adapters/host (contracts, core, registry) → bots (via injected instances)
-bots → shared/tools + shared/utils
+bots → tools + utils
 ```
 
 - **Bootstrap** (`bootstrap/runApplication.ts`) — the only place that imports both `bots/registry` and the adapter host. Calls `bootstrapTaskSources`, wires scheduled-run handlers, passes started bot instances to adapters.
-- **`shared/adapters/cli|telegram/`** — plug-in input surfaces. Each implements `AdapterModule` from `adapters/host`.
-- **`shared/adapters/host/`** — adapter host: ports/contracts, bot router, terminal prompts, adapter registry, **task source validation**. Wires plug-in adapters to bots. Must not import from `bots/`.
-- **Shared tools** — standalone packages: browser, scraper, scheduler, database. Generic over payload type `T`. Zero imports from `bots/`.
-- **Shared utils** — env, errors, log, timing, date. Lowest layer; no app imports.
+- **`adapters/cli|telegram/`** — plug-in input surfaces. Each implements `AdapterModule` from `adapters/host`.
+- **`adapters/host/`** — adapter host: ports/contracts, bot router, terminal prompts, adapter registry, **task source validation**. Wires plug-in adapters to bots. Must not import from `bots/`.
+- **Tools** (`tools/`) — browser, scraper, scheduler, database. Generic over payload type `T`. Zero imports from `bots/`.
+- **Utils** (`utils/`) — env, errors, log, timing, date. Lowest layer; no app imports.
 - **Bots** — own types, storage, scheduler, workflows, game plugins. Consume tools through public APIs only. Declare `taskTriggerSources` (e.g. `"scheduler"`) on `BotModule` for non-adapter sources.
 
-**Forbidden imports:** `shared/tools` → `bots/` · `shared/adapters/host` → `bots/` · `shared/adapters` → `bots/` · adapters → bot storage implementations (use bot menu actions / workflows).
+**Forbidden imports:** `tools` → `bots/` · `adapters/host` → `bots/` · `adapters` → `bots/` · adapters → bot storage implementations (use bot menu actions / workflows).
 
 ### Adapters stay thin
 
@@ -182,11 +164,11 @@ bots → shared/tools + shared/utils
 | When to scrape | `bots/.../engine/policies/scrapePolicy.ts` |
 | Redeem orchestration | `bots/.../engine/workflows/redeemRun.ts` |
 | Browser + code-store redeem | `bots/.../engine/workflows/browserRedemption.ts` |
-| When task runs next | `@/shared/tools/scheduler` drivers + `scheduleSpec` |
+| When task runs next | `@/tools/scheduler` drivers + `scheduleSpec` |
 | What user sees (redeem) | `bots/.../controllers/io/` + `utils/` |
 | What gets stored | `bots/.../controllers/storage/` |
 | Game-specific DOM | `bots/.../hoyoverse/<game>/controllers/` |
-| Game scrape logic | `bots/.../hoyoverse/<game>/core/` using `@/shared/tools/scraper.js` |
+| Game scrape logic | `bots/.../hoyoverse/<game>/core/` using `@/tools/scraper.js` |
 
 ---
 
@@ -200,14 +182,14 @@ The router and `runApplication` pick it up automatically. Optional: `start()`/`s
 
 ### How to add an input adapter
 
-1. Create `src/shared/adapters/<name>/core/<name>AdapterModule.ts` implementing `AdapterModule`.
-2. Append to `src/shared/adapters/host/registry/adapterModules.ts`.
+1. Create `src/adapters/<name>/core/<name>AdapterModule.ts` implementing `AdapterModule`.
+2. Append to `src/adapters/host/registry/adapterModules.ts`.
 3. Add env flag in `appConfig.ts`, `.env.example`, and README.
 
 ### How to add a game (code-redeem-bot)
 
 1. Add id to `GameId` in `bots/code-redeem-bot/config/constants.ts`.
-2. Create `hoyoverse/<gameId>/{config,controllers,core}` — scraper uses `@/shared/tools/scraper.js` only; controllers use `@/shared/tools/browser.js` only.
+2. Create `hoyoverse/<gameId>/{config,controllers,core}` — scraper uses `@/tools/scraper.js` only; controllers use `@/tools/browser.js` only.
 3. Register module in `bots/code-redeem-bot/engine/gameRegistry.ts`.
 
 ---

@@ -1,22 +1,22 @@
-import { ConfigError } from "@/shared/utils/errors.js";
-import { SCHEDULER_TASK_SOURCE } from "@/bots/code-redeem-bot/config/constants.js";
-import type { AppConfig } from "@/shared/utils/env/appConfigTypes.js";
+import { ConfigError } from "@/utils/errors";
+import { SCHEDULER_TASK_SOURCE } from "@/bots/code-redeem-bot/config/constants";
+import type { AppConfig } from "@/utils/env/appConfigTypes";
 import type {
   Bot,
   BotContext,
   BotModule,
   BotModuleCreateOptions,
-} from "@/shared/adapters/host/contracts/bot.js";
-import type { SchedulerRunner } from "@/shared/tools/scheduler/schedulerRunner.js";
-import type { RedeemTask, RedeemTaskTemplate } from "@/bots/code-redeem-bot/types.js";
-import { createCodeRedeemSchedulerOnTrigger } from "./controllers/scheduling/onTrigger.js";
-import { createBotScheduler } from "./controllers/scheduling/scheduler.js";
+} from "@/adapters/host/contracts/bot";
+import type { SchedulerRunner } from "@/tools/scheduler/schedulerRunner";
+import type { RedeemTask, RedeemTaskTemplate } from "@/bots/code-redeem-bot/types";
+import { createCodeRedeemSchedulerOnTrigger } from "./controllers/scheduling/onTrigger";
+import { createBotScheduler } from "./controllers/scheduling/scheduler";
 import {
   bootstrapStorage,
   closeBotDatabase,
   resetStorage,
-} from "@/bots/code-redeem-bot/controllers/storage.js";
-import { buildMenuActions } from "./engine/menuActions.js";
+} from "@/bots/code-redeem-bot/controllers/storage";
+import { buildMenuActions } from "./engine/menuActions";
 
 const BOT_ID = "code-redeem";
 

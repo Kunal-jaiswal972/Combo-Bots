@@ -1,24 +1,24 @@
 import {
   buildChromeLaunchOptions,
   launchChromeSession,
-} from "@/shared/tools/browser.js";
-import { closeBrowser } from "@/shared/tools/browser.js";
-import type { RedeemTask } from "@/bots/code-redeem-bot/types.js";
-import type { RunResult, RunResultStatus } from "@/bots/code-redeem-bot/types.js";
-import { getGameModule } from "@/bots/code-redeem-bot/engine/gameRegistry.js";
-import type { ChromeSession } from "@/shared/tools/browser.js";
-import { getAppConfig } from "@/shared/utils/env/appConfig.js";
-import { getDatabasePath } from "@/bots/code-redeem-bot/controllers/storage.js";
-import type { RedeemSummary } from "@/bots/code-redeem-bot/types.js";
-import type { ScrapeStats } from "@/bots/code-redeem-bot/types.js";
+} from "@/tools/browser";
+import { closeBrowser } from "@/tools/browser";
+import type { RedeemTask } from "@/bots/code-redeem-bot/types";
+import type { RunResult, RunResultStatus } from "@/bots/code-redeem-bot/types";
+import { getGameModule } from "@/bots/code-redeem-bot/engine/gameRegistry";
+import type { ChromeSession } from "@/tools/browser";
+import { getAppConfig } from "@/utils/env/appConfig";
+import { getDatabasePath } from "@/bots/code-redeem-bot/controllers/storage";
+import type { RedeemSummary } from "@/bots/code-redeem-bot/types";
+import type { ScrapeStats } from "@/bots/code-redeem-bot/types";
 import {
   hasRedeemableCodesForGame,
   logRunSummary,
   redeemCodes,
-} from "./browserRedemption.js";
-import { runScrape } from "./scrapeService.js";
-import { logger } from "@/shared/utils.js";
-import { evaluateScrapePolicy } from "../policies/scrapePolicy.js";
+} from "./browserRedemption";
+import { runScrape } from "./scrapeService";
+import { logger } from "@/utils";
+import { evaluateScrapePolicy } from "../policies/scrapePolicy";
 
 export interface ExecuteRedeemRunOptions {
   task: RedeemTask;

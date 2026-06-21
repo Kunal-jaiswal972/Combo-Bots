@@ -2,12 +2,12 @@ import type {
   RedeemTaskTemplate,
   RunHistoryEntry,
   ScheduledTask,
-} from "@/bots/code-redeem-bot/types.js";import type { TaskScheduler } from "@/shared/tools/scheduler/scheduler.js";
-import { getStorage } from "@/bots/code-redeem-bot/controllers/storage.js";
+} from "@/bots/code-redeem-bot/types";import type { TaskScheduler } from "@/tools/scheduler/scheduler";
+import { getStorage } from "@/bots/code-redeem-bot/controllers/storage";
 import {
   buildScheduledTasksById,
   listScheduledTasks,
-} from "./scheduledTasks.js";
+} from "./scheduledTasks";
 
 export interface RunHistoryListResult {
   readonly entries: readonly RunHistoryEntry[];
