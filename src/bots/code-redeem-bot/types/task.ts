@@ -12,12 +12,6 @@ export const credentialsSchema = z.preprocess((value) => {
     return value;
   }
 
-  const legacyEmail = record.email;
-
-  if (typeof legacyEmail === "string") {
-    return { ...record, username: legacyEmail };
-  }
-
   return value;
 }, z.object({
   username: z.string().min(1),

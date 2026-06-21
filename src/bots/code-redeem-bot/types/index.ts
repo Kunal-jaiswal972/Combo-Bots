@@ -17,7 +17,7 @@ export type {
   RedeemTaskTemplate,
   ScrapePolicy,
   TaskSource,
-} from "./domain";
+} from "./task";
 export {
   credentialsSchema,
   gameIdSchema,
@@ -26,7 +26,7 @@ export {
   redeemTaskTemplateSchema,
   scrapePolicySchema,
   taskSourceSchema,
-} from "./domain";
+} from "./task";
 
 export type { ScheduledTask, ScheduledTaskRecord } from "./schedule";
 export { scheduledTaskRecordSchema } from "./schedule";

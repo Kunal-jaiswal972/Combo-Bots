@@ -1,5 +1,5 @@
 import type { GameIdValue } from "../config/constants";
-import type { RedeemTask, RedeemTaskTemplate } from "./domain";
+import type { RedeemTask, RedeemTaskTemplate } from "./task";
 import type { CodeRedeemResult, RunHistoryEntry, RunResult } from "./run";
 import type {
   CodeStoreMergeResult,

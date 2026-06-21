@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { scheduleSpecSchema } from "@/tools/scheduler/scheduleSpec";
 import type { ScheduledJob } from "@/tools/scheduler/job";
-import { redeemTaskTemplateSchema, type RedeemTaskTemplate } from "./domain";
+import { redeemTaskTemplateSchema, type RedeemTaskTemplate } from "./task";
 
 export const scheduledTaskRecordSchema = z.object({
   id: z.string().min(1),

@@ -76,7 +76,7 @@ src/
     └── code-redeem-bot/              # reference implementation
         ├── index.ts                  # Bot contract: DB, scheduler, menuActions
         ├── config/                   # constants, database path resolution
-        ├── types/                    # domain.ts, schedule.ts, run.ts, codes.ts, storage.ts
+        ├── types/                    # task.ts, schedule.ts, run.ts, codes.ts, storage.ts
         ├── utils/                    # credentials, normalizeCodes, formatters
         ├── engine/
         │   ├── menu/                 # runNow, schedule — prompt user, build task
