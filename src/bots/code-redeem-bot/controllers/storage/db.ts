@@ -1,31 +1,31 @@
 import type Database from "better-sqlite3";
-import type { GameIdValue } from "../../config/constants.js";
+import type { GameIdValue } from "../../config/constants";
 import {
   gameDatabaseIds,
   resolveGameDatabasePath,
-} from "../../config/database.js";
+} from "../../config/database";
 import {
   closeAllDatabases,
   getNativeDatabase,
   openDatabase,
-} from "@/shared/tools/database.js";
-import { runMigrations } from "./migrations.js";
+} from "@/tools/database";
+import { initSchema } from "./schema";
 
-const migratedPaths = new Set<string>();
+const initializedPaths = new Set<string>();
 
 export function getDatabasePath(gameId: GameIdValue): string {
   return resolveGameDatabasePath(gameId);
 }
 
-/** Opens a game DB, runs migrations on first connect, returns the native handle. */
+/** Opens a game DB, applies schema on first connect, returns the native handle. */
 export function openGameDatabase(gameId: GameIdValue): Database.Database {
   const databasePath = resolveGameDatabasePath(gameId);
   const handle = openDatabase({ databasePath });
   const db = getNativeDatabase(handle);
 
-  if (!migratedPaths.has(databasePath)) {
-    runMigrations(db);
-    migratedPaths.add(databasePath);
+  if (!initializedPaths.has(databasePath)) {
+    initSchema(db);
+    initializedPaths.add(databasePath);
   }
 
   return db;
@@ -39,5 +39,5 @@ export function bootstrapGameDatabases(): void {
 
 export function closeBotDatabase(): void {
   closeAllDatabases();
-  migratedPaths.clear();
+  initializedPaths.clear();
 }

@@ -8,16 +8,8 @@ export function parseStoredCredentials(raw: unknown): {
   }
 
   const record = raw as Record<string, unknown>;
-  const legacyEmail = record.email;
-  const username =
-    typeof record.username === "string"
-      ? record.username
-      : typeof legacyEmail === "string"
-        ? legacyEmail
-        : "";
-
   return {
-    username,
+    username: typeof record.username === "string" ? record.username : "",
     password: typeof record.password === "string" ? record.password : "",
     server: typeof record.server === "string" ? record.server : "",
   };

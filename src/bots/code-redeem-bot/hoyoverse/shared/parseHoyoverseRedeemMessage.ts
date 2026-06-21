@@ -1,4 +1,4 @@
-import type { ParsedRedeemMessage } from "./redeemMessageTypes.js";
+import type { ParsedRedeemMessage } from "./redeemMessageTypes";
 
 /**
  * Default parser for Hoyoverse gift-page modal text (Genshin, HSR, ZZZ share the same cdkey UI).

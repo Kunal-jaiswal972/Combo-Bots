@@ -1,6 +1,6 @@
-import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants.js";
-import type { ParsedRedeemMessage } from "./redeemMessageTypes.js";
-import { parseHoyoverseRedeemMessage } from "./parseHoyoverseRedeemMessage.js";
+import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
+import type { ParsedRedeemMessage } from "./redeemMessageTypes";
+import { parseHoyoverseRedeemMessage } from "./parseHoyoverseRedeemMessage";
 
 /** Pluggable parser for redeem modal feedback. Swap per game when UI text diverges. */
 export interface RedeemMessageParser {

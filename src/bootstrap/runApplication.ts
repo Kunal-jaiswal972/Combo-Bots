@@ -1,18 +1,18 @@
-import { botModules } from "@/bots/registry.js";
-import { getAppConfig } from "@/shared/utils/env/appConfig.js";
-import { logger } from "@/shared/utils.js";
-import type { Bot } from "@/shared/adapters/host/contracts/bot.js";
-import type { SchedulableRunPayload } from "@/shared/adapters/host/contracts/scheduledRunNotifier.js";
-import type { PromptPort } from "@/shared/adapters/host/contracts/promptPort.js";
-import { createTerminalPorts } from "@/shared/adapters/host/core/terminalPorts.js";
-import { createEnabledAdapters } from "@/shared/adapters/host/registry/createEnabledAdapters.js";
+import { botModules } from "@/bots/registry";
+import { getAppConfig } from "@/utils/env/appConfig";
+import { logger } from "@/utils";
+import type { Bot } from "@/adapters/host/contracts/bot";
+import type { SchedulableRunPayload } from "@/adapters/host/contracts/scheduledRunNotifier";
+import type { PromptPort } from "@/adapters/host/contracts/promptPort";
+import { createTerminalPorts } from "@/adapters/host/core/terminalPorts";
+import { createEnabledAdapters } from "@/adapters/host/registry/createEnabledAdapters";
 import {
   bootstrapTaskSources,
   validateTaskSource,
-} from "@/shared/adapters/host/registry/taskSource.js";
-import { registerShutdownHook } from "@/shared/tools/browser.js";
-import { redeemTaskSchema } from "@/bots/code-redeem-bot/types.js";
-import { createScheduledRunHandler } from "@/bots/code-redeem-bot/controllers/scheduling/scheduledRunHandler.js";
+} from "@/adapters/host/registry/taskSource";
+import { registerShutdownHook } from "@/tools/browser";
+import { redeemTaskSchema } from "@/bots/code-redeem-bot/types";
+import { createScheduledRunHandler } from "@/bots/code-redeem-bot/controllers/scheduling/scheduledRunHandler";
 
 bootstrapTaskSources({
   triggerSourceIds: botModules.flatMap(

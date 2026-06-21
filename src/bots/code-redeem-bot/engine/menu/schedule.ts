@@ -1,15 +1,15 @@
-import { createRedeemTask } from "@/bots/code-redeem-bot/engine/createRedeemTask.js";
-import type { TaskSource } from "@/bots/code-redeem-bot/types.js";
-import type { ScheduleSpec } from "@/shared/tools/scheduler/scheduleSpec.js";
-import type { RedeemTaskTemplate } from "@/bots/code-redeem-bot/types.js";
-import type { TaskScheduler } from "@/shared/tools/scheduler/scheduler.js";
-import { formatScheduleInstant } from "@/shared/utils.js";
-import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants.js";
-import { isPromptBack } from "@/shared/adapters/host/contracts/promptBack.js";
-import type { PromptPort } from "@/shared/adapters/host/contracts/promptPort.js";
-import { promptCredentials } from "@/bots/code-redeem-bot/controllers/io/prompts/credentials.js";
-import { promptGameSelection } from "@/bots/code-redeem-bot/controllers/io/prompts/gameSelection.js";
-import { promptScheduleSpec } from "@/shared/adapters/host/core/prompts/promptSchedule.js";
+import { createRedeemTask } from "@/bots/code-redeem-bot/engine/createRedeemTask";
+import type { TaskSource } from "@/bots/code-redeem-bot/types";
+import type { ScheduleSpec } from "@/tools/scheduler/scheduleSpec";
+import type { RedeemTaskTemplate } from "@/bots/code-redeem-bot/types";
+import type { TaskScheduler } from "@/tools/scheduler/scheduler";
+import { formatScheduleInstant } from "@/utils";
+import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
+import { isPromptBack } from "@/adapters/host/contracts/promptBack";
+import type { PromptPort } from "@/adapters/host/contracts/promptPort";
+import { promptCredentials } from "@/bots/code-redeem-bot/controllers/io/prompts/credentials";
+import { promptGameSelection } from "@/bots/code-redeem-bot/controllers/io/prompts/gameSelection";
+import { promptScheduleSpec } from "@/adapters/host/core/prompts/promptSchedule";
 
 export interface ScheduleMenuOptions {
   port: PromptPort;

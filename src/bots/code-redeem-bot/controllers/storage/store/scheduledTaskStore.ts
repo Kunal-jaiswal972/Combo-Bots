@@ -3,13 +3,13 @@ import type {
   RedeemTaskTemplate,
   ScheduledTask,
   ScheduledTaskStore,
-} from "@/bots/code-redeem-bot/types.js";
-import { scheduledTaskRecordSchema } from "@/bots/code-redeem-bot/types.js";
-import { parseStoredCredentials } from "@/bots/code-redeem-bot/utils/credentials.js";
-import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants.js";
-import { gameDatabaseIds } from "@/bots/code-redeem-bot/config/database.js";
-import type { ScheduleSpec } from "@/shared/tools/scheduler/scheduleSpec.js";
-import { openGameDatabase } from "../db.js";
+} from "@/bots/code-redeem-bot/types";
+import { scheduledTaskRecordSchema } from "@/bots/code-redeem-bot/types";
+import { parseStoredCredentials } from "@/bots/code-redeem-bot/utils/credentials";
+import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
+import { gameDatabaseIds } from "@/bots/code-redeem-bot/config/database";
+import type { ScheduleSpec } from "@/tools/scheduler/scheduleSpec";
+import { openGameDatabase } from "../db";
 
 interface ScheduledTaskRow {
   id: string;

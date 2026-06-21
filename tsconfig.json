@@ -1,25 +1,12 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "lib": ["ES2022", "DOM"],
-    "outDir": "dist",
     "rootDir": "src",
     "baseUrl": ".",
     "paths": {
-      "@/bots/code-redeem-bot.js": ["src/bots/code-redeem-bot/index.ts"],
-      "@/bots/code-redeem-bot/types.js": ["src/bots/code-redeem-bot/types/index.ts"],
-      "@/bots/code-redeem-bot/controllers/storage.js": [
-        "src/bots/code-redeem-bot/controllers/storage/index.ts"
-      ],
-      "@/shared/utils.js": ["src/shared/utils/index.ts"],
-      "@/shared/utils/errors.js": ["src/shared/utils/errors.ts"],
-      "@/shared/utils/env.js": ["src/shared/utils/env/index.ts"],
-      "@/shared/tools/browser.js": ["src/shared/tools/browser/index.ts"],
-      "@/shared/tools/scraper.js": ["src/shared/tools/scraper/index.ts"],
-      "@/shared/tools/database.js": ["src/shared/tools/database/index.ts"],
-      "@/shared/tools/scheduler.js": ["src/shared/tools/scheduler/index.ts"],
       "@/*": ["src/*"]
     },
     "strict": true,
@@ -31,9 +18,9 @@
     "types": ["node"],
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true
+    "noEmit": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]

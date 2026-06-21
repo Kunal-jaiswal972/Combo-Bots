@@ -1,9 +1,9 @@
-import { createSchedulerOnTrigger } from "@/shared/adapters/host/core/schedulerOnTrigger.js";
-import type { ScheduledRunNotifier } from "@/shared/adapters/host/contracts/scheduledRunNotifier.js";
-import type { PromptPort } from "@/shared/adapters/host/contracts/promptPort.js";
-import type { SchedulerTriggerHandler } from "@/shared/tools/scheduler/scheduler.js";
-import type { RedeemTask } from "@/bots/code-redeem-bot/types.js";
-import { createScheduledRunHandler } from "./scheduledRunHandler.js";
+import { createSchedulerOnTrigger } from "@/adapters/host/core/schedulerOnTrigger";
+import type { ScheduledRunNotifier } from "@/adapters/host/contracts/scheduledRunNotifier";
+import type { PromptPort } from "@/adapters/host/contracts/promptPort";
+import type { SchedulerTriggerHandler } from "@/tools/scheduler/scheduler";
+import type { RedeemTask } from "@/bots/code-redeem-bot/types";
+import { createScheduledRunHandler } from "./scheduledRunHandler";
 
 export interface CreateCodeRedeemSchedulerOnTriggerOptions {
   readonly terminalPrompt: PromptPort;

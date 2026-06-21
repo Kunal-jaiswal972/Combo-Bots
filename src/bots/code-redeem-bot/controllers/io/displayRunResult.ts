@@ -1,6 +1,6 @@
-import { formatRunResultForDisplay } from "@/bots/code-redeem-bot/utils/runResult.js";
-import type { RunResult } from "@/bots/code-redeem-bot/types.js";
-import type { PromptPort } from "@/shared/adapters/host/contracts/promptPort.js";
+import { formatRunResultForDisplay } from "@/bots/code-redeem-bot/utils/runResult";
+import type { RunResult } from "@/bots/code-redeem-bot/types";
+import type { PromptPort } from "@/adapters/host/contracts/promptPort";
 
 export function displayRunResult(port: PromptPort, result: RunResult): void {
   const formatted = formatRunResultForDisplay(result);

@@ -1,13 +1,13 @@
 import { randomUUID } from "node:crypto";
-import { SchedulerRunner } from "@/shared/tools/scheduler/schedulerRunner.js";
-import { getAppConfig } from "@/shared/utils/env/appConfig.js";
-import type { SchedulerTriggerHandler } from "@/shared/tools/scheduler/scheduler.js";
-import { SCHEDULER_TASK_SOURCE } from "@/bots/code-redeem-bot/config/constants.js";
-import { getStorage } from "@/bots/code-redeem-bot/controllers/storage.js";
+import { SchedulerRunner } from "@/tools/scheduler/schedulerRunner";
+import { getAppConfig } from "@/utils/env/appConfig";
+import type { SchedulerTriggerHandler } from "@/tools/scheduler/scheduler";
+import { SCHEDULER_TASK_SOURCE } from "@/bots/code-redeem-bot/config/constants";
+import { getStorage } from "@/bots/code-redeem-bot/controllers/storage";
 import type {
   RedeemTask,
   RedeemTaskTemplate,
-} from "@/bots/code-redeem-bot/types.js";
+} from "@/bots/code-redeem-bot/types";
 
 export interface CreateBotSchedulerOptions {
   readonly onTrigger: SchedulerTriggerHandler<RedeemTask>;

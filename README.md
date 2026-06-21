@@ -37,7 +37,7 @@ Scheduled tasks fire while the process is running.
 
 ## Input adapters
 
-Adapters are registered in `src/shared/adapters/host/registry/adapterModules.ts`. Enable each via `.env`:
+Adapters are registered in `src/adapters/host/registry/adapterModules.ts`. Enable each via `.env`:
 
 | Variable | Adapter | Lifecycle |
 |----------|---------|-----------|
@@ -60,11 +60,12 @@ Scheduled runs notify the Telegram chat when `telegramChatId` is stored in task 
 
 ### Production (Docker)
 
+Persists DBs and Chrome profile to **`./src/data`** on the host (same path as local dev).
+
 ```bash
 cp .env.example .env
 # Set TELEGRAM_BOT_TOKEN; set CLI_ADAPTER_ENABLED=false for headless containers
 
-cd deploy
 docker compose up --build
 ```
 
@@ -100,16 +101,16 @@ docker compose up --build
 ```text
 src/
 ├── index.ts                      # bootstrap → runApplication()
-├── shared/
-│   ├── adapters/
-│   │   ├── host/                 # contracts, registry, router — hosts plug-in adapters
-│   │   ├── cli/
-│   │   └── telegram/
-│   ├── tools/                    # browser, scraper, scheduler, database
-│   └── utils/                    # env, errors, log, timing, date
+├── bootstrap/
+├── adapters/
+│   ├── host/                     # contracts, registry, router
+│   ├── cli/
+│   └── telegram/
+├── tools/                        # browser, scraper, scheduler, database
+├── utils/                        # env, errors, log, timing, date
 └── bots/
-    ├── registry.ts               # botModules
-    └── code-redeem-bot/          # config, types, engine, controllers, hoyoverse/
+    ├── registry.ts
+    └── code-redeem-bot/
 ```
 
 Contributor rules: **[AGENTS.md](./AGENTS.md)**. Implementation tracking: **[PLAN.md](./PLAN.md)**. Restructure notes: **[Restructure.md](./Restructure.md)**.
@@ -118,11 +119,11 @@ Contributor rules: **[AGENTS.md](./AGENTS.md)**. Implementation tracking: **[PLA
 
 ## Adding a new input adapter
 
-1. Create `src/shared/adapters/<name>/core/<name>AdapterModule.ts` implementing `AdapterModule`:
+1. Create `src/adapters/<name>/core/<name>AdapterModule.ts` implementing `AdapterModule`:
    - `isEnabled(appConfig)` — read a new `.env` flag from `appConfig.ts`
    - `lifecycle`: `"background"` (Discord, HTTP) or `"foreground"` (CLI)
    - `create()` — return `{ adapter: TaskInputAdapter, scheduledRunNotifier? }`
-2. Append the module to `src/shared/adapters/host/registry/adapterModules.ts`
+2. Append the module to `src/adapters/host/registry/adapterModules.ts`
 3. Add env vars to `appConfig.ts`, `.env.example`, and this README
 
 The shared `botRouter` works for any adapter that implements `PromptPort` + `DisplayPresenter`.
@@ -175,7 +176,7 @@ Copy `.env.example` → `.env`. Application config only — no game credentials.
 2. Create `src/bots/code-redeem-bot/hoyoverse/<gameId>/` — `config/`, `controllers/`, `core/` (+ module file)
 3. Register in `src/bots/code-redeem-bot/engine/gameRegistry.ts`
 
-Scrapers must use `@/shared/tools/scraper.js` only. Browser steps must use `@/shared/tools/browser.js` only.
+Scrapers must use `@/tools/scraper` only. Browser steps must use `@/tools/browser` only.
 
 ---
 
@@ -190,5 +191,5 @@ Details in **[AGENTS.md](./AGENTS.md)**.
 
 ## Stack
 
-- Node.js 20+, TypeScript (ESM, `NodeNext`)
+- Node.js 20+, TypeScript (ESM, bundler resolution + tsup)
 - `puppeteer-core`, `better-sqlite3`, `grammy`, `zod`, `@clack/prompts`

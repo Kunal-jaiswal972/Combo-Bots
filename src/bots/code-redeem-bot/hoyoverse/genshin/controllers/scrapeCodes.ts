@@ -1,4 +1,4 @@
-import { ScrapeError } from "@/shared/utils/errors.js";
+import { ScrapeError } from "@/utils/errors";
 import {
   attrIn,
   fetchJson,
@@ -7,9 +7,9 @@ import {
   selectElements,
   type CheerioAPI,
   type Element,
-} from "@/shared/tools/scraper.js";
-import type { ScrapedCodeRow } from "@/bots/code-redeem-bot/types.js";
-import { genshinConfig } from "../config/config.js";
+} from "@/tools/scraper";
+import type { ScrapedCodeRow } from "@/bots/code-redeem-bot/types";
+import { genshinConfig } from "../config/config";
 
 interface FandomWikiError {
   code?: string;

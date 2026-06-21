@@ -1,7 +1,7 @@
-import { runRedeemTask } from "@/bots/code-redeem-bot/engine/run/runRedeemTask.js";
-import type { RedeemTask } from "@/bots/code-redeem-bot/types.js";
-import type { PromptPort } from "@/shared/adapters/host/contracts/promptPort.js";
-import { displayRunResult } from "@/bots/code-redeem-bot/controllers/io/displayRunResult.js";
+import { runRedeemTask } from "@/bots/code-redeem-bot/engine/run/runRedeemTask";
+import type { RedeemTask } from "@/bots/code-redeem-bot/types";
+import type { PromptPort } from "@/adapters/host/contracts/promptPort";
+import { displayRunResult } from "@/bots/code-redeem-bot/controllers/io/displayRunResult";
 
 /** Fallback when a scheduled task fires and no adapter notifier is registered. */
 export function createScheduledRunHandler(port: PromptPort) {

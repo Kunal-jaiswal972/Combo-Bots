@@ -1,13 +1,13 @@
 import { randomUUID } from "node:crypto";
 import type Database from "better-sqlite3";
-import type { RunHistoryEntry } from "@/bots/code-redeem-bot/types.js";
-import { gameDatabaseIds } from "@/bots/code-redeem-bot/config/database.js";
-import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants.js";
-import { openGameDatabase } from "../db.js";
+import type { RunHistoryEntry } from "@/bots/code-redeem-bot/types";
+import { gameDatabaseIds } from "@/bots/code-redeem-bot/config/database";
+import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
+import { openGameDatabase } from "../db";
 import type {
   RecordRunHistoryOptions,
   RunHistoryStore,
-} from "@/bots/code-redeem-bot/types.js";
+} from "@/bots/code-redeem-bot/types";
 
 interface RunHistoryRow {
   id: string;

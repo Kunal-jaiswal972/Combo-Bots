@@ -1,7 +1,7 @@
-import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants.js";
-import type { ScrapePolicy } from "@/bots/code-redeem-bot/types.js";
-import { getStorage } from "@/bots/code-redeem-bot/controllers/storage.js";
-import { getTodayRunDate } from "@/shared/utils.js";
+import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
+import type { ScrapePolicy } from "@/bots/code-redeem-bot/types";
+import { getStorage } from "@/bots/code-redeem-bot/controllers/storage";
+import { getTodayRunDate } from "@/utils";
 
 export interface ScrapeDecision {
   shouldScrape: boolean;

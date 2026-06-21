@@ -2,7 +2,7 @@
 
 > User docs: **[README.md](./README.md)** · Agent rules: **[AGENTS.md](./AGENTS.md)** · Restructure (Phases 1–5 complete): **[Restructure.md](./Restructure.md)**
 
-**Architecture (2026-06-21):** Codebase reorganized into `src/shared/{adapters,tools,utils}` + `src/bots/`. Code Redeemer bot owns SQLite storage (`codes`, `scheduled_tasks`, `run_history`) at `src/data/hoyoverse/redeemer.db`. Legacy `src/{adapters,application,domain,games,...}` removed.
+**Architecture (2026-06-21):** Codebase reorganized into `src/{adapters,tools,utils,bots}`. Code Redeemer bot owns per-game SQLite DBs at `src/data/genshin.db`, `src/data/hsr.db`.
 
 ---
 
@@ -423,8 +423,8 @@ No `sessions` table — login state is **not** stored in the DB between process 
 
 ## Phase 10 — Docker / Azure Deployment ⏳ IN PROGRESS
 
-- [x] `deploy/Dockerfile`
-- [x] `deploy/docker-compose.yml` (loads root `.env`)
+- [x] `Dockerfile`
+- [x] `docker-compose.yml` (loads root `.env`)
 - [x] `.env.example` — app config only
 - [x] Deployment docs in root `README.md`
 - [ ] Verify headless redeem in container

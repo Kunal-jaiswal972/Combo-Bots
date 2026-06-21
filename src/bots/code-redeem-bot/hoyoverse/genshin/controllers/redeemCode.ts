@@ -1,25 +1,25 @@
 import type { Page } from "puppeteer-core";
-import { BrowserDelays } from "@/shared/tools/browser/constants.js";
-import { RedeemStatus } from "@/bots/code-redeem-bot/config/constants.js";
-import { GameId } from "@/bots/code-redeem-bot/config/constants.js";
-import type { CodeRedeemResult } from "@/bots/code-redeem-bot/types.js";
+import { BrowserDelays } from "@/tools/browser/constants";
+import { RedeemStatus } from "@/bots/code-redeem-bot/config/constants";
+import { GameId } from "@/bots/code-redeem-bot/config/constants";
+import type { CodeRedeemResult } from "@/bots/code-redeem-bot/types";
 import {
   clearInput,
   clickElement,
   enterText,
-} from "@/shared/tools/browser.js";
+} from "@/tools/browser";
 import {
   getRandomDelay,
   logger,
   sleep,
-} from "@/shared/utils.js";
-import { getRedeemMessageParser } from "@/bots/code-redeem-bot/hoyoverse/shared/redeemMessageParser.js";
-import { genshinConfig } from "../config/config.js";
+} from "@/utils";
+import { getRedeemMessageParser } from "@/bots/code-redeem-bot/hoyoverse/shared/redeemMessageParser";
+import { genshinConfig } from "../config/config";
 import {
   dismissRedeemModal,
   ensureRedeemModalClosed,
   waitForRedeemModalMessage,
-} from "./redeemModal.js";
+} from "./redeemModal";
 
 export async function redeemSingleCode(
   page: Page,

@@ -1,6 +1,6 @@
 import path from "node:path";
-import { getAppConfig } from "@/shared/utils/env/appConfig.js";
-import { GameId, type GameIdValue } from "./constants.js";
+import { getAppConfig } from "@/utils/env/appConfig";
+import { GameId, type GameIdValue } from "./constants";
 
 export const gameDatabaseIds = Object.values(GameId) as [
   GameIdValue,
