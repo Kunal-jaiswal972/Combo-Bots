@@ -16,7 +16,7 @@ export interface BotStorage {
 
 let storage: BotStorage | null = null;
 
-/** Opens DB, runs migrations, and wires all store implementations. */
+/** Opens DB, applies schema, and wires all store implementations. */
 export function bootstrapStorage(): BotStorage {
   bootstrapGameDatabases();
 

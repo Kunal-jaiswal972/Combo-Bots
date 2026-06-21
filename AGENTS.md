@@ -42,7 +42,7 @@ Rules and structure for AI agents and contributors. User-facing docs: **[README.
 
 ```text
 runApplication
-  → start enabled bots (DB, scheduler, migrations)
+  → start enabled bots (DB, scheduler, schema init)
   → start enabled adapters (CLI foreground / Telegram background)
   → botRouter: pick bot → bot menu loop
 

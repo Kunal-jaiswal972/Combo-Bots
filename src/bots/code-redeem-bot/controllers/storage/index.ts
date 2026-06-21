@@ -4,7 +4,7 @@ export {
   closeBotDatabase,
   getDatabasePath,
 } from "./db";
-export { runMigrations } from "./migrations";
+export { initSchema } from "./schema";
 export { bootstrapStorage, getStorage, resetStorage } from "./store/registry";
 export type { BotStorage } from "./store/registry";
 export type {

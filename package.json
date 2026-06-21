@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsup",
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx src/index.ts",
     "start": "npm run build && node dist/index.js",
     "typecheck": "cross-env NODE_OPTIONS=--max-old-space-size=4096 tsc -p tsconfig.json --noEmit"
   },

@@ -108,7 +108,7 @@ function createCodesStoreContext(db: Database.Database): CodesStoreContext {
         source = excluded.source
     `),
     upsertMetaStmt: db.prepare(`
-      INSERT INTO code_scrape_meta (game_id, last_scrape_date, last_scraped_at)
+      INSERT INTO scrape_info (game_id, last_scrape_date, last_scraped_at)
       VALUES (@game_id, @last_scrape_date, @last_scraped_at)
       ON CONFLICT(game_id) DO UPDATE SET
         last_scrape_date = excluded.last_scrape_date,
@@ -116,7 +116,7 @@ function createCodesStoreContext(db: Database.Database): CodesStoreContext {
     `),
     selectMetaStmt: db.prepare(`
       SELECT game_id, last_scrape_date, last_scraped_at
-      FROM code_scrape_meta
+      FROM scrape_info
       WHERE game_id = ?
     `),
     updateRedeemStmt: db.prepare(`
