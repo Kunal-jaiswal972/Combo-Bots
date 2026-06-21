@@ -21,8 +21,7 @@ WORKDIR /app
 ENV NODE_ENV=production \
   HEADLESS=true \
   CHROME_EXECUTABLE_PATH=/usr/bin/chromium \
-  CODE_STORE_BASE_PATH=/data/codes \
-  DATABASE_URL=file:/data/redeemer.db
+  DATABASE_URL=file:/data
 
 COPY package.json package-lock.json ./
 RUN npm ci
@@ -31,7 +30,7 @@ COPY tsconfig.json tsconfig.typecheck.json ./
 COPY src ./src
 COPY --from=build /app/dist ./dist
 
-RUN mkdir -p /data/codes /data/chrome
+RUN mkdir -p /data /data/chrome
 
 VOLUME ["/data"]
 

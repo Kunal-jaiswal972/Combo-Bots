@@ -1,17 +1,18 @@
 # Auto Code Redeemer v2 — Implementation Plan
 
-> User docs: **[README.md](./README.md)** · Agent rules: **[AGENTS.md](./AGENTS.md)**
+> User docs: **[README.md](./README.md)** · Agent rules: **[AGENTS.md](./AGENTS.md)** · Restructure (Phases 1–5 complete): **[Restructure.md](./Restructure.md)**
+
+**Architecture (2026-06-21):** Codebase reorganized into `src/shared/{adapters,tools,utils}` + `src/bots/`. Code Redeemer bot owns SQLite storage (`codes`, `scheduled_tasks`, `run_history`) at `src/data/hoyoverse/redeemer.db`. Legacy `src/{adapters,application,domain,games,...}` removed.
 
 ---
 
 ## Phase 9 — Multi-user auth + unified SQLite storage ⏳ NOT STARTED
 
-> **Goal:** One deployment serves multiple Hoyoverse accounts with **login / sign-up / guest** flows. **All app data** (users, codes, scheduled tasks, run history) lives in SQLite — no `codes.json` or JSON task-store fallback. Logged-in users get isolated data, stored credentials, and a dedicated Chrome profile (managed by the app, invisible to the user).
+> **Goal:** One deployment serves multiple Hoyoverse accounts with **login / sign-up / guest** flows. **All app data** (users, codes, scheduled tasks, run history) lives in SQLite with per-user isolation. Logged-in users get isolated data, stored credentials, and a dedicated Chrome profile (managed by the app, invisible to the user).
 
 ### Current limitation
 
-- Codes in JSON files (`src/data/<gameId>/codes.json`) — global per game, not per account
-- Tasks/history already SQLite, but codes are a separate JSON layer
+- Codes, tasks, and run history are in SQLite (`src/data/hoyoverse/redeemer.db`) but **global** — not per account
 - One `CHROME_USER_DATA_DIR` — switching accounts conflicts Hoyoverse session
 - `RedeemTask.credentials` has username/password but no stable **user id**
 - No session concept — everyone shares the same menu and data
@@ -101,7 +102,9 @@ No `sessions` table — login state is **not** stored in the DB between process 
 
 **User–code relation:** Each row in `codes` ties one user to one promo code for one game. Same code string can be `pending` for user A and `redeemed` for user B.
 
-**Remove:** `codes.json`, `CODE_STORE_BASE_PATH` for codes, JSON `CodeStore` file implementation, `DATABASE_URL=json:...` task-store fallback (SQLite only).
+**Remove:** JSON `CodeStore` file implementation, `DATABASE_URL=json:...` task-store fallback (SQLite only).
+
+> **Restructure (2026-06-21):** `codes.json` and `CODE_STORE_BASE_PATH` removed. Codes live in SQLite `codes` table (global per game, not per user yet). Per-user scoping is Step 9.8 below.
 
 ### Schema strategy (testing — clean slate, no incremental migrations)
 
@@ -308,14 +311,14 @@ No `sessions` table — login state is **not** stored in the DB between process 
 
 #### Step 9.8 — SQLite codes per user
 
-**Goal:** Replace JSON `codes.json` with per-user SQLite rows.
+**Goal:** Add `user_id` scoping to the existing SQLite `codes` table (created in Restructure Phase 4).
 
 **Build**
 
-- [ ] `codes` table keyed by `(user_id, game_id, code)` (already in schema from 9.1)
-- [ ] `SqliteCodeStore` implements scrape/merge/redeem lookups scoped by `user_id`
-- [ ] `redeemWorkflow` + `scrapePolicy` pass `userId` from session/task
-- [ ] Remove JSON `codeStore` runtime path; drop `CODE_STORE_BASE_PATH` for codes
+- [ ] `codes` table keyed by `(user_id, game_id, code)` (extend schema from 9.1)
+- [ ] `codesStore` implements scrape/merge/redeem lookups scoped by `user_id`
+- [ ] `redeemRun` workflow + `scrapePolicy` pass `userId` from session/task
+- [x] Remove JSON `codeStore` runtime path; drop `CODE_STORE_BASE_PATH` for codes *(done in Restructure Phase 5)*
 - [ ] **No** import of old `codes.json` — test data discarded with DB wipe
 
 **Verify**

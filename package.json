@@ -5,10 +5,11 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc-alias -p tsconfig.json --resolve-full-paths",
     "dev": "tsx src/index.ts",
     "start": "npm run build && node dist/index.js",
-    "typecheck": "cross-env NODE_OPTIONS=--max-old-space-size=4096 tsc -p tsconfig.typecheck.json --noEmit"
+    "typecheck": "cross-env NODE_OPTIONS=--max-old-space-size=4096 tsc -p tsconfig.typecheck.json --noEmit",
+    "rewrite-imports": "node scripts/rewrite-imports-to-aliases.mjs"
   },
   "keywords": [],
   "author": "",
@@ -31,6 +32,7 @@
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^22.10.5",
     "cross-env": "^7.0.3",
+    "tsc-alias": "^1.8.17",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   }

@@ -1,11 +1,9 @@
-import { registerShutdownHandlers } from "./browser/lifecycle.js";
-import { runApplication } from "./adapters/registry/runApplication.js";
-import { loadEnvFile } from "./config/loadEnv.js";
-import { initRunHistoryStore } from "./infrastructure/storage/stores/runHistoryPersistence.js";
-import { logger } from "./utils/utils.js";
+import { registerShutdownHandlers } from "@/shared/tools/browser.js";
+import { runApplication } from "@/bootstrap/runApplication.js";
+import { loadEnvFile } from "@/shared/utils/env/loadEnv.js";
+import { logger } from "@/shared/utils.js";
 
 loadEnvFile();
-initRunHistoryStore();
 registerShutdownHandlers();
 
 const main = runApplication();
