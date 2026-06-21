@@ -1,5 +1,5 @@
 import type { RedeemTaskTemplate, ScheduledTask } from "@/bots/code-redeem-bot/types";
-import type { TaskScheduler } from "@/tools/scheduler/scheduler";
+import type { TaskScheduler } from "@/tools/scheduler/types/taskScheduler";
 
 export async function listScheduledTasks(
   scheduler: TaskScheduler<RedeemTaskTemplate>,

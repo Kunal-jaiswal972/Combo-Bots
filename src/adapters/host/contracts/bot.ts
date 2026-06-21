@@ -1,5 +1,5 @@
 import type { AppConfig } from "@/utils/env/appConfigTypes";
-import type { SchedulerRunner } from "@/tools/scheduler/schedulerRunner";
+import type { SchedulerRunner } from "@/tools/scheduler/runner/schedulerRunner";
 import type { ScheduledRunNotifier } from "./scheduledRunNotifier";
 import type { DisplayPresenter } from "./displayPresenter";
 import type { PromptPort } from "./promptPort";

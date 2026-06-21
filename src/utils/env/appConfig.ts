@@ -5,12 +5,12 @@ import {
   resolveChromeExecutablePath,
   type ChromePathSearchContext,
 } from "@/tools/browser/paths/chromePaths";
+import { isValidIanaTimeZone } from "@/utils";
 import type { AppConfig } from "./appConfigTypes";
 
-/** Dev default when DATABASE_URL is unset — shared data root, not a bot DB file. */
 const DEFAULT_DATA_BASE_DIR = "file:./src/data";
-
 const DEFAULT_SCHEDULER_POLL_INTERVAL_MS = 60_000;
+const DEFAULT_SCHEDULER_TIMEZONE = "Asia/Kolkata";
 
 const booleanFromEnv = z
   .string()
@@ -52,6 +52,13 @@ function resolveTelegramEnabled(
 
 const appConfigSchema = z.object({
   DATABASE_URL: z.string().min(1).default(DEFAULT_DATA_BASE_DIR),
+  SCHEDULER_TIMEZONE: z
+    .string()
+    .min(1)
+    .default(DEFAULT_SCHEDULER_TIMEZONE)
+    .refine((timeZone) => isValidIanaTimeZone(timeZone), {
+      message: "Must be a valid IANA timezone identifier",
+    }),
   SCHEDULER_POLL_INTERVAL_MS: z.coerce
     .number()
     .int()
@@ -115,6 +122,7 @@ export function getAppConfig(): AppConfig {
 
   cachedAppConfig = {
     dataBaseDir: raw.DATABASE_URL,
+    schedulerTimezone: raw.SCHEDULER_TIMEZONE,
     schedulerPollIntervalMs: raw.SCHEDULER_POLL_INTERVAL_MS,
     cliAdapterEnabled: raw.CLI_ADAPTER_ENABLED,
     telegramBotToken: hasTelegramToken ? telegramToken : null,

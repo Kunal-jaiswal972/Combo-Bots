@@ -2,7 +2,7 @@ import type { RunResult, RunHistoryEntry } from "@/bots/code-redeem-bot/types";
 import type { ScheduledTask } from "@/bots/code-redeem-bot/types";
 import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
 import { getGameModule } from "@/bots/code-redeem-bot/engine/gameRegistry";
-import { formatScheduleInstant } from "@/utils";
+import { formatSchedulerInstant } from "@/utils";
 import type { DisplayCard, DisplayCardRow } from "@/adapters/host/contracts/displayCard";
 
 function formatRunStatusLabel(status: RunResult["status"]): string {
@@ -76,8 +76,8 @@ export function buildRunHistoryCard(
     { label: "Game", value: game.displayName },
     { label: "Status", value: formatRunStatusLabel(entry.status) },
     { label: "Source", value: entry.source },
-    { label: "Started", value: formatScheduleInstant(entry.startedAt) },
-    { label: "Finished", value: formatScheduleInstant(entry.finishedAt) },
+    { label: "Started", value: formatSchedulerInstant(entry.startedAt) },
+    { label: "Finished", value: formatSchedulerInstant(entry.finishedAt) },
     { label: "Duration", value: formatDuration(entry.startedAt, entry.finishedAt) },
   ];
 

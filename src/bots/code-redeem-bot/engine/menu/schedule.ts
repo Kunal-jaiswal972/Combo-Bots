@@ -1,15 +1,15 @@
 import { createRedeemTask } from "@/bots/code-redeem-bot/engine/createRedeemTask";
 import type { TaskSource } from "@/bots/code-redeem-bot/types";
-import type { ScheduleSpec } from "@/tools/scheduler/scheduleSpec";
+import type { RecurrenceSpec } from "@/tools/scheduler/types/recurrenceSpec";
 import type { RedeemTaskTemplate } from "@/bots/code-redeem-bot/types";
-import type { TaskScheduler } from "@/tools/scheduler/scheduler";
-import { formatScheduleInstant } from "@/utils";
+import type { TaskScheduler } from "@/tools/scheduler/types/taskScheduler";
+import { formatSchedulerInstant } from "@/utils";
 import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
 import { isPromptBack } from "@/adapters/host/contracts/promptBack";
 import type { PromptPort } from "@/adapters/host/contracts/promptPort";
 import { promptCredentials } from "@/bots/code-redeem-bot/controllers/io/prompts/credentials";
 import { promptGameSelection } from "@/bots/code-redeem-bot/controllers/io/prompts/gameSelection";
-import { promptScheduleSpec } from "@/adapters/host/core/prompts/promptSchedule";
+import { promptRecurrenceSpec } from "@/adapters/host/core/prompts/promptSchedule";
 
 export interface ScheduleMenuOptions {
   port: PromptPort;
@@ -27,10 +27,10 @@ export async function scheduleMenu(
   port.step("Schedule — configure a recurring or one-shot task.");
 
   while (true) {
-    let schedule: ScheduleSpec;
+    let schedule: RecurrenceSpec;
 
     try {
-      schedule = await promptScheduleSpec(port);
+      schedule = await promptRecurrenceSpec(port);
     } catch (error) {
       if (isPromptBack(error)) {
         port.gray("Schedule setup cancelled.");
@@ -73,7 +73,7 @@ export async function scheduleMenu(
     });
 
     port.success(`Scheduled task created: ${scheduled.id}`);
-    port.gray(`Next run: ${formatScheduleInstant(scheduled.nextRunAt)}`);
+    port.gray(`Next run: ${formatSchedulerInstant(scheduled.nextRunAt)}`);
     port.gray("Keep this process running — scheduled tasks fire while dev or start is active.");
     return;
   }

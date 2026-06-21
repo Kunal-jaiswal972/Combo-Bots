@@ -1,9 +1,9 @@
-import type { ScheduleSpec } from "./scheduleSpec";
+import type { RecurrenceSpec } from "./recurrenceSpec";
 
 export interface ScheduledJob<TPayload> {
   readonly id: string;
   readonly payloadTemplate: TPayload;
-  readonly schedule: ScheduleSpec;
+  readonly schedule: RecurrenceSpec;
   readonly enabled: boolean;
   readonly lastRunAt: string | null;
   readonly nextRunAt: string | null;

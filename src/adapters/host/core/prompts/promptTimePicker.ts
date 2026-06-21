@@ -4,7 +4,7 @@ import {
   formatTimeOfDayLabel,
   formatTimeOfDayString,
   to24Hour,
-} from "@/tools/scheduler/timeOfDay";
+} from "@/utils";
 
 const HOUR_CHOICES = [
   { value: "12" as const, label: "12 o'clock" },

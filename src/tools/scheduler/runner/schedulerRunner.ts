@@ -1,15 +1,15 @@
 import { randomUUID } from "node:crypto";
-import { formatScheduleInstant, logger } from "@/utils";
+import { formatSchedulerInstant, logger } from "@/utils";
 import {
   computeNextRunAt,
   rescheduleAfterRun,
-} from "./drivers/scheduleDrivers";
-import type { ScheduledJob, ScheduledJobStore } from "./job";
+} from "@/tools/scheduler/drivers/recurrenceDrivers";
+import type { ScheduledJob, ScheduledJobStore } from "@/tools/scheduler/types/scheduledJob";
 import type {
-  RegisterScheduleOptions,
+  RegisterScheduledJobOptions,
   SchedulerTriggerHandler,
   TaskScheduler,
-} from "./scheduler";
+} from "@/tools/scheduler/types/taskScheduler";
 
 const DEFAULT_POLL_INTERVAL_MS = 60_000;
 const MAX_DUE_TIMER_MS = 2_147_483_647;
@@ -43,7 +43,7 @@ export class SchedulerRunner<TTemplate, TTrigger>
   }
 
   async register(
-    options: RegisterScheduleOptions<TTemplate>,
+    options: RegisterScheduledJobOptions<TTemplate>,
   ): Promise<ScheduledJob<TTemplate>> {
     const task: ScheduledJob<TTemplate> = {
       id: randomUUID(),
@@ -183,11 +183,11 @@ export class SchedulerRunner<TTemplate, TTrigger>
     );
 
     logger.step(
-      `Scheduled task ${scheduled.id} triggered at ${formatScheduleInstant(claimedAt.toISOString())}.`,
+      `Scheduled task ${scheduled.id} triggered at ${formatSchedulerInstant(claimedAt.toISOString())}.`,
     );
 
     if (nextRunAt) {
-      logger.gray(`Next run: ${formatScheduleInstant(nextRunAt)}`);
+      logger.gray(`Next run: ${formatSchedulerInstant(nextRunAt)}`);
     }
 
     try {

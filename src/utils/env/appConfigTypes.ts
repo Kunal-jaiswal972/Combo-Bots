@@ -8,6 +8,8 @@ export interface ChromeEnvConfig {
 export interface AppConfig {
   /** Shared data root (`DATABASE_URL` env). Bots place DB files under `<dataBaseDir>/<subfolder>/`. */
   dataBaseDir: string;
+  /** IANA timezone for schedule times and display (`SCHEDULER_TIMEZONE`). */
+  schedulerTimezone: string;
   schedulerPollIntervalMs: number;
   cliAdapterEnabled: boolean;
   telegramBotToken: string | null;

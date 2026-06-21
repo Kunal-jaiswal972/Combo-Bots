@@ -8,7 +8,7 @@ import type {
   BotModule,
   BotModuleCreateOptions,
 } from "@/adapters/host/contracts/bot";
-import type { SchedulerRunner } from "@/tools/scheduler/schedulerRunner";
+import type { SchedulerRunner } from "@/tools/scheduler/runner/schedulerRunner";
 import type { RedeemTask, RedeemTaskTemplate } from "@/bots/code-redeem-bot/types";
 import { createCodeRedeemSchedulerOnTrigger } from "./controllers/scheduling/onTrigger";
 import { createBotScheduler } from "./controllers/scheduling/scheduler";

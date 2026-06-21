@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
-import { SchedulerRunner } from "@/tools/scheduler/schedulerRunner";
+import { SchedulerRunner } from "@/tools/scheduler/runner/schedulerRunner";
 import { getAppConfig } from "@/utils/env/appConfig";
-import type { SchedulerTriggerHandler } from "@/tools/scheduler/scheduler";
+import type { SchedulerTriggerHandler } from "@/tools/scheduler/types/taskScheduler";
 import { SCHEDULER_TASK_SOURCE } from "@/bots/code-redeem-bot/config/constants";
 import { getStorage } from "@/bots/code-redeem-bot/controllers/storage";
 import type {

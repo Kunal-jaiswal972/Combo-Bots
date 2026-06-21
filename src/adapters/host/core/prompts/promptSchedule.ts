@@ -1,5 +1,5 @@
 import { isPromptBack } from "@/adapters/host/contracts/promptBack";
-import type { ScheduleSpec } from "@/tools/scheduler/scheduleSpec";
+import type { RecurrenceSpec } from "@/tools/scheduler/types/recurrenceSpec";
 import type { PromptPort } from "@/adapters/host/contracts/promptPort";
 import { promptOnceDateTime } from "./promptDatePicker";
 import { promptTimeOfDay } from "./promptTimePicker";
@@ -8,27 +8,27 @@ import {
   promptSingleWeekday,
 } from "./promptWeekdays";
 
-type ScheduleKind = "daily" | "weekly" | "once" | "weeklyOnce";
+type RecurrenceKind = "daily" | "weekly" | "once" | "weeklyOnce";
 
-const SCHEDULE_KIND_CHOICES = [
+const RECURRENCE_KIND_CHOICES = [
   { value: "daily" as const, label: "Every day at a set time" },
   { value: "weekly" as const, label: "On selected days every week at a set time" },
   { value: "once" as const, label: "Once at a specific date and time" },
   { value: "weeklyOnce" as const, label: "Every week on one day at a set time" },
 ];
 
-async function promptScheduleKind(port: PromptPort): Promise<ScheduleKind> {
-  return port.choose<ScheduleKind>("How should this run?", SCHEDULE_KIND_CHOICES, {
+async function promptRecurrenceKind(port: PromptPort): Promise<RecurrenceKind> {
+  return port.choose<RecurrenceKind>("How should this run?", RECURRENCE_KIND_CHOICES, {
     allowBack: true,
   });
 }
 
-async function promptDailySchedule(port: PromptPort): Promise<ScheduleSpec> {
+async function promptDailyRecurrence(port: PromptPort): Promise<RecurrenceSpec> {
   const at = await promptTimeOfDay(port);
   return { type: "daily", at };
 }
 
-async function promptWeeklySchedule(port: PromptPort): Promise<ScheduleSpec> {
+async function promptWeeklyRecurrence(port: PromptPort): Promise<RecurrenceSpec> {
   while (true) {
     const days = await promptMultipleWeekdays(port);
 
@@ -45,7 +45,9 @@ async function promptWeeklySchedule(port: PromptPort): Promise<ScheduleSpec> {
   }
 }
 
-async function promptWeeklyOnceSchedule(port: PromptPort): Promise<ScheduleSpec> {
+async function promptWeeklyOnceRecurrence(
+  port: PromptPort,
+): Promise<RecurrenceSpec> {
   while (true) {
     const day = await promptSingleWeekday(port);
 
@@ -62,30 +64,32 @@ async function promptWeeklyOnceSchedule(port: PromptPort): Promise<ScheduleSpec>
   }
 }
 
-async function promptScheduleForKind(
+async function promptRecurrenceForKind(
   port: PromptPort,
-  kind: ScheduleKind,
-): Promise<ScheduleSpec> {
+  kind: RecurrenceKind,
+): Promise<RecurrenceSpec> {
   switch (kind) {
     case "daily":
-      return promptDailySchedule(port);
+      return promptDailyRecurrence(port);
     case "weekly":
-      return promptWeeklySchedule(port);
+      return promptWeeklyRecurrence(port);
     case "once": {
       const at = await promptOnceDateTime(port);
       return { type: "once", at };
     }
     case "weeklyOnce":
-      return promptWeeklyOnceSchedule(port);
+      return promptWeeklyOnceRecurrence(port);
   }
 }
 
-export async function promptScheduleSpec(port: PromptPort): Promise<ScheduleSpec> {
+export async function promptRecurrenceSpec(
+  port: PromptPort,
+): Promise<RecurrenceSpec> {
   while (true) {
-    let kind: ScheduleKind;
+    let kind: RecurrenceKind;
 
     try {
-      kind = await promptScheduleKind(port);
+      kind = await promptRecurrenceKind(port);
     } catch (error) {
       if (isPromptBack(error)) {
         throw error;
@@ -95,7 +99,7 @@ export async function promptScheduleSpec(port: PromptPort): Promise<ScheduleSpec
     }
 
     try {
-      return await promptScheduleForKind(port, kind);
+      return await promptRecurrenceForKind(port, kind);
     } catch (error) {
       if (isPromptBack(error)) {
         continue;

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-export const scheduleSpecSchema = z.discriminatedUnion("type", [
+/** When a scheduled job should run: once, daily, or on selected weekdays. */
+export const recurrenceSpecSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("once"), at: z.string().min(1) }),
   z.object({ type: z.literal("daily"), at: z.string().min(1) }),
   z.object({
@@ -10,4 +11,4 @@ export const scheduleSpecSchema = z.discriminatedUnion("type", [
   }),
 ]);
 
-export type ScheduleSpec = z.infer<typeof scheduleSpecSchema>;
+export type RecurrenceSpec = z.infer<typeof recurrenceSpecSchema>;

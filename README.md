@@ -66,8 +66,22 @@ Persists DBs and Chrome profile to **`./src/data`** on the host (same path as lo
 cp .env.example .env
 # Set TELEGRAM_BOT_TOKEN; set CLI_ADAPTER_ENABLED=false for headless containers
 
-docker compose up --build
+docker compose up --build -d
 ```
+
+**Wipe persisted data and start fresh** (stop containers, remove compose volumes, rebuild):
+
+```bash
+npm run docker:reset
+```
+
+Or manually:
+
+```bash
+docker compose down -v && docker compose up --build -d
+```
+
+Data is bind-mounted at `./src/data` — `down -v` does **not** delete host files. To fully reset SQLite DBs and the Chrome profile, delete the contents of `src/data/` on the host after stopping the container. Your `.env` on the host is not deleted.
 
 ---
 

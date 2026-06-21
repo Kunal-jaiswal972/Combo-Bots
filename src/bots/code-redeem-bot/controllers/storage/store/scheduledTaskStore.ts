@@ -8,7 +8,7 @@ import { scheduledTaskRecordSchema } from "@/bots/code-redeem-bot/types";
 import { parseStoredCredentials } from "@/bots/code-redeem-bot/utils/credentials";
 import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
 import { gameDatabaseIds } from "@/bots/code-redeem-bot/config/database";
-import type { ScheduleSpec } from "@/tools/scheduler/scheduleSpec";
+import type { RecurrenceSpec } from "@/tools/scheduler/types/recurrenceSpec";
 import { openGameDatabase } from "../db";
 
 interface ScheduledTaskRow {
@@ -46,7 +46,7 @@ function rowToScheduledTask(row: ScheduledTaskRow): ScheduledTask {
   const task: ScheduledTask = {
     id: row.id,
     payloadTemplate,
-    schedule: JSON.parse(row.schedule_json) as ScheduleSpec,
+    schedule: JSON.parse(row.schedule_json) as RecurrenceSpec,
     enabled: row.enabled === 1,
     lastRunAt: row.last_run_at,
     nextRunAt: row.next_run_at,

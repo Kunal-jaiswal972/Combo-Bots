@@ -1,13 +1,15 @@
-import type { ScheduledJob } from "./job";
-import type { ScheduleSpec } from "./scheduleSpec";
+import type { ScheduledJob } from "./scheduledJob";
+import type { RecurrenceSpec } from "./recurrenceSpec";
 
-export interface RegisterScheduleOptions<TPayload> {
+export interface RegisterScheduledJobOptions<TPayload> {
   payload: TPayload;
-  schedule: ScheduleSpec;
+  schedule: RecurrenceSpec;
 }
 
 export interface TaskScheduler<TPayload> {
-  register(options: RegisterScheduleOptions<TPayload>): Promise<ScheduledJob<TPayload>>;
+  register(
+    options: RegisterScheduledJobOptions<TPayload>,
+  ): Promise<ScheduledJob<TPayload>>;
   cancel(taskId: string): Promise<void>;
   list(): Promise<ScheduledJob<TPayload>[]>;
   start(): Promise<void>;

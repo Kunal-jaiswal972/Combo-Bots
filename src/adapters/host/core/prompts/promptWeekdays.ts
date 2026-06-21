@@ -3,7 +3,7 @@ import type { PromptPort } from "@/adapters/host/contracts/promptPort";
 import {
   getWeekdayPickerLabel,
   WEEKDAY_PICKER_CHOICES,
-} from "@/tools/scheduler/weekdays";
+} from "@/utils";
 
 type WeekdayPickValue = (typeof WEEKDAY_PICKER_CHOICES)[number]["value"] | "done";
 
