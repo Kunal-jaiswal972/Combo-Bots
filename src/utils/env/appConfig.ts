@@ -17,6 +17,22 @@ const booleanFromEnv = z
   .default("false")
   .transform((value) => /^(1|true|yes|on)$/i.test(value));
 
+function resolveOptionalBooleanFlag(
+  flag: string | undefined,
+): boolean | undefined {
+  if (flag === undefined || flag.trim().length === 0) {
+    return undefined;
+  }
+
+  const normalized = flag.trim();
+
+  if (/^(0|false|no|off)$/i.test(normalized)) {
+    return false;
+  }
+
+  return /^(1|true|yes|on)$/i.test(normalized);
+}
+
 function resolveTelegramEnabled(
   flag: string | undefined,
   hasToken: boolean,
@@ -57,6 +73,7 @@ const appConfigSchema = z.object({
     .transform((value) => /^(1|true|yes|on)$/i.test(value)),
   TELEGRAM_BOT_TOKEN: z.string().optional(),
   TELEGRAM_ENABLED: z.string().optional(),
+  MAL_FRIEND_REQUEST_BOT_ENABLED: z.string().optional(),
 });
 
 let cachedAppConfig: AppConfig | null = null;
@@ -102,6 +119,9 @@ export function getAppConfig(): AppConfig {
     cliAdapterEnabled: raw.CLI_ADAPTER_ENABLED,
     telegramBotToken: hasTelegramToken ? telegramToken : null,
     telegramEnabled: resolveTelegramEnabled(raw.TELEGRAM_ENABLED, hasTelegramToken),
+    malFriendRequestBotEnabled: resolveOptionalBooleanFlag(
+      raw.MAL_FRIEND_REQUEST_BOT_ENABLED,
+    ),
     chrome: {
       executablePath: resolveChromeExecutablePath({
         configuredPath: chromeExecutablePath,

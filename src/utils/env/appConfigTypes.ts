@@ -12,5 +12,7 @@ export interface AppConfig {
   cliAdapterEnabled: boolean;
   telegramBotToken: string | null;
   telegramEnabled: boolean;
+  /** Unset in env = enabled; set `MAL_FRIEND_REQUEST_BOT_ENABLED=false` to disable. */
+  malFriendRequestBotEnabled?: boolean;
   chrome: ChromeEnvConfig;
 }

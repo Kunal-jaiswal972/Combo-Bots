@@ -1,4 +1,5 @@
 import { codeRedeemBotModule } from "@/bots/code-redeem-bot";
+import { malFriendRequestBotModule } from "@/bots/mal-friend-request-sender";
 import type { BotModule } from "@/adapters/host/contracts/bot";
 
 /**
@@ -8,4 +9,5 @@ import type { BotModule } from "@/adapters/host/contracts/bot";
  */
 export const botModules = [
   codeRedeemBotModule,
+  malFriendRequestBotModule,
 ] as const satisfies readonly BotModule[];
