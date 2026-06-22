@@ -101,10 +101,13 @@ Created at runtime from `.env` defaults (`DATABASE_URL`):
 
 | Path | Purpose |
 |------|---------|
-| `src/data/genshin.db` | Genshin: `codes`, `scheduled_tasks`, `run_history`, `scheduled_jobs` |
-| `src/data/hsr.db` | HSR: same tables |
+| Path | Purpose |
+|------|---------|
+| `src/data/code-redeem/genshin.db` | Genshin: `codes`, `scheduled_tasks`, `run_history`, `scheduled_jobs` |
+| `src/data/code-redeem/hsr.db` | HSR: same tables |
+| `src/data/mal-friend-request-sender/mal-friend-request-sender.db` | MAL bot state |
 
-Per-game DBs live directly under `<DATABASE_URL>` (default dev: `src/data/`). Override base via `DATABASE_URL` in `.env`. Docker mounts `/data`.
+Bot DBs live under `<DATABASE_URL>/<bot-id>/` (default dev: `src/data/`). Override base via `DATABASE_URL` in `.env`. Docker mounts `/data`.
 
 ---
 

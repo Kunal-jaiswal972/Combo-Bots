@@ -1,23 +1,22 @@
-import path from "node:path";
 import { getAppConfig } from "@/utils/env/appConfig";
-import { GameId, type GameIdValue } from "./constants";
+import {
+  resolveDataBaseDir,
+  resolveDatabasePath,
+} from "@/tools/database/paths";
+import { BOT_ID, GameId, type GameIdValue } from "./constants";
 
 export const gameDatabaseIds = Object.values(GameId) as [
   GameIdValue,
   ...GameIdValue[],
 ];
 
-function resolveDataBaseDir(databaseUrl: string): string {
-  const withoutScheme = databaseUrl.startsWith("file:")
-    ? databaseUrl.slice("file:".length)
-    : databaseUrl;
-
-  return path.resolve(withoutScheme);
-}
-
-/** e.g. src/data/genshin.db, src/data/hsr.db */
+/** e.g. src/data/code-redeem/genshin.db, src/data/code-redeem/hsr.db */
 export function resolveGameDatabasePath(gameId: GameIdValue): string {
   const appConfig = getAppConfig();
 
-  return path.resolve(resolveDataBaseDir(appConfig.dataBaseDir), `${gameId}.db`);
+  return resolveDatabasePath({
+    basePath: resolveDataBaseDir(appConfig.dataBaseDir),
+    subfolder: BOT_ID,
+    filename: `${gameId}.db`,
+  });
 }

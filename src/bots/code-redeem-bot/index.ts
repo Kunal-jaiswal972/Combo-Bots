@@ -1,6 +1,9 @@
 /** @see ./README.md — bot overview, flow, storage, and layout */
 import { ConfigError } from "@/utils/errors";
-import { SCHEDULER_TASK_SOURCE } from "@/bots/code-redeem-bot/config/constants";
+import {
+  BOT_ID,
+  SCHEDULER_TASK_SOURCE,
+} from "@/bots/code-redeem-bot/config/constants";
 import type { AppConfig } from "@/utils/env/appConfigTypes";
 import type {
   Bot,
@@ -18,8 +21,6 @@ import {
   resetStorage,
 } from "@/bots/code-redeem-bot/controllers/storage";
 import { buildMenuActions } from "./engine/menuActions";
-
-const BOT_ID = "code-redeem";
 
 export function createCodeRedeemBot(
   options: BotModuleCreateOptions,

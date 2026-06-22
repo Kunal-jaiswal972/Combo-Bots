@@ -1,20 +1,17 @@
-import path from "node:path";
 import { getAppConfig } from "@/utils/env/appConfig";
+import {
+  resolveDataBaseDir,
+  resolveDatabasePath,
+} from "@/tools/database/paths";
+import { BOT_ID } from "./constants";
 
-function resolveDataBaseDir(databaseUrl: string): string {
-  const withoutScheme = databaseUrl.startsWith("file:")
-    ? databaseUrl.slice("file:".length)
-    : databaseUrl;
-
-  return path.resolve(withoutScheme);
-}
-
-/** e.g. src/data/mal-friend-request-sender.db */
+/** e.g. src/data/mal-friend-request-sender/mal-friend-request-sender.db */
 export function resolveMalDatabasePath(): string {
   const appConfig = getAppConfig();
 
-  return path.resolve(
-    resolveDataBaseDir(appConfig.dataBaseDir),
-    "mal-friend-request-sender.db",
-  );
+  return resolveDatabasePath({
+    basePath: resolveDataBaseDir(appConfig.dataBaseDir),
+    subfolder: BOT_ID,
+    filename: `${BOT_ID}.db`,
+  });
 }

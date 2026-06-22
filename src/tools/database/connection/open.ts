@@ -67,16 +67,3 @@ export function closeAllDatabases(): void {
     registry.delete(key);
   }
 }
-
-export interface ResolveDatabasePathOptions {
-  readonly basePath: string;
-  readonly subfolder: string;
-  readonly filename: string;
-}
-
-export function resolveDatabasePath(
-  options: ResolveDatabasePathOptions,
-): string {
-  const filename = options.filename;
-  return path.resolve(options.basePath, options.subfolder, filename);
-}

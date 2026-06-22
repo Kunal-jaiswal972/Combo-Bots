@@ -1,3 +1,5 @@
+export const BOT_ID = "code-redeem" as const;
+
 export const CodeStatus = {
   ACTIVE: "active",
   EXPIRED: "expired",
