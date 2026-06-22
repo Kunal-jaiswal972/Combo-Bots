@@ -1,4 +1,4 @@
-/** @see ./README.md — bot overview, flow, storage, and layout */
+/** @see ./docs — bot overview, flow, storage, and layout */
 import { ConfigError } from "@/utils/errors";
 import {
   BOT_ID,
@@ -22,6 +22,8 @@ import {
 } from "@/bots/code-redeem-bot/controllers/storage";
 import { buildMenuActions } from "./engine/menuActions";
 
+const BOT_LABEL = "Code Redeemer";
+
 export function createCodeRedeemBot(
   options: BotModuleCreateOptions,
 ): Bot {
@@ -29,14 +31,14 @@ export function createCodeRedeemBot(
 
   return {
     id: BOT_ID,
-    label: "Code Redeemer",
+    label: BOT_LABEL,
 
     async start(): Promise<void> {
       bootstrapStorage();
 
       if (!options.terminalPrompt) {
         throw new ConfigError(
-          "Code Redeemer bot requires terminalPrompt for scheduled-run fallback.",
+          `${BOT_LABEL} bot requires terminalPrompt for scheduled-run fallback.`,
         );
       }
 
@@ -72,7 +74,7 @@ export function createCodeRedeemBot(
 
 export const codeRedeemBotModule: BotModule = {
   id: BOT_ID,
-  label: "Code Redeemer",
+  label: BOT_LABEL,
   taskTriggerSources: [SCHEDULER_TASK_SOURCE],
 
   isEnabled(_appConfig: AppConfig): boolean {

@@ -1,4 +1,4 @@
-/** @see ./README.md — bot overview, flow, storage, and layout */
+/** @see ./docs — bot overview, flow, storage, and layout */
 import type { AppConfig } from "@/utils/env/appConfigTypes";
 import type {
   Bot,
@@ -51,4 +51,4 @@ export const malFriendRequestBotModule: BotModule = {
     return createMalFriendRequestBot(options);
   },
 };
-
+
