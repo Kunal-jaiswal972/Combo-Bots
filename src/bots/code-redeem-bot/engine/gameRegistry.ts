@@ -5,7 +5,7 @@ import type {
   GameRedeemOptions,
   ScrapedCodeRow,
 } from "@/bots/code-redeem-bot/types";
-import { ConfigError } from "@/utils/errors";
+import { ConfigError } from "@/utils";
 import { genshinGameModule } from "../hoyoverse/genshin/core/genshinModule";
 import { hsrGameModule } from "../hoyoverse/hsr/hsrModule";
 

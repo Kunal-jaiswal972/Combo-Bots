@@ -1,5 +1,5 @@
 /** @see ./docs — bot overview, flow, storage, and layout */
-import { ConfigError } from "@/utils/errors";
+import { ConfigError } from "@/utils";
 import {
   BOT_ID,
   SCHEDULER_TASK_SOURCE,

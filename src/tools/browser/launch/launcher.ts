@@ -1,35 +1,15 @@
-import { execSync, spawn } from "node:child_process";
+import { spawn } from "node:child_process";
 import fs from "node:fs";
-import path from "node:path";
 import puppeteer from "puppeteer-core";
-import { getAppConfig } from "@/utils/env/appConfig";
-import { BrowserError } from "@/utils/errors";
-import { logger, sleep } from "@/utils";
+import { logger, sleep, BrowserError, getAppConfig } from "@/utils";
 import { BrowserConfig, BrowserDelays } from "../constants";
 import type {
   ChromeLaunchOptions,
   ChromeSession,
   ChromeVersionResponse,
 } from "../types/session";
-import { bindBrowser } from "../lifecycle/shutdown";
+import { bindBrowser, killExistingDebugChrome } from "../lifecycle/lifecycle";
 import { openPage } from "../actions/elements";
-
-function killExistingDebugChrome(userDataDir: string): void {
-  if (process.platform !== "win32") {
-    return;
-  }
-
-  const profileName = path.basename(userDataDir);
-
-  try {
-    execSync(
-      `powershell -NoProfile -Command "Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'chrome.exe' -and $_.CommandLine -like '*${profileName}*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }"`,
-      { stdio: "ignore" },
-    );
-  } catch {
-    // best-effort cleanup
-  }
-}
 
 function buildChromeSpawnArgs(options: ChromeLaunchOptions): string[] {
   const args = [
@@ -63,12 +43,14 @@ function spawnChrome(options: ChromeLaunchOptions): void {
   child.unref();
 }
 
-async function fetchWebSocketDebuggerUrl(
-  debugPort: number,
-): Promise<string> {
+async function fetchWebSocketDebuggerUrl(debugPort: number): Promise<string> {
   const versionUrl = `http://127.0.0.1:${debugPort}/json/version`;
 
-  for (let attempt = 1; attempt <= BrowserConfig.WS_FETCH_RETRIES; attempt += 1) {
+  for (
+    let attempt = 1;
+    attempt <= BrowserConfig.WS_FETCH_RETRIES;
+    attempt += 1
+  ) {
     try {
       const response = await fetch(versionUrl);
 

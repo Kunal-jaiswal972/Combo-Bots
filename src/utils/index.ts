@@ -6,7 +6,7 @@ export {
   RedeemError,
   ScrapeError,
   StorageError,
-} from "./errors";
+} from "./errors/errors";
 export {
   addCalendarDaysInTimezone,
   advanceScheduleCursor,
@@ -58,6 +58,7 @@ export type {
   WaitOptions,
   WaitUntilOptions,
 } from "./timing/waitTypes";
+export { abortSignal, isAborted, triggerAbort } from "./control/abort";
 export { getAppConfig } from "./env/appConfig";
 export type { AppConfig, ChromeEnvConfig } from "./env/appConfigTypes";
 export { loadEnvFile } from "./env/loadEnv";

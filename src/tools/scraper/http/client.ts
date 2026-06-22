@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { CheerioAPI } from "cheerio";
 import { loadHtml } from "../dom/query";
-import { HttpError, ScrapeError } from "@/utils/errors";
+import { HttpError, ScrapeError } from "@/utils";
 
 export interface FetchHtmlOptions {
   readonly url: string;

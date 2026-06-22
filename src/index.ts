@@ -1,10 +1,10 @@
-import { registerShutdownHandlers } from "@/tools/browser";
+import { installShutdownHandlers } from "@/bootstrap/shutdown";
 import { runApplication } from "@/bootstrap/runApplication";
 import { loadEnvFile } from "@/utils/env/loadEnv";
 import { logger } from "@/utils";
 
 loadEnvFile();
-registerShutdownHandlers();
+installShutdownHandlers();
 
 const main = runApplication();
 

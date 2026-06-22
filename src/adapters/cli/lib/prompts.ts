@@ -1,5 +1,4 @@
 import * as clack from "@clack/prompts";
-import { registerActivePromptCloser } from "@/adapters/host/core/promptShutdown";
 import type { PromptOptions } from "@/adapters/host/contracts/promptPort";
 import {
   PROMPT_BACK_CHOICE_VALUE,
@@ -27,16 +26,6 @@ function unwrapClackResult<T>(result: T | symbol, allowBack = false): T {
 
   return result;
 }
-
-/**
- * Registered with promptShutdown on SIGINT/SIGTERM.
- * Clack has no cancellable prompt handle — this is intentionally a no-op.
- */
-export function closeActivePrompt(): void {
-  // No-op: @clack/prompts manages readline per prompt.
-}
-
-registerActivePromptCloser(closeActivePrompt);
 
 export async function askQuestion(prompt: string, options?: PromptOptions): Promise<string> {
   if (!process.stdin.isTTY) {

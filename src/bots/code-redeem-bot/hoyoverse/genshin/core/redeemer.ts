@@ -1,5 +1,4 @@
 import { BrowserDelays } from "@/tools/browser/constants";
-import { RedeemError } from "@/utils/errors";
 import type { ChromeSession } from "@/tools/browser";
 import type {
   CodeRedeemResult,
@@ -7,8 +6,10 @@ import type {
 } from "@/bots/code-redeem-bot/types";
 import {
   formatAccountLabel,
+  isAborted,
   logger,
   sleep,
+  RedeemError
 } from "@/utils";
 import { genshinConfig, isGenshinServer } from "../config/config";
 import { ensureLoggedIn } from "../controllers/login";
@@ -50,6 +51,11 @@ export async function redeemGenshinCodes(
   const results: CodeRedeemResult[] = [];
 
   for (let index = 0; index < codes.length; index += 1) {
+    if (isAborted()) {
+      logger.gray("Shutdown requested — stopping code redemption.");
+      break;
+    }
+
     const code = codes[index];
     if (!code) {
       continue;

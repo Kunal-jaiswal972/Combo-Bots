@@ -30,9 +30,8 @@ export { buildChromeLaunchOptions, launchChromeSession } from "./launch/launcher
 export {
   bindBrowser,
   closeBrowser,
-  registerShutdownHandlers,
-  registerShutdownHook,
-} from "./lifecycle/shutdown";
+  setOnBrowserDisconnect,
+} from "./lifecycle/lifecycle";
 export {
   clearInput,
   clickElement,

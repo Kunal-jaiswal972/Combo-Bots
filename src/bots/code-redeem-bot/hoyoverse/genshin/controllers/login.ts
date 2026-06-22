@@ -1,12 +1,11 @@
 import type { Browser, Page } from "puppeteer-core";
-import { BrowserDelays } from "@/tools/browser/constants";
-import { RedeemError } from "@/utils/errors";
 import {
   clickElement,
   enterText,
   getIframeContentFrame,
   openPage,
   waitForNetworkIdle,
+  BrowserDelays
 } from "@/tools/browser";
 import {
   formatAccountLabel,
@@ -15,6 +14,7 @@ import {
   maskSecret,
   sleep,
   waitUntil,
+  RedeemError,
 } from "@/utils";
 import { genshinConfig } from "../config/config";
 

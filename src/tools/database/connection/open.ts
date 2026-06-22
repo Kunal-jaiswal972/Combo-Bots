@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import type Database from "better-sqlite3";
 import BetterSqlite3 from "better-sqlite3";
-import { StorageError } from "@/utils/errors";
+import { StorageError } from "@/utils";
 
 export interface DbHandle {
   readonly path: string;

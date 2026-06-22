@@ -1,3 +1,4 @@
+import { abortSignal } from "../control/abort";
 import { logger } from "../log/logger";
 import type { WaitOptions, WaitUntilOptions } from "./waitTypes";
 
@@ -5,14 +6,28 @@ export function formatWaitMs(ms: number): string {
   return `${ms}ms`;
 }
 
-/** Fixed delay. Logs planned duration before waiting starts. */
+/** Fixed delay. Resolves early if shutdown is requested. */
 export async function sleep(options: WaitOptions): Promise<void> {
+  if (abortSignal.aborted) {
+    return;
+  }
+
   if (options.reason) {
     logger.wait(`Waiting ${formatWaitMs(options.ms)} — ${options.reason}`);
   }
 
   await new Promise<void>((resolve) => {
-    setTimeout(resolve, options.ms);
+    const onAbort = (): void => {
+      clearTimeout(timer);
+      resolve();
+    };
+
+    const timer = setTimeout(() => {
+      abortSignal.removeEventListener("abort", onAbort);
+      resolve();
+    }, options.ms);
+
+    abortSignal.addEventListener("abort", onAbort, { once: true });
   });
 }
 

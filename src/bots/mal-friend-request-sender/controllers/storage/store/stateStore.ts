@@ -1,5 +1,5 @@
 import { dbGet, dbRun } from "@/tools/database";
-import { StorageError } from "@/utils/errors";
+import { StorageError } from "@/utils";
 import {
   malBotStateSchema,
   type MalBotState,

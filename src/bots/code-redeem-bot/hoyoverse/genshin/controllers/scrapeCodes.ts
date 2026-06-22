@@ -1,4 +1,4 @@
-import { ScrapeError } from "@/utils/errors";
+import { ScrapeError } from "@/utils";
 import {
   attrIn,
   fetchJson,

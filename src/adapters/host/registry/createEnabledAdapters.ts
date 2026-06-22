@@ -1,4 +1,4 @@
-import { ConfigError } from "@/utils/errors";
+import { ConfigError } from "@/utils/errors/errors";
 import type { AppConfig } from "@/utils/env/appConfigTypes";
 import type { Bot } from "@/adapters/host/contracts/bot";
 import type {
