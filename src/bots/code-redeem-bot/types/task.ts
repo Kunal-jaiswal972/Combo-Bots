@@ -2,23 +2,26 @@ import { z } from "zod";
 
 import { GameId, type GameIdValue } from "../config/constants";
 
-export const credentialsSchema = z.preprocess((value) => {
-  if (typeof value !== "object" || value === null) {
+export const credentialsSchema = z.preprocess(
+  (value) => {
+    if (typeof value !== "object" || value === null) {
+      return value;
+    }
+
+    const record = value as Record<string, unknown>;
+
+    if (typeof record.username === "string") {
+      return value;
+    }
+
     return value;
-  }
-
-  const record = value as Record<string, unknown>;
-
-  if (typeof record.username === "string") {
-    return value;
-  }
-
-  return value;
-}, z.object({
-  username: z.string().min(1),
-  password: z.string(),
-  server: z.string().min(1),
-}));
+  },
+  z.object({
+    username: z.string().min(1),
+    password: z.string(),
+    server: z.string().min(1),
+  }),
+);
 
 export type GameLoginCredentials = z.infer<typeof credentialsSchema>;
 

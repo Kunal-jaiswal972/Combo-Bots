@@ -8,10 +8,7 @@ import {
   cancelScheduledTask,
   listScheduledTasks,
 } from "../controllers/scheduling/queries/scheduledTasks";
-import type {
-  RedeemTask,
-  RedeemTaskTemplate,
-} from "../types";
+import type { RedeemTask, RedeemTaskTemplate } from "../types";
 import { formatScheduledTaskChoiceLabel } from "../utils/scheduledTask";
 import { runNowMenu } from "./menu/runNow";
 import { scheduleMenu } from "./menu/schedule";

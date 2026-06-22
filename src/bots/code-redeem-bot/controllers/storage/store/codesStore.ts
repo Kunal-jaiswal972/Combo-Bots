@@ -4,13 +4,14 @@ import { getTodayRunDate } from "@/utils";
 
 import {
   CodeStatus,
-  RedeemStatus,
   type GameIdValue,
+  RedeemStatus,
   type RedeemStatusValue,
 } from "../../../config/constants";
-import type { CodeRedeemResult, CodeStoreMergeResult } from "../../../types";
 import type {
+  CodeRedeemResult,
   CodesStore,
+  CodeStoreMergeResult,
   MergeScrapedCodesOptions,
   PersistRedeemResultOptions,
 } from "../../../types";
@@ -237,7 +238,9 @@ export function createCodesStore(): CodesStore {
       return getRedeemableFromRows(rows).length > 0;
     },
 
-    async persistRedeemResult(options: PersistRedeemResultOptions): Promise<void> {
+    async persistRedeemResult(
+      options: PersistRedeemResultOptions,
+    ): Promise<void> {
       const { updateRedeemStmt } = getContext(options.gameId);
       const result: CodeRedeemResult = options.result;
 

@@ -1,6 +1,5 @@
 import { getStorage } from "../../controllers/storage";
-import type { RedeemTask } from "../../types";
-import type { RunResult } from "../../types";
+import type { RedeemTask, RunResult } from "../../types";
 import { executeRedeemRun } from "./redeemRun";
 
 export interface RunRedeemTaskOptions {

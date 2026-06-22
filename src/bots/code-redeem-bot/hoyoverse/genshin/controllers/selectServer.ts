@@ -5,12 +5,15 @@ import { logger, sleep } from "@/utils";
 
 import { type GenshinServerValue } from "../../../config/constants";
 import {
+  genshinConfig,
   genshinServerNthChild,
   getServerMenuSelector,
-  genshinConfig,
 } from "../config/config";
 
-function serverLabelMatches(label: string, server: GenshinServerValue): boolean {
+function serverLabelMatches(
+  label: string,
+  server: GenshinServerValue,
+): boolean {
   const normalizedLabel = label.toLowerCase();
   const normalizedServer = server.toLowerCase();
 

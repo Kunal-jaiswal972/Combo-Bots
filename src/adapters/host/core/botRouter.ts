@@ -26,7 +26,9 @@ async function pickBot(
   ];
 
   const picked = await port.choose("Which bot?", choices);
-  return picked === "exit" ? "exit" : (bots.find((bot) => bot.id === picked) ?? "exit");
+  return picked === "exit"
+    ? "exit"
+    : (bots.find((bot) => bot.id === picked) ?? "exit");
 }
 
 async function runBotMenuLoop(options: {
@@ -68,7 +70,9 @@ async function runBotMenuLoop(options: {
   }
 }
 
-export async function runBotRouter(options: RunBotRouterOptions): Promise<void> {
+export async function runBotRouter(
+  options: RunBotRouterOptions,
+): Promise<void> {
   const ctx: BotContext = {
     prompt: options.port,
     display: options.display,

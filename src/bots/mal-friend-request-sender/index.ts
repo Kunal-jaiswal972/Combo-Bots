@@ -52,4 +52,3 @@ export const malFriendRequestBotModule: BotModule = {
     return createMalFriendRequestBot(options);
   },
 };
-

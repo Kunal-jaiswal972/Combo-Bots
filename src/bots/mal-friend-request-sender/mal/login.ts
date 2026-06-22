@@ -16,11 +16,7 @@ import {
   sleep,
 } from "@/utils";
 
-import {
-  loginPageUrl,
-  MalDelays,
-  MalSelectors,
-} from "../config/constants";
+import { loginPageUrl, MalDelays, MalSelectors } from "../config/constants";
 import {
   loadMalBotState,
   saveMalBotState,
@@ -161,7 +157,9 @@ export async function ensureMalLoggedIn(
     const username = await options.prompt.username("MAL account username:");
     const password = await options.prompt.password("MAL account password:");
 
-    logger.info(`Logging in automatically as ${formatAccountLabel(username)}...`);
+    logger.info(
+      `Logging in automatically as ${formatAccountLabel(username)}...`,
+    );
     await autoLogin(options.page, username, password);
 
     if (await verifyMalLoggedIn(options.page)) {

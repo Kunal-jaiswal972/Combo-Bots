@@ -44,7 +44,9 @@ export async function requestShutdown(
   // window — control returns to the terminal fast even if a hook hangs (e.g.
   // Telegram failing to abort its long-poll). Cleanup is best-effort.
   await Promise.race([
-    Promise.allSettled(SHUTDOWN_HOOKS.map((hook) => Promise.resolve().then(hook))),
+    Promise.allSettled(
+      SHUTDOWN_HOOKS.map((hook) => Promise.resolve().then(hook)),
+    ),
     delay(FORCE_EXIT_TIMEOUT_MS),
   ]);
 

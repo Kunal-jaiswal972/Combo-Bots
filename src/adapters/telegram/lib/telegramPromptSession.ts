@@ -1,6 +1,11 @@
 import type { PromptChoice } from "@/adapters/host/contracts";
 
-export type PendingPromptKind = "choose" | "question" | "yesNo" | "username" | "password";
+export type PendingPromptKind =
+  | "choose"
+  | "question"
+  | "yesNo"
+  | "username"
+  | "password";
 
 export interface PendingPrompt {
   readonly kind: PendingPromptKind;

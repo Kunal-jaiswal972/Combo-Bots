@@ -14,9 +14,7 @@ export interface RunNowMenuOptions {
 }
 
 /** Menu path: prompt for game/credentials, then execute a redeem run. */
-export async function runNowMenu(
-  options: RunNowMenuOptions,
-): Promise<void> {
+export async function runNowMenu(options: RunNowMenuOptions): Promise<void> {
   const { port, source, metadata } = options;
 
   port.step("Run now — configure this run.");

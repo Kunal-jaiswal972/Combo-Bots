@@ -1,5 +1,5 @@
-import * as cheerio from "cheerio";
 import type { CheerioAPI } from "cheerio";
+import * as cheerio from "cheerio";
 import type { AnyNode, Element } from "domhandler";
 
 function isElement(node: AnyNode): node is Element {

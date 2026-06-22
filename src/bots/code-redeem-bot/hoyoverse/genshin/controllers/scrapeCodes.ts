@@ -1,11 +1,11 @@
 import {
   attrIn,
+  type CheerioAPI,
+  type Element,
   fetchJson,
   findNestedTexts,
   loadHtml,
   selectElements,
-  type CheerioAPI,
-  type Element,
 } from "@/tools/scraper";
 import { ScrapeError } from "@/utils";
 
@@ -112,8 +112,7 @@ export async function scrapeGenshinCodes(): Promise<ScrapedCodeRow[]> {
       throw error;
     }
 
-    const cause =
-      error instanceof Error ? error : new Error(String(error));
+    const cause = error instanceof Error ? error : new Error(String(error));
     throw new ScrapeError(
       "Failed to fetch Genshin promotional codes from Fandom wiki.",
       cause,

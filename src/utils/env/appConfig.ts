@@ -2,9 +2,9 @@ import os from "node:os";
 import { z } from "zod";
 
 import {
+  type ChromePathSearchContext,
   expandChromeUserDataDir,
   resolveChromeExecutablePath,
-  type ChromePathSearchContext,
 } from "@/tools/browser/paths/chromePaths";
 
 import { isValidIanaTimeZone } from "../datetime/dateTime";
@@ -69,12 +69,7 @@ const appConfigSchema = z.object({
     .default(DEFAULT_SCHEDULER_POLL_INTERVAL_MS),
   CHROME_EXECUTABLE_PATH: z.string().optional(),
   CHROME_USER_DATA_DIR: z.string().optional(),
-  CHROME_DEBUG_PORT: z.coerce
-    .number()
-    .int()
-    .min(1024)
-    .max(65535)
-    .default(9222),
+  CHROME_DEBUG_PORT: z.coerce.number().int().min(1024).max(65535).default(9222),
   HEADLESS: booleanFromEnv,
   CLI_ADAPTER_ENABLED: z
     .string()
@@ -128,7 +123,10 @@ export function getAppConfig(): AppConfig {
     schedulerPollIntervalMs: raw.SCHEDULER_POLL_INTERVAL_MS,
     cliAdapterEnabled: raw.CLI_ADAPTER_ENABLED,
     telegramBotToken: hasTelegramToken ? telegramToken : null,
-    telegramEnabled: resolveTelegramEnabled(raw.TELEGRAM_ENABLED, hasTelegramToken),
+    telegramEnabled: resolveTelegramEnabled(
+      raw.TELEGRAM_ENABLED,
+      hasTelegramToken,
+    ),
     malFriendRequestBotEnabled: resolveOptionalBooleanFlag(
       raw.MAL_FRIEND_REQUEST_BOT_ENABLED,
     ),

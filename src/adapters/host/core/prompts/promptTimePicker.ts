@@ -1,8 +1,4 @@
-import {
-  formatTimeOfDayLabel,
-  formatTimeOfDayString,
-  to24Hour,
-} from "@/utils";
+import { formatTimeOfDayLabel, formatTimeOfDayString, to24Hour } from "@/utils";
 
 import { isPromptBack, type PromptPort } from "../../contracts";
 
@@ -28,7 +24,10 @@ const PERIOD_CHOICES = [
 
 const MINUTE_CHOICES = Array.from({ length: 12 }, (_, index) => {
   const minute = index * 5;
-  const label = minute === 0 ? ":00 (on the hour)" : `:${minute.toString().padStart(2, "0")}`;
+  const label =
+    minute === 0
+      ? ":00 (on the hour)"
+      : `:${minute.toString().padStart(2, "0")}`;
   return {
     value: minute.toString().padStart(2, "0") as `${number}`,
     label,
@@ -46,7 +45,9 @@ export async function promptTimeOfDay(port: PromptPort): Promise<string> {
   while (true) {
     if (step === "hour") {
       try {
-        hour12 = await port.choose("What hour?", HOUR_CHOICES, { allowBack: true });
+        hour12 = await port.choose("What hour?", HOUR_CHOICES, {
+          allowBack: true,
+        });
         step = "period";
       } catch (error) {
         if (isPromptBack(error)) {
@@ -61,9 +62,13 @@ export async function promptTimeOfDay(port: PromptPort): Promise<string> {
 
     if (step === "period") {
       try {
-        period = await port.choose("Morning or afternoon/evening?", PERIOD_CHOICES, {
-          allowBack: true,
-        });
+        period = await port.choose(
+          "Morning or afternoon/evening?",
+          PERIOD_CHOICES,
+          {
+            allowBack: true,
+          },
+        );
         step = "minute";
       } catch (error) {
         if (isPromptBack(error)) {

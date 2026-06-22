@@ -5,9 +5,9 @@ import { validateTaskSource } from "@/adapters/host/registry/taskSource";
 import type { GameIdValue } from "../config/constants";
 import { validateGameCredentials } from "../hoyoverse/shared/credentials";
 import {
-  redeemTaskSchema,
   type GameLoginCredentials,
   type RedeemTask,
+  redeemTaskSchema,
   type ScrapePolicy,
   type TaskSource,
 } from "../types";

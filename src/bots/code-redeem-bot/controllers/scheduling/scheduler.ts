@@ -7,10 +7,7 @@ import {
 import { getAppConfig } from "@/utils";
 
 import { SCHEDULER_TASK_SOURCE } from "../../config/constants";
-import type {
-  RedeemTask,
-  RedeemTaskTemplate,
-} from "../../types";
+import type { RedeemTask, RedeemTaskTemplate } from "../../types";
 import { getStorage } from "../storage";
 
 export interface CreateBotSchedulerOptions {

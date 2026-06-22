@@ -1,7 +1,4 @@
-import {
-  resolveDataBaseDir,
-  resolveDatabasePath,
-} from "@/tools/database";
+import { resolveDataBaseDir, resolveDatabasePath } from "@/tools/database";
 import { getAppConfig } from "@/utils";
 
 import { BOT_ID } from "./constants";

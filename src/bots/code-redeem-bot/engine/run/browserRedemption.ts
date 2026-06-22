@@ -3,16 +3,18 @@ import { formatAccountLabel, logger } from "@/utils";
 import type { GameIdValue } from "../../config/constants";
 import { RedeemStatus } from "../../config/constants";
 import { getStorage } from "../../controllers/storage";
-import type { RedeemSummary } from "../../types";
-import type { CodeRedeemResult } from "../../types";
 import type {
+  CodeRedeemResult,
   RedeemCodesOptions,
+  RedeemSummary,
   RedeemWithGameEngineOptions,
 } from "../../types";
 import { formatRedeemSummaryLogLine } from "../../utils/runResult";
 import { getGameModule } from "../gameRegistry";
 
-function countResults(results: CodeRedeemResult[]): Omit<RedeemSummary, "codesAttempted"> {
+function countResults(
+  results: CodeRedeemResult[],
+): Omit<RedeemSummary, "codesAttempted"> {
   const counts = {
     redeemed: 0,
     expired: 0,
@@ -81,11 +83,12 @@ export async function hasRedeemableCodesForGame(
 export async function redeemCodes(
   options: RedeemCodesOptions,
 ): Promise<RedeemSummary> {
-  logger.step(`Redeeming codes for ${formatAccountLabel(options.credentials.username)}.`);
-
-  const { toRedeem: codesToRedeem, skipped } = await getStorage().codes.getRedeemResumeStats(
-    options.gameId,
+  logger.step(
+    `Redeeming codes for ${formatAccountLabel(options.credentials.username)}.`,
   );
+
+  const { toRedeem: codesToRedeem, skipped } =
+    await getStorage().codes.getRedeemResumeStats(options.gameId);
 
   if (skipped > 0) {
     logger.gray(

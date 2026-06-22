@@ -20,7 +20,9 @@ export interface ExpandChromeUserDataDirOptions {
   readonly localAppData: string;
 }
 
-export function getChromeCandidates(context: ChromePathSearchContext): string[] {
+export function getChromeCandidates(
+  context: ChromePathSearchContext,
+): string[] {
   const candidates: string[] = [];
 
   if (context.platform === "win32") {

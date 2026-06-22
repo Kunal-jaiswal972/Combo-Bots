@@ -1,5 +1,6 @@
 /** Timeouts and pacing for browser automation (Puppeteer). */
-export const BrowserDelays = {  SHORT: 5_000,
+export const BrowserDelays = {
+  SHORT: 5_000,
   LONG: 10_000,
   TYPE_MIN: 10,
   TYPE_MAX: 100,

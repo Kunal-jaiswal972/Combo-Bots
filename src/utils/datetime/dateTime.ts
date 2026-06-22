@@ -141,7 +141,10 @@ export function getWeekdayInTimezone(date: Date, timeZone: string): number {
   return getDay(toZonedTime(date, timeZone));
 }
 
-export function getCalendarYearInTimezone(date: Date, timeZone: string): number {
+export function getCalendarYearInTimezone(
+  date: Date,
+  timeZone: string,
+): number {
   return getYear(toZonedTime(date, timeZone));
 }
 

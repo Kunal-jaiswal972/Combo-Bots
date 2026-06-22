@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 import fs from "node:fs";
 import puppeteer from "puppeteer-core";
 
-import { logger, sleep, BrowserError, getAppConfig } from "@/utils";
+import { BrowserError, getAppConfig, logger, sleep } from "@/utils";
 
 import { openPage } from "../actions/elements";
 import { BrowserConfig, BrowserDelays } from "../constants";

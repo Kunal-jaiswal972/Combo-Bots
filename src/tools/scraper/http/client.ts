@@ -12,7 +12,9 @@ export interface FetchHtmlOptions {
   readonly params?: Readonly<Record<string, string>>;
 }
 
-export async function fetchHtml(options: FetchHtmlOptions): Promise<CheerioAPI> {
+export async function fetchHtml(
+  options: FetchHtmlOptions,
+): Promise<CheerioAPI> {
   try {
     const response = await axios.get<string>(options.url, {
       params: options.params,

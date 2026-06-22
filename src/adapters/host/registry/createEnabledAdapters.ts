@@ -8,7 +8,10 @@ import type {
   TaskInputAdapter,
 } from "../contracts";
 import type { TerminalPorts } from "../core/terminalPorts";
-import { adapterModules, type AdapterModuleCreateOptions } from "./adapterModules";
+import {
+  type AdapterModuleCreateOptions,
+  adapterModules,
+} from "./adapterModules";
 
 export interface CreateEnabledAdaptersOptions {
   readonly terminal: TerminalPorts;

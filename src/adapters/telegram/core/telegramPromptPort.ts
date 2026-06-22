@@ -1,4 +1,4 @@
-import { InlineKeyboard, type Api } from "grammy";
+import { type Api, InlineKeyboard } from "grammy";
 
 import {
   type DisplayCard,
@@ -11,8 +11,8 @@ import {
   TELEGRAM_BACK_CALLBACK,
 } from "@/adapters/host/contracts";
 import {
-  createAdapterLogger,
   type AdapterLogger,
+  createAdapterLogger,
 } from "@/adapters/host/core/adapterLogger";
 import { formatDisplayCardTelegramHtml } from "@/adapters/host/core/formatters/formatDisplayCard";
 
@@ -51,7 +51,9 @@ export class TelegramPromptPort implements PromptPort, DisplayPresenter {
 
     const allowBack = options?.allowBack === true;
     const valuePromise = this.waitForString("choose", allowBack);
-    this.adapterLog.debug(`Prompt choose: ${message} (${choices.length} options)`);
+    this.adapterLog.debug(
+      `Prompt choose: ${message} (${choices.length} options)`,
+    );
 
     const keyboard = new InlineKeyboard();
 
@@ -148,7 +150,10 @@ export class TelegramPromptPort implements PromptPort, DisplayPresenter {
         return value;
       }
 
-      await this.api.sendMessage(this.chatId, "Please enter a whole number ≥ 1.");
+      await this.api.sendMessage(
+        this.chatId,
+        "Please enter a whole number ≥ 1.",
+      );
     }
   }
 
@@ -180,13 +185,20 @@ export class TelegramPromptPort implements PromptPort, DisplayPresenter {
 
   displayCards(cards: readonly DisplayCard[]): void {
     for (const card of cards) {
-      void this.api.sendMessage(this.chatId, formatDisplayCardTelegramHtml(card), {
-        parse_mode: "HTML",
-      });
+      void this.api.sendMessage(
+        this.chatId,
+        formatDisplayCardTelegramHtml(card),
+        {
+          parse_mode: "HTML",
+        },
+      );
     }
   }
 
-  private waitForString(kind: PendingPromptKind, allowBack = false): Promise<string> {
+  private waitForString(
+    kind: PendingPromptKind,
+    allowBack = false,
+  ): Promise<string> {
     if (this.session.pending) {
       this.session.pending.reject(new Error("Replaced by a new prompt."));
     }
@@ -241,7 +253,12 @@ export class TelegramPromptPort implements PromptPort, DisplayPresenter {
 
 export function resolveTelegramCallbackData(
   data: string,
-): { kind: "choose"; value: string } | { kind: "yes" } | { kind: "no" } | { kind: "back" } | null {
+):
+  | { kind: "choose"; value: string }
+  | { kind: "yes" }
+  | { kind: "no" }
+  | { kind: "back" }
+  | null {
   if (data === TELEGRAM_BACK_CALLBACK) {
     return { kind: "back" };
   }

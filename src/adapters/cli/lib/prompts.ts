@@ -28,7 +28,10 @@ function unwrapClackResult<T>(result: T | symbol, allowBack = false): T {
   return result;
 }
 
-export async function askQuestion(prompt: string, options?: PromptOptions): Promise<string> {
+export async function askQuestion(
+  prompt: string,
+  options?: PromptOptions,
+): Promise<string> {
   if (!process.stdin.isTTY) {
     return "";
   }
@@ -150,7 +153,10 @@ export async function askPassword(message = "Password"): Promise<string> {
   return unwrapClackResult(result);
 }
 
-export async function askYesNo(prompt: string, defaultYes: boolean): Promise<boolean> {
+export async function askYesNo(
+  prompt: string,
+  defaultYes: boolean,
+): Promise<boolean> {
   if (!process.stdin.isTTY) {
     return defaultYes;
   }

@@ -3,14 +3,11 @@ import {
   formatAccountLabel,
   isAborted,
   logger,
+  RedeemError,
   sleep,
-  RedeemError
 } from "@/utils";
 
-import type {
-  CodeRedeemResult,
-  GameRedeemOptions,
-} from "../../../types";
+import type { CodeRedeemResult, GameRedeemOptions } from "../../../types";
 import { genshinConfig, isGenshinServer } from "../config/config";
 import { ensureLoggedIn } from "../controllers/login";
 import { redeemSingleCode } from "../controllers/redeemCode";
@@ -36,7 +33,9 @@ export async function redeemGenshinCodes(
   let page = session.page;
 
   logger.gray(`Navigating to redeem page for ${accountLabel}...`);
-  await page.goto(genshinConfig.redeemPageUrl, { waitUntil: "domcontentloaded" });
+  await page.goto(genshinConfig.redeemPageUrl, {
+    waitUntil: "domcontentloaded",
+  });
   await sleep({ ms: BrowserDelays.SHORT, reason: "redeem page to load" });
   logger.gray(`Navigated to ${genshinConfig.redeemPageUrl}`);
 
@@ -71,7 +70,10 @@ export async function redeemGenshinCodes(
     const hasMoreCodes = index < codes.length - 1;
     if (hasMoreCodes) {
       await ensureRedeemModalClosed(page);
-      await sleep({ ms: genshinConfig.redeemCooldownMs, reason: "between redeem codes" });
+      await sleep({
+        ms: genshinConfig.redeemCooldownMs,
+        reason: "between redeem codes",
+      });
     }
   }
 

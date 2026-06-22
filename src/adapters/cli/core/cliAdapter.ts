@@ -17,7 +17,9 @@ export interface CreateCliAdapterOptions {
   readonly metadata?: Record<string, string>;
 }
 
-export function createCliAdapter(options: CreateCliAdapterOptions): TaskInputAdapter {
+export function createCliAdapter(
+  options: CreateCliAdapterOptions,
+): TaskInputAdapter {
   return {
     id: CLI_ADAPTER_ID,
     label: "CLI menu",

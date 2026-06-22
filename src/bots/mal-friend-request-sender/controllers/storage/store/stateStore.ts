@@ -1,10 +1,7 @@
 import { dbGet, dbRun } from "@/tools/database";
 import { StorageError } from "@/utils";
 
-import {
-  malBotStateSchema,
-  type MalBotState,
-} from "../../../types/state";
+import { type MalBotState, malBotStateSchema } from "../../../types/state";
 import { getMalDbHandle } from "../db";
 
 interface BotStateRow {

@@ -7,10 +7,13 @@ import {
 import { getAppConfig, logger } from "@/utils";
 
 import { getDatabasePath } from "../../controllers/storage";
-import type { RedeemTask } from "../../types";
-import type { RunResult, RunResultStatus } from "../../types";
-import type { RedeemSummary } from "../../types";
-import type { ScrapeStats } from "../../types";
+import type {
+  RedeemSummary,
+  RedeemTask,
+  RunResult,
+  RunResultStatus,
+  ScrapeStats,
+} from "../../types";
 import { getGameModule } from "../gameRegistry";
 import { evaluateScrapePolicy } from "../policies/scrapePolicy";
 import {
@@ -24,7 +27,9 @@ export interface ExecuteRedeemRunOptions {
   task: RedeemTask;
 }
 
-function resolveRunStatus(redeemSummary: RedeemSummary | null): RunResultStatus {
+function resolveRunStatus(
+  redeemSummary: RedeemSummary | null,
+): RunResultStatus {
   if (redeemSummary === null) {
     return "success";
   }

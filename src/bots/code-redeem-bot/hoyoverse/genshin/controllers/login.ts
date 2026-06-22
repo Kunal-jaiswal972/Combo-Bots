@@ -1,21 +1,21 @@
 import type { Browser, Page } from "puppeteer-core";
 
 import {
+  BrowserDelays,
   clickElement,
   enterText,
   getIframeContentFrame,
   openPage,
   waitForNetworkIdle,
-  BrowserDelays
 } from "@/tools/browser";
 import {
   formatAccountLabel,
   getRandomDelay,
   logger,
   maskSecret,
+  RedeemError,
   sleep,
   waitUntil,
-  RedeemError,
 } from "@/utils";
 
 import { genshinConfig } from "../config/config";
@@ -35,7 +35,10 @@ export async function isLoggedIn(page: Page): Promise<boolean> {
     return false;
   }
 
-  await sleep({ ms: BrowserDelays.SHORT, reason: "account button label to load" });
+  await sleep({
+    ms: BrowserDelays.SHORT,
+    reason: "account button label to load",
+  });
 
   const label = await page.evaluate(
     (element) => element.textContent?.trim() ?? "",
@@ -69,7 +72,10 @@ async function loginToGenshin(
     iframeSelector: genshinConfig.selectors.loginIframe,
     reason: "login iframe",
   });
-  await sleep({ ms: BrowserDelays.SHORT, reason: "login iframe to initialize" });
+  await sleep({
+    ms: BrowserDelays.SHORT,
+    reason: "login iframe to initialize",
+  });
 
   await enterText({
     context: frame,
@@ -128,7 +134,9 @@ export async function ensureLoggedIn(
   let activePage = page;
 
   if (await isLoggedIn(activePage)) {
-    logger.success(`Already logged in via Chrome debug profile (${accountLabel}).`);
+    logger.success(
+      `Already logged in via Chrome debug profile (${accountLabel}).`,
+    );
     return activePage;
   }
 
@@ -142,8 +150,7 @@ export async function ensureLoggedIn(
       return activePage;
     } catch (error) {
       loginAttempts += 1;
-      const cause =
-        error instanceof Error ? error : new Error(String(error));
+      const cause = error instanceof Error ? error : new Error(String(error));
       logger.warn(
         `Login attempt ${loginAttempts}/${genshinConfig.maxLoginAttempts} failed: ${cause.message}`,
       );

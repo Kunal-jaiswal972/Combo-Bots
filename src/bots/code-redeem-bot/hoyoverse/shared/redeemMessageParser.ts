@@ -20,6 +20,8 @@ export function registerRedeemMessageParser(
   parsersByGameId.set(gameId, parser);
 }
 
-export function getRedeemMessageParser(gameId: GameIdValue): RedeemMessageParser {
+export function getRedeemMessageParser(
+  gameId: GameIdValue,
+): RedeemMessageParser {
   return parsersByGameId.get(gameId) ?? hoyoverseRedeemMessageParser;
 }

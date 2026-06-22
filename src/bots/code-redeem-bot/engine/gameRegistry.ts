@@ -48,9 +48,10 @@ function validateRegisteredModules(): void {
 
 validateRegisteredModules();
 
-export const registeredGameIds = gameModules.map(
-  (module) => module.id,
-) as [GameIdValue, ...GameIdValue[]];
+export const registeredGameIds = gameModules.map((module) => module.id) as [
+  GameIdValue,
+  ...GameIdValue[],
+];
 
 export function getGameModule(gameId: GameIdValue): GameModule {
   const module = modulesById.get(gameId);

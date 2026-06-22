@@ -10,7 +10,9 @@ import {
 import { computeNextRunAt } from "../drivers/recurrenceDrivers";
 import type { RecurrenceSpec } from "../types/recurrenceSpec";
 
-export function formatRecurrenceDescription(recurrence: RecurrenceSpec): string {
+export function formatRecurrenceDescription(
+  recurrence: RecurrenceSpec,
+): string {
   switch (recurrence.type) {
     case "daily":
       return `Every day at ${formatTimeOfDayLabel(recurrence.at)}`;
@@ -63,7 +65,10 @@ export function computeUpcomingRunTimes(
   return times;
 }
 
-export function formatUpcomingRuns(recurrence: RecurrenceSpec, count = 3): string {
+export function formatUpcomingRuns(
+  recurrence: RecurrenceSpec,
+  count = 3,
+): string {
   const upcoming = computeUpcomingRunTimes(recurrence, count);
   const now = new Date();
 

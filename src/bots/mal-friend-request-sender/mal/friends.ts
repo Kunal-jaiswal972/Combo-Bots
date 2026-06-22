@@ -3,11 +3,7 @@ import type { Page } from "puppeteer-core";
 import { navigate } from "@/tools/browser";
 import { logger, sleep } from "@/utils";
 
-import {
-  friendsPageUrl,
-  MalDelays,
-  MalSelectors,
-} from "../config/constants";
+import { friendsPageUrl, MalDelays, MalSelectors } from "../config/constants";
 
 type FriendRequestStatus =
   | { readonly type: "add"; readonly link: string }
@@ -48,7 +44,10 @@ async function sendFriendRequest(
   friendRequestUrl: string,
 ): Promise<void> {
   await navigate({ page, url: friendRequestUrl });
-  await sleep({ ms: MalDelays.pageSettle, reason: "friend request page to settle" });
+  await sleep({
+    ms: MalDelays.pageSettle,
+    reason: "friend request page to settle",
+  });
 
   const clicked = await page.evaluate((submitSelector) => {
     const button = document.querySelector(submitSelector);
@@ -79,7 +78,7 @@ async function getFriendRequestStatus(
   page: Page,
   profileUrl: string,
 ): Promise<void> {
-  const status = await page.evaluate((requestSelector) => {
+  const status = (await page.evaluate((requestSelector) => {
     const friendButton = document.querySelector(requestSelector);
 
     if (!(friendButton instanceof HTMLElement)) {
@@ -108,7 +107,7 @@ async function getFriendRequestStatus(
     }
 
     return null;
-  }, MalSelectors.friendRequestButton) as FriendRequestStatus | null;
+  }, MalSelectors.friendRequestButton)) as FriendRequestStatus | null;
 
   if (status === null) {
     logger.gray(`No Add Friend button found on ${profileUrl}`);

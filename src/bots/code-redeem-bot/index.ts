@@ -8,10 +8,7 @@ import type {
 import type { SchedulerRunner } from "@/tools/scheduler";
 import { type AppConfig, ConfigError } from "@/utils";
 
-import {
-  BOT_ID,
-  SCHEDULER_TASK_SOURCE,
-} from "./config/constants";
+import { BOT_ID, SCHEDULER_TASK_SOURCE } from "./config/constants";
 import { createCodeRedeemSchedulerOnTrigger } from "./controllers/scheduling/onTrigger";
 import { createBotScheduler } from "./controllers/scheduling/scheduler";
 import {
@@ -24,9 +21,7 @@ import type { RedeemTask, RedeemTaskTemplate } from "./types";
 
 const BOT_LABEL = "Code Redeemer";
 
-export function createCodeRedeemBot(
-  options: BotModuleCreateOptions,
-): Bot {
+export function createCodeRedeemBot(options: BotModuleCreateOptions): Bot {
   let scheduler: SchedulerRunner<RedeemTaskTemplate, RedeemTask> | null = null;
 
   return {
@@ -45,7 +40,8 @@ export function createCodeRedeemBot(
       scheduler = createBotScheduler({
         onTrigger: createCodeRedeemSchedulerOnTrigger({
           terminalPrompt: options.terminalPrompt,
-          getScheduledRunNotifiers: options.getScheduledRunNotifiers ?? (() => []),
+          getScheduledRunNotifiers:
+            options.getScheduledRunNotifiers ?? (() => []),
         }),
       });
 

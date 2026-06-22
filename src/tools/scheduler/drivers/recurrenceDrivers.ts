@@ -10,7 +10,8 @@ import type { RecurrenceSpec } from "../types/recurrenceSpec";
 import { createRecurrenceDriverRegistry } from "./recurrenceDriverRegistry";
 
 type OnceRecurrence = Extract<RecurrenceSpec, { type: "once" }>;
-type DailyRecurrence = Extract<RecurrenceSpec, { type: "daily" }>;type WeekdaysRecurrence = Extract<RecurrenceSpec, { type: "weekdays" }>;
+type DailyRecurrence = Extract<RecurrenceSpec, { type: "daily" }>;
+type WeekdaysRecurrence = Extract<RecurrenceSpec, { type: "weekdays" }>;
 
 const onceRecurrenceDriver: RecurrenceDriver<OnceRecurrence> = {
   type: "once",
@@ -54,11 +55,7 @@ const dailyRecurrenceDriver: RecurrenceDriver<DailyRecurrence> = {
   },
 };
 
-function computeWeekdaysNextRun(
-  days: number[],
-  at: string,
-  from: Date,
-): Date {
+function computeWeekdaysNextRun(days: number[], at: string, from: Date): Date {
   if (days.length === 0) {
     throw new Error("Select at least one weekday.");
   }
