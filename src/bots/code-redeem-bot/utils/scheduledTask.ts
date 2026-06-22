@@ -3,7 +3,7 @@ import { getGameModule } from "@/bots/code-redeem-bot/engine/gameRegistry";
 import {
   formatRecurrenceDescription,
   formatUpcomingRuns,
-} from "@/tools/scheduler/display/formatRecurrenceDisplay";
+} from "@/tools/scheduler";
 import { formatSchedulerInstant } from "@/utils";
 import type { DisplayCard, DisplayCardRow } from "@/adapters/host/contracts/displayCard";
 

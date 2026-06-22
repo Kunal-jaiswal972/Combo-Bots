@@ -1,13 +1,13 @@
 import {
   buildChromeLaunchOptions,
+  type ChromeSession,
+  closeBrowser,
   launchChromeSession,
 } from "@/tools/browser";
-import { closeBrowser } from "@/tools/browser";
 import type { RedeemTask } from "@/bots/code-redeem-bot/types";
 import type { RunResult, RunResultStatus } from "@/bots/code-redeem-bot/types";
 import { getGameModule } from "@/bots/code-redeem-bot/engine/gameRegistry";
-import type { ChromeSession } from "@/tools/browser";
-import { getAppConfig } from "@/utils/env/appConfig";
+import { getAppConfig, logger } from "@/utils";
 import { getDatabasePath } from "@/bots/code-redeem-bot/controllers/storage";
 import type { RedeemSummary } from "@/bots/code-redeem-bot/types";
 import type { ScrapeStats } from "@/bots/code-redeem-bot/types";
@@ -17,7 +17,6 @@ import {
   redeemCodes,
 } from "./browserRedemption";
 import { runScrape } from "./scrapeService";
-import { logger } from "@/utils";
 import { evaluateScrapePolicy } from "../policies/scrapePolicy";
 
 export interface ExecuteRedeemRunOptions {

@@ -1,8 +1,8 @@
-import { getAppConfig } from "@/utils/env/appConfig";
+import { getAppConfig } from "@/utils";
 import {
   resolveDataBaseDir,
   resolveDatabasePath,
-} from "@/tools/database/paths";
+} from "@/tools/database";
 import { BOT_ID } from "./constants";
 
 /** e.g. src/data/mal-friend-request-sender/mal-friend-request-sender.db */

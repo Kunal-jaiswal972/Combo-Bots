@@ -1,5 +1,5 @@
 import type { Page } from "puppeteer-core";
-import { BrowserDelays } from "@/tools/browser/constants";
+import { BrowserDelays } from "@/tools/browser";
 import { formatWaitMs, logger, sleep } from "@/utils";
 import { genshinConfig } from "../config/config";
 

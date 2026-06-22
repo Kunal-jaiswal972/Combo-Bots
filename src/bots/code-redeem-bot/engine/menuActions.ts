@@ -1,4 +1,4 @@
-import type { SchedulerRunner } from "@/tools/scheduler/runner/schedulerRunner";
+import type { SchedulerRunner } from "@/tools/scheduler";
 import type {
   RedeemTask,
   RedeemTaskTemplate,

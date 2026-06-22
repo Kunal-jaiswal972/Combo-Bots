@@ -1,5 +1,5 @@
 import { isPromptBack } from "@/adapters/host/contracts/promptBack";
-import type { RecurrenceSpec } from "@/tools/scheduler/types/recurrenceSpec";
+import type { RecurrenceSpec } from "@/tools/scheduler";
 import type { PromptPort } from "@/adapters/host/contracts/promptPort";
 import { promptOnceDateTime } from "./promptDatePicker";
 import { promptTimeOfDay } from "./promptTimePicker";

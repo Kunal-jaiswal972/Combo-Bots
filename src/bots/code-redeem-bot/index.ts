@@ -1,17 +1,16 @@
 /** @see ./docs — bot overview, flow, storage, and layout */
-import { ConfigError } from "@/utils";
+import { type AppConfig, ConfigError } from "@/utils";
 import {
   BOT_ID,
   SCHEDULER_TASK_SOURCE,
 } from "@/bots/code-redeem-bot/config/constants";
-import type { AppConfig } from "@/utils/env/appConfigTypes";
 import type {
   Bot,
   BotContext,
   BotModule,
   BotModuleCreateOptions,
 } from "@/adapters/host/contracts/bot";
-import type { SchedulerRunner } from "@/tools/scheduler/runner/schedulerRunner";
+import type { SchedulerRunner } from "@/tools/scheduler";
 import type { RedeemTask, RedeemTaskTemplate } from "@/bots/code-redeem-bot/types";
 import { createCodeRedeemSchedulerOnTrigger } from "./controllers/scheduling/onTrigger";
 import { createBotScheduler } from "./controllers/scheduling/scheduler";

@@ -8,7 +8,7 @@ import { scheduledTaskRecordSchema } from "@/bots/code-redeem-bot/types";
 import { parseStoredCredentials } from "@/bots/code-redeem-bot/utils/credentials";
 import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
 import { gameDatabaseIds } from "@/bots/code-redeem-bot/config/database";
-import type { RecurrenceSpec } from "@/tools/scheduler/types/recurrenceSpec";
+import type { RecurrenceSpec } from "@/tools/scheduler";
 import { openGameDatabase } from "../db";
 
 interface ScheduledTaskRow {

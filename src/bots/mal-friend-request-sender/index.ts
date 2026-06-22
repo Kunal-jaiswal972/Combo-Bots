@@ -1,5 +1,5 @@
 /** @see ./docs — bot overview, flow, storage, and layout */
-import type { AppConfig } from "@/utils/env/appConfigTypes";
+import type { AppConfig } from "@/utils";
 import type {
   Bot,
   BotModule,

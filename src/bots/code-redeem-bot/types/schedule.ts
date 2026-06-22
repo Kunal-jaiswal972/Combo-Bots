@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { recurrenceSpecSchema } from "@/tools/scheduler/types/recurrenceSpec";
-import type { ScheduledJob } from "@/tools/scheduler/types/scheduledJob";
+import { recurrenceSpecSchema, type ScheduledJob } from "@/tools/scheduler";
 import { redeemTaskTemplateSchema, type RedeemTaskTemplate } from "./task";
 
 export const scheduledTaskRecordSchema = z.object({

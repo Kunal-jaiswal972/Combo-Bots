@@ -1,5 +1,4 @@
-import { ConfigError } from "@/utils/errors/errors";
-import type { AppConfig } from "@/utils/env/appConfigTypes";
+import { type AppConfig, ConfigError } from "@/utils";
 import type { Bot } from "@/adapters/host/contracts/bot";
 import type {
   SchedulableRunPayload,
@@ -9,6 +8,7 @@ import type { PromptPort } from "@/adapters/host/contracts/promptPort";
 import type { TaskInputAdapter } from "@/adapters/host/contracts/taskInputAdapter";
 import type { TerminalPorts } from "@/adapters/host/core/terminalPorts";
 import { adapterModules, type AdapterModuleCreateOptions } from "./adapterModules";
+
 export interface CreateEnabledAdaptersOptions {
   readonly terminal: TerminalPorts;
   readonly appConfig: AppConfig;

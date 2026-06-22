@@ -1,4 +1,4 @@
-import { ConfigError } from "@/utils/errors/errors";
+import { ConfigError } from "@/utils";
 import type { AdapterModule } from "@/adapters/host/registry/adapterModules";
 import { createTelegramAdapter } from "./telegramAdapter";
 import { createTelegramScheduledRunNotifier } from "@/adapters/telegram/lib/telegramScheduledRunNotifier";

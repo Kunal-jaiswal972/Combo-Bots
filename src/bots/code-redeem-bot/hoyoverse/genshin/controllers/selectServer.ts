@@ -1,10 +1,6 @@
 import type { Page } from "puppeteer-core";
-import { BrowserDelays } from "@/tools/browser/constants";
+import { BrowserDelays, evaluateClick, readElementText } from "@/tools/browser";
 import { type GenshinServerValue } from "@/bots/code-redeem-bot/config/constants";
-import {
-  evaluateClick,
-  readElementText,
-} from "@/tools/browser";
 import { logger, sleep } from "@/utils";
 import {
   genshinServerNthChild,

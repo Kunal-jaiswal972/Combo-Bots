@@ -1,6 +1,5 @@
 import { botModules } from "@/bots/registry";
-import { getAppConfig } from "@/utils/env/appConfig";
-import { isAborted, logger } from "@/utils";
+import { getAppConfig, isAborted, logger } from "@/utils";
 import type { Bot } from "@/adapters/host/contracts/bot";
 import type { SchedulableRunPayload } from "@/adapters/host/contracts/scheduledRunNotifier";
 import type { PromptPort } from "@/adapters/host/contracts/promptPort";

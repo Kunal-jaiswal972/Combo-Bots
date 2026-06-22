@@ -5,7 +5,7 @@ import type {
   CodeStoreMergeResult,
   NormalizedScrapedCode,
 } from "./codes";
-import type { ScheduledJobStore } from "@/tools/scheduler/types/scheduledJob";
+import type { ScheduledJobStore } from "@/tools/scheduler";
 
 export interface MergeScrapedCodesOptions {
   gameId: GameIdValue;

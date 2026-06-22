@@ -1,4 +1,4 @@
-import type { SchedulerTriggerHandler } from "@/tools/scheduler/types/taskScheduler";
+import type { SchedulerTriggerHandler } from "@/tools/scheduler";
 import type {
   SchedulableRunPayload,
   ScheduledRunNotifier,

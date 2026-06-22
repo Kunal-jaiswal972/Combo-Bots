@@ -1,4 +1,4 @@
-import type { AppConfig } from "@/utils/env/appConfigTypes";
+import type { AppConfig } from "@/utils";
 import type { Bot } from "@/adapters/host/contracts/bot";
 import type {
   SchedulableRunPayload,

@@ -1,13 +1,13 @@
 import type { Page } from "puppeteer-core";
-import { BrowserDelays } from "@/tools/browser/constants";
-import { RedeemStatus } from "@/bots/code-redeem-bot/config/constants";
-import { GameId } from "@/bots/code-redeem-bot/config/constants";
-import type { CodeRedeemResult } from "@/bots/code-redeem-bot/types";
 import {
+  BrowserDelays,
   clearInput,
   clickElement,
   enterText,
 } from "@/tools/browser";
+import { RedeemStatus } from "@/bots/code-redeem-bot/config/constants";
+import { GameId } from "@/bots/code-redeem-bot/config/constants";
+import type { CodeRedeemResult } from "@/bots/code-redeem-bot/types";
 import {
   getRandomDelay,
   logger,

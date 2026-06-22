@@ -1,8 +1,7 @@
 import { createRedeemTask } from "@/bots/code-redeem-bot/engine/createRedeemTask";
 import type { TaskSource } from "@/bots/code-redeem-bot/types";
-import type { RecurrenceSpec } from "@/tools/scheduler/types/recurrenceSpec";
+import type { RecurrenceSpec, TaskScheduler } from "@/tools/scheduler";
 import type { RedeemTaskTemplate } from "@/bots/code-redeem-bot/types";
-import type { TaskScheduler } from "@/tools/scheduler/types/taskScheduler";
 import { formatSchedulerInstant } from "@/utils";
 import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
 import { isPromptBack } from "@/adapters/host/contracts/promptBack";

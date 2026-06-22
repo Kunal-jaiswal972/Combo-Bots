@@ -1,5 +1,4 @@
-import { BrowserDelays } from "@/tools/browser/constants";
-import type { ChromeSession } from "@/tools/browser";
+import { BrowserDelays, type ChromeSession } from "@/tools/browser";
 import type {
   CodeRedeemResult,
   GameRedeemOptions,
