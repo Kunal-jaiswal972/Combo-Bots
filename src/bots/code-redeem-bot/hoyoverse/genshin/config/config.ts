@@ -1,7 +1,7 @@
 import {
   GenshinServer,
   type GenshinServerValue,
-} from "@/bots/code-redeem-bot/config/constants";
+} from "../../../config/constants";
 import { genshinElements } from "./elements";
 
 export const genshinConfig = {

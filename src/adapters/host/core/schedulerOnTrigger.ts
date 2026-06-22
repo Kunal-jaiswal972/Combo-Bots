@@ -1,8 +1,9 @@
 import type { SchedulerTriggerHandler } from "@/tools/scheduler";
+
 import type {
   SchedulableRunPayload,
   ScheduledRunNotifier,
-} from "@/adapters/host/contracts/scheduledRunNotifier";
+} from "../contracts";
 
 export interface CreateSchedulerOnTriggerOptions<TPayload extends SchedulableRunPayload> {
   readonly getScheduledRunNotifiers: () => readonly ScheduledRunNotifier[];

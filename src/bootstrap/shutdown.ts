@@ -1,4 +1,5 @@
 import readline from "node:readline";
+
 import { triggerAbort } from "@/utils";
 
 export type ShutdownHook = () => Promise<void> | void;

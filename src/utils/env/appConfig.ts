@@ -1,10 +1,12 @@
 import os from "node:os";
 import { z } from "zod";
+
 import {
   expandChromeUserDataDir,
   resolveChromeExecutablePath,
   type ChromePathSearchContext,
 } from "@/tools/browser/paths/chromePaths";
+
 import { isValidIanaTimeZone } from "../datetime/dateTime";
 import type { AppConfig } from "./appConfigTypes";
 

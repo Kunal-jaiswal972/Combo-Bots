@@ -1,4 +1,5 @@
 import chalk from "chalk";
+
 import type { GetRandomDelayOptions } from "../timing/waitTypes";
 
 function randomInt(min: number, max: number): number {

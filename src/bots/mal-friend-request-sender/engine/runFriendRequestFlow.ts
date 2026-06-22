@@ -1,10 +1,11 @@
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
+import type { PromptPort } from "@/adapters/host/contracts";
 import {
   buildChromeLaunchOptions,
   closeBrowser,
   launchChromeSession,
 } from "@/tools/browser";
 import { isAborted, logger, sleep } from "@/utils";
+
 import { MalDelays } from "../config/constants";
 import { fetchFriendProfileLinks, processProfileLink } from "../mal/friends";
 import { ensureMalLoggedIn, resolveTargetUsername } from "../mal/login";

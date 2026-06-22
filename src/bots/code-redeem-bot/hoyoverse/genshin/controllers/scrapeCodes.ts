@@ -1,4 +1,3 @@
-import { ScrapeError } from "@/utils";
 import {
   attrIn,
   fetchJson,
@@ -8,7 +7,9 @@ import {
   type CheerioAPI,
   type Element,
 } from "@/tools/scraper";
-import type { ScrapedCodeRow } from "@/bots/code-redeem-bot/types";
+import { ScrapeError } from "@/utils";
+
+import type { ScrapedCodeRow } from "../../../types";
 import { genshinConfig } from "../config/config";
 
 interface FandomWikiError {

@@ -1,12 +1,13 @@
 import { type AppConfig, ConfigError } from "@/utils";
-import type { Bot } from "@/adapters/host/contracts/bot";
+
 import type {
+  Bot,
+  PromptPort,
   SchedulableRunPayload,
   ScheduledRunNotifier,
-} from "@/adapters/host/contracts/scheduledRunNotifier";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
-import type { TaskInputAdapter } from "@/adapters/host/contracts/taskInputAdapter";
-import type { TerminalPorts } from "@/adapters/host/core/terminalPorts";
+  TaskInputAdapter,
+} from "../contracts";
+import type { TerminalPorts } from "../core/terminalPorts";
 import { adapterModules, type AdapterModuleCreateOptions } from "./adapterModules";
 
 export interface CreateEnabledAdaptersOptions {

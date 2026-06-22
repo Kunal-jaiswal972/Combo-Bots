@@ -1,6 +1,7 @@
 import { z } from "zod";
-import { GameId, GenshinServer, type GameIdValue } from "@/bots/code-redeem-bot/config/constants";
-import type { GameLoginCredentials } from "@/bots/code-redeem-bot/types";
+
+import { GameId, GenshinServer, type GameIdValue } from "../../config/constants";
+import type { GameLoginCredentials } from "../../types";
 import { HsrServer } from "../hsr/constants";
 
 export interface ServerPromptChoice {

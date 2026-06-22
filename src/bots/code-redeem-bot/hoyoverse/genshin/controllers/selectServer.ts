@@ -1,7 +1,9 @@
 import type { Page } from "puppeteer-core";
+
 import { BrowserDelays, evaluateClick, readElementText } from "@/tools/browser";
-import { type GenshinServerValue } from "@/bots/code-redeem-bot/config/constants";
 import { logger, sleep } from "@/utils";
+
+import { type GenshinServerValue } from "../../../config/constants";
 import {
   genshinServerNthChild,
   getServerMenuSelector,

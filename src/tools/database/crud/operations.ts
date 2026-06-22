@@ -1,4 +1,5 @@
 import type { RunResult } from "better-sqlite3";
+
 import type { DbHandle } from "../connection/open";
 import { getNativeDatabase } from "../connection/open";
 

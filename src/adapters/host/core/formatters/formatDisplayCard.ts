@@ -1,4 +1,4 @@
-import type { DisplayCard } from "@/adapters/host/contracts/displayCard";
+import type { DisplayCard } from "../../contracts";
 
 function escapeHtml(text: string): string {
   return text

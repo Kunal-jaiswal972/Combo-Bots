@@ -1,9 +1,9 @@
-import { isPromptBack } from "@/adapters/host/contracts/promptBack";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
 import {
   getWeekdayPickerLabel,
   WEEKDAY_PICKER_CHOICES,
 } from "@/utils";
+
+import { isPromptBack, type PromptPort } from "../../contracts";
 
 type WeekdayPickValue = (typeof WEEKDAY_PICKER_CHOICES)[number]["value"] | "done";
 

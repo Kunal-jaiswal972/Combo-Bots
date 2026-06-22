@@ -1,6 +1,8 @@
 import type { Page } from "puppeteer-core";
+
 import { navigate } from "@/tools/browser";
 import { logger, sleep } from "@/utils";
+
 import {
   friendsPageUrl,
   MalDelays,

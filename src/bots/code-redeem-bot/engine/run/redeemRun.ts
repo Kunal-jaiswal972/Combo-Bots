@@ -4,20 +4,21 @@ import {
   closeBrowser,
   launchChromeSession,
 } from "@/tools/browser";
-import type { RedeemTask } from "@/bots/code-redeem-bot/types";
-import type { RunResult, RunResultStatus } from "@/bots/code-redeem-bot/types";
-import { getGameModule } from "@/bots/code-redeem-bot/engine/gameRegistry";
 import { getAppConfig, logger } from "@/utils";
-import { getDatabasePath } from "@/bots/code-redeem-bot/controllers/storage";
-import type { RedeemSummary } from "@/bots/code-redeem-bot/types";
-import type { ScrapeStats } from "@/bots/code-redeem-bot/types";
+
+import { getDatabasePath } from "../../controllers/storage";
+import type { RedeemTask } from "../../types";
+import type { RunResult, RunResultStatus } from "../../types";
+import type { RedeemSummary } from "../../types";
+import type { ScrapeStats } from "../../types";
+import { getGameModule } from "../gameRegistry";
+import { evaluateScrapePolicy } from "../policies/scrapePolicy";
 import {
   hasRedeemableCodesForGame,
   logRunSummary,
   redeemCodes,
 } from "./browserRedemption";
 import { runScrape } from "./scrapeService";
-import { evaluateScrapePolicy } from "../policies/scrapePolicy";
 
 export interface ExecuteRedeemRunOptions {
   task: RedeemTask;

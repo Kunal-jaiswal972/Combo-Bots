@@ -1,11 +1,12 @@
 import * as clack from "@clack/prompts";
-import type { PromptOptions } from "@/adapters/host/contracts/promptPort";
+
 import {
   PROMPT_BACK_CHOICE_VALUE,
   PROMPT_BACK_LABEL,
   PROMPT_BACK_TEXT,
   PromptBackError,
-} from "@/adapters/host/contracts/promptBack";
+  type PromptOptions,
+} from "@/adapters/host/contracts";
 
 function isBackText(answer: string): boolean {
   return answer.trim().toLowerCase() === PROMPT_BACK_TEXT;

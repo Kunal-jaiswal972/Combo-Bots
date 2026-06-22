@@ -1,25 +1,26 @@
 /** @see ./docs — bot overview, flow, storage, and layout */
-import { type AppConfig, ConfigError } from "@/utils";
-import {
-  BOT_ID,
-  SCHEDULER_TASK_SOURCE,
-} from "@/bots/code-redeem-bot/config/constants";
 import type {
   Bot,
   BotContext,
   BotModule,
   BotModuleCreateOptions,
-} from "@/adapters/host/contracts/bot";
+} from "@/adapters/host/contracts";
 import type { SchedulerRunner } from "@/tools/scheduler";
-import type { RedeemTask, RedeemTaskTemplate } from "@/bots/code-redeem-bot/types";
+import { type AppConfig, ConfigError } from "@/utils";
+
+import {
+  BOT_ID,
+  SCHEDULER_TASK_SOURCE,
+} from "./config/constants";
 import { createCodeRedeemSchedulerOnTrigger } from "./controllers/scheduling/onTrigger";
 import { createBotScheduler } from "./controllers/scheduling/scheduler";
 import {
   bootstrapStorage,
   closeBotDatabase,
   resetStorage,
-} from "@/bots/code-redeem-bot/controllers/storage";
+} from "./controllers/storage";
 import { buildMenuActions } from "./engine/menuActions";
+import type { RedeemTask, RedeemTaskTemplate } from "./types";
 
 const BOT_LABEL = "Code Redeemer";
 

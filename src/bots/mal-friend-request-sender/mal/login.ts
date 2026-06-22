@@ -1,5 +1,6 @@
 import type { Page } from "puppeteer-core";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
+
+import type { PromptPort } from "@/adapters/host/contracts";
 import {
   clearInput,
   clickElement,
@@ -14,15 +15,16 @@ import {
   logger,
   sleep,
 } from "@/utils";
-import {
-  loadMalBotState,
-  saveMalBotState,
-} from "../controllers/storage/store/stateStore";
+
 import {
   loginPageUrl,
   MalDelays,
   MalSelectors,
 } from "../config/constants";
+import {
+  loadMalBotState,
+  saveMalBotState,
+} from "../controllers/storage/store/stateStore";
 
 async function typeLikeHuman(
   page: Page,

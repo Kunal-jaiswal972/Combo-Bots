@@ -1,5 +1,7 @@
 import type { Frame, Page } from "puppeteer-core";
+
 import { getRandomDelay, logger, waitUntil, BrowserError } from "@/utils";
+
 import { BrowserConfig, BrowserDelays } from "../constants";
 import type {
   ClearInputOptions,

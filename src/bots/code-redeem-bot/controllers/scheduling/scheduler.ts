@@ -1,15 +1,17 @@
 import { randomUUID } from "node:crypto";
+
 import {
   SchedulerRunner,
   type SchedulerTriggerHandler,
 } from "@/tools/scheduler";
 import { getAppConfig } from "@/utils";
-import { SCHEDULER_TASK_SOURCE } from "@/bots/code-redeem-bot/config/constants";
-import { getStorage } from "@/bots/code-redeem-bot/controllers/storage";
+
+import { SCHEDULER_TASK_SOURCE } from "../../config/constants";
 import type {
   RedeemTask,
   RedeemTaskTemplate,
-} from "@/bots/code-redeem-bot/types";
+} from "../../types";
+import { getStorage } from "../storage";
 
 export interface CreateBotSchedulerOptions {
   readonly onTrigger: SchedulerTriggerHandler<RedeemTask>;

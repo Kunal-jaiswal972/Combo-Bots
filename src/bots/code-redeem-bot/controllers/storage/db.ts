@@ -1,14 +1,16 @@
 import type Database from "better-sqlite3";
-import type { GameIdValue } from "../../config/constants";
-import {
-  gameDatabaseIds,
-  resolveGameDatabasePath,
-} from "../../config/database";
+
 import {
   closeAllDatabases,
   getNativeDatabase,
   openDatabase,
 } from "@/tools/database";
+
+import type { GameIdValue } from "../../config/constants";
+import {
+  gameDatabaseIds,
+  resolveGameDatabasePath,
+} from "../../config/database";
 import { initSchema } from "./schema";
 
 const initializedPaths = new Set<string>();

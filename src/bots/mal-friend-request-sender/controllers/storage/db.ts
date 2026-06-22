@@ -1,10 +1,12 @@
 import type Database from "better-sqlite3";
+
 import {
   closeDatabase,
   getNativeDatabase,
   openDatabase,
   type DbHandle,
 } from "@/tools/database";
+
 import { resolveMalDatabasePath } from "../../config/database";
 import { initSchema } from "./schema";
 

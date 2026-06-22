@@ -1,7 +1,11 @@
 import { isAborted } from "@/utils";
-import type { Bot, BotContext } from "@/adapters/host/contracts/bot";
-import type { DisplayPresenter } from "@/adapters/host/contracts/displayPresenter";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
+
+import type {
+  Bot,
+  BotContext,
+  DisplayPresenter,
+  PromptPort,
+} from "../contracts";
 
 export interface RunBotRouterOptions {
   readonly port: PromptPort;

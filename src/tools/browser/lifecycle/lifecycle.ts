@@ -1,7 +1,9 @@
 import { execSync } from "node:child_process";
 import path from "node:path";
 import type { Browser } from "puppeteer-core";
+
 import { logger, sleep, getAppConfig } from "@/utils";
+
 import { BrowserDelays } from "../constants";
 
 let activeBrowser: Browser | null = null;

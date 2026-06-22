@@ -1,8 +1,4 @@
 import { BrowserDelays, type ChromeSession } from "@/tools/browser";
-import type {
-  CodeRedeemResult,
-  GameRedeemOptions,
-} from "@/bots/code-redeem-bot/types";
 import {
   formatAccountLabel,
   isAborted,
@@ -10,6 +6,11 @@ import {
   sleep,
   RedeemError
 } from "@/utils";
+
+import type {
+  CodeRedeemResult,
+  GameRedeemOptions,
+} from "../../../types";
 import { genshinConfig, isGenshinServer } from "../config/config";
 import { ensureLoggedIn } from "../controllers/login";
 import { redeemSingleCode } from "../controllers/redeemCode";

@@ -1,10 +1,11 @@
 /** @see ./docs — bot overview, flow, storage, and layout */
-import type { AppConfig } from "@/utils";
 import type {
   Bot,
   BotModule,
   BotModuleCreateOptions,
-} from "@/adapters/host/contracts/bot";
+} from "@/adapters/host/contracts";
+import type { AppConfig } from "@/utils";
+
 import { BOT_ID } from "./config/constants";
 import {
   bootstrapMalStorage,

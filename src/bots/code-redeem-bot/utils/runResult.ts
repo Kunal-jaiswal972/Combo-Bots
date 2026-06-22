@@ -2,7 +2,7 @@ import type {
   RedeemSummary,
   RunResult,
   ScrapeStats,
-} from "@/bots/code-redeem-bot/types";
+} from "../types";
 
 function formatScrapeStatsLine(stats: ScrapeStats): string {
   return `Scrape: ${stats.codesUpserted} codes (${stats.newCodes.length} new)`;

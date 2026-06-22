@@ -1,6 +1,7 @@
-import type { AdapterModule } from "@/adapters/host/registry/adapterModules";
-import { createCliAdapter } from "./cliAdapter";
 import type { TerminalPorts } from "@/adapters/host/core/terminalPorts";
+import type { AdapterModule } from "@/adapters/host/registry/adapterModules";
+
+import { createCliAdapter } from "./cliAdapter";
 
 const CLI_ADAPTER_ID = "cli";
 

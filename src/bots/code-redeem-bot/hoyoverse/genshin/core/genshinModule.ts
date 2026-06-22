@@ -1,8 +1,8 @@
-import { GameId } from "@/bots/code-redeem-bot/config/constants";
-import type { GameModule } from "@/bots/code-redeem-bot/engine/gameRegistry";
+import { GameId } from "../../../config/constants";
+import type { GameModule } from "../../../engine/gameRegistry";
 import { genshinConfig } from "../config/config";
-import { redeemGenshinCodes } from "./redeemer";
 import { scrapeGenshinCodes } from "../controllers/scrapeCodes";
+import { redeemGenshinCodes } from "./redeemer";
 
 export const genshinGameModule: GameModule = {
   id: GameId.GENSHIN,

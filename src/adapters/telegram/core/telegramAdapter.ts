@@ -1,19 +1,23 @@
 import { Bot, type Context } from "grammy";
-import { logger } from "@/utils";
-import type { Bot as RegisteredBot } from "@/adapters/host/contracts/bot";
-import type { TaskInputAdapter } from "@/adapters/host/contracts/taskInputAdapter";
+
+import {
+  type Bot as RegisteredBot,
+  PROMPT_BACK_TEXT,
+  type TaskInputAdapter,
+} from "@/adapters/host/contracts";
+import { logAdapter } from "@/adapters/host/core/adapterLogger";
 import { runBotRouter } from "@/adapters/host/core/botRouter";
-import { PROMPT_BACK_TEXT } from "@/adapters/host/contracts/promptBack";
+import { logger } from "@/utils";
+
+import {
+  clearTelegramChatSession,
+  getTelegramChatSession,
+} from "../lib/telegramPromptSession";
 import {
   rejectTelegramPromptBack,
   resolveTelegramCallbackData,
   TelegramPromptPort,
 } from "./telegramPromptPort";
-import { logAdapter } from "@/adapters/host/core/adapterLogger";
-import {
-  clearTelegramChatSession,
-  getTelegramChatSession,
-} from "@/adapters/telegram/lib/telegramPromptSession";
 
 const TELEGRAM_ADAPTER_ID = "telegram";
 

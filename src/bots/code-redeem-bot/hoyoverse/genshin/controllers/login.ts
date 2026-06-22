@@ -1,4 +1,5 @@
 import type { Browser, Page } from "puppeteer-core";
+
 import {
   clickElement,
   enterText,
@@ -16,6 +17,7 @@ import {
   waitUntil,
   RedeemError,
 } from "@/utils";
+
 import { genshinConfig } from "../config/config";
 
 export async function isLoggedIn(page: Page): Promise<boolean> {

@@ -1,5 +1,3 @@
-import type { RecurrenceSpec } from "../types/recurrenceSpec";
-import { computeNextRunAt } from "../drivers/recurrenceDrivers";
 import {
   advanceScheduleCursor,
   formatSchedulerInstant,
@@ -8,6 +6,9 @@ import {
   formatWeekdayFullList,
   getWeekdayFullName,
 } from "@/utils";
+
+import { computeNextRunAt } from "../drivers/recurrenceDrivers";
+import type { RecurrenceSpec } from "../types/recurrenceSpec";
 
 export function formatRecurrenceDescription(recurrence: RecurrenceSpec): string {
   switch (recurrence.type) {

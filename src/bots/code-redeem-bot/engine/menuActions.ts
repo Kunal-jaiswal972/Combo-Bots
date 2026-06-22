@@ -1,19 +1,20 @@
+import type { BotContext, BotMenuAction } from "@/adapters/host/contracts";
 import type { SchedulerRunner } from "@/tools/scheduler";
-import type {
-  RedeemTask,
-  RedeemTaskTemplate,
-} from "@/bots/code-redeem-bot/types";
-import type { BotContext, BotMenuAction } from "@/adapters/host/contracts/bot";
-import { runNowMenu } from "./menu/runNow";
-import { scheduleMenu } from "./menu/schedule";
+
+import { showRunHistoryList } from "../controllers/io/runHistoryList";
+import { showScheduledTaskList } from "../controllers/io/scheduledTaskList";
+import { listRecentRunHistoryWithTasks } from "../controllers/scheduling/queries/runHistory";
 import {
   cancelScheduledTask,
   listScheduledTasks,
 } from "../controllers/scheduling/queries/scheduledTasks";
-import { listRecentRunHistoryWithTasks } from "../controllers/scheduling/queries/runHistory";
-import { showRunHistoryList } from "../controllers/io/runHistoryList";
-import { showScheduledTaskList } from "../controllers/io/scheduledTaskList";
+import type {
+  RedeemTask,
+  RedeemTaskTemplate,
+} from "../types";
 import { formatScheduledTaskChoiceLabel } from "../utils/scheduledTask";
+import { runNowMenu } from "./menu/runNow";
+import { scheduleMenu } from "./menu/schedule";
 
 export function buildMenuActions(
   scheduler: SchedulerRunner<RedeemTaskTemplate, RedeemTask>,

@@ -1,17 +1,19 @@
 import type Database from "better-sqlite3";
+
+import { getTodayRunDate } from "@/utils";
+
 import {
   CodeStatus,
   RedeemStatus,
   type GameIdValue,
   type RedeemStatusValue,
 } from "../../../config/constants";
-import type { CodeRedeemResult, CodeStoreMergeResult } from "@/bots/code-redeem-bot/types";
+import type { CodeRedeemResult, CodeStoreMergeResult } from "../../../types";
 import type {
   CodesStore,
   MergeScrapedCodesOptions,
   PersistRedeemResultOptions,
-} from "@/bots/code-redeem-bot/types";
-import { getTodayRunDate } from "@/utils";
+} from "../../../types";
 import { openGameDatabase } from "../db";
 
 const skipRedeemStatuses: RedeemStatusValue[] = [

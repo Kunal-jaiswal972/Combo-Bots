@@ -1,4 +1,4 @@
-import type { PromptChoice } from "@/adapters/host/contracts/promptPort";
+import type { PromptChoice } from "@/adapters/host/contracts";
 
 export type PendingPromptKind = "choose" | "question" | "yesNo" | "username" | "password";
 

@@ -1,14 +1,14 @@
-import { createRedeemTask } from "@/bots/code-redeem-bot/engine/createRedeemTask";
-import type { TaskSource } from "@/bots/code-redeem-bot/types";
-import type { RecurrenceSpec, TaskScheduler } from "@/tools/scheduler";
-import type { RedeemTaskTemplate } from "@/bots/code-redeem-bot/types";
-import { formatSchedulerInstant } from "@/utils";
-import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
-import { isPromptBack } from "@/adapters/host/contracts/promptBack";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
-import { promptCredentials } from "@/bots/code-redeem-bot/controllers/io/prompts/credentials";
-import { promptGameSelection } from "@/bots/code-redeem-bot/controllers/io/prompts/gameSelection";
+import { isPromptBack, type PromptPort } from "@/adapters/host/contracts";
 import { promptRecurrenceSpec } from "@/adapters/host/core/prompts/promptSchedule";
+import type { RecurrenceSpec, TaskScheduler } from "@/tools/scheduler";
+import { formatSchedulerInstant } from "@/utils";
+
+import type { GameIdValue } from "../../config/constants";
+import { promptCredentials } from "../../controllers/io/prompts/credentials";
+import { promptGameSelection } from "../../controllers/io/prompts/gameSelection";
+import type { TaskSource } from "../../types";
+import type { RedeemTaskTemplate } from "../../types";
+import { createRedeemTask } from "../createRedeemTask";
 
 export interface ScheduleMenuOptions {
   port: PromptPort;

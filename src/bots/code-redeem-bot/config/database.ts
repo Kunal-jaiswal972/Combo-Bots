@@ -1,8 +1,9 @@
-import { getAppConfig } from "@/utils";
 import {
   resolveDataBaseDir,
   resolveDatabasePath,
 } from "@/tools/database";
+import { getAppConfig } from "@/utils";
+
 import { BOT_ID, GameId, type GameIdValue } from "./constants";
 
 export const gameDatabaseIds = Object.values(GameId) as [

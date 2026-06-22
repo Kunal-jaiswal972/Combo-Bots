@@ -11,9 +11,9 @@ export type {
   CodesStore,
   MergeScrapedCodesOptions,
   PersistRedeemResultOptions,
-} from "@/bots/code-redeem-bot/types";
+} from "../../types";
 export type {
   RecordRunHistoryOptions,
   RunHistoryStore,
-} from "@/bots/code-redeem-bot/types";
-export type { ScheduledTaskStore } from "@/bots/code-redeem-bot/types";
+} from "../../types";
+export type { ScheduledTaskStore } from "../../types";

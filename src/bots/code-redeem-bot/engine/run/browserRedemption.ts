@@ -1,15 +1,16 @@
-import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
-import { RedeemStatus } from "@/bots/code-redeem-bot/config/constants";
-import { getGameModule } from "@/bots/code-redeem-bot/engine/gameRegistry";
-import { getStorage } from "@/bots/code-redeem-bot/controllers/storage";
-import type { RedeemSummary } from "@/bots/code-redeem-bot/types";
-import type { CodeRedeemResult } from "@/bots/code-redeem-bot/types";
+import { formatAccountLabel, logger } from "@/utils";
+
+import type { GameIdValue } from "../../config/constants";
+import { RedeemStatus } from "../../config/constants";
+import { getStorage } from "../../controllers/storage";
+import type { RedeemSummary } from "../../types";
+import type { CodeRedeemResult } from "../../types";
 import type {
   RedeemCodesOptions,
   RedeemWithGameEngineOptions,
-} from "@/bots/code-redeem-bot/types";
-import { formatRedeemSummaryLogLine } from "@/bots/code-redeem-bot/utils/runResult";
-import { formatAccountLabel, logger } from "@/utils";
+} from "../../types";
+import { formatRedeemSummaryLogLine } from "../../utils/runResult";
+import { getGameModule } from "../gameRegistry";
 
 function countResults(results: CodeRedeemResult[]): Omit<RedeemSummary, "codesAttempted"> {
   const counts = {

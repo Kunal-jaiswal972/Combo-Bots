@@ -1,11 +1,12 @@
+import type { ScheduledJobStore } from "@/tools/scheduler";
+
 import type { GameIdValue } from "../config/constants";
-import type { RedeemTask, RedeemTaskTemplate } from "./task";
-import type { CodeRedeemResult, RunHistoryEntry, RunResult } from "./run";
 import type {
   CodeStoreMergeResult,
   NormalizedScrapedCode,
 } from "./codes";
-import type { ScheduledJobStore } from "@/tools/scheduler";
+import type { CodeRedeemResult, RunHistoryEntry, RunResult } from "./run";
+import type { RedeemTask, RedeemTaskTemplate } from "./task";
 
 export interface MergeScrapedCodesOptions {
   gameId: GameIdValue;

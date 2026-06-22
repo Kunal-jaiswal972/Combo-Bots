@@ -1,7 +1,9 @@
-import type { TaskInputAdapter } from "@/adapters/host/contracts/taskInputAdapter";
-import type { Bot } from "@/adapters/host/contracts/bot";
-import type { DisplayPresenter } from "@/adapters/host/contracts/displayPresenter";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
+import type {
+  Bot,
+  DisplayPresenter,
+  PromptPort,
+  TaskInputAdapter,
+} from "@/adapters/host/contracts";
 import { runBotRouter } from "@/adapters/host/core/botRouter";
 
 const CLI_ADAPTER_ID = "cli";

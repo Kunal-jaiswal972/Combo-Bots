@@ -1,5 +1,3 @@
-import { isPromptBack } from "@/adapters/host/contracts/promptBack";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
 import {
   addCalendarDaysInTimezone,
   atTimeOnDateInTimezone,
@@ -10,6 +8,8 @@ import {
   startOfDayInTimezone,
   zonedDateTimeToUtc,
 } from "@/utils";
+
+import { isPromptBack, type PromptPort } from "../../contracts";
 import { promptTimeOfDay } from "./promptTimePicker";
 
 const MONTH_CHOICES = [

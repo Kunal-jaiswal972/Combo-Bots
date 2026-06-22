@@ -1,10 +1,10 @@
-import { isPromptBack } from "@/adapters/host/contracts/promptBack";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
 import {
   formatTimeOfDayLabel,
   formatTimeOfDayString,
   to24Hour,
 } from "@/utils";
+
+import { isPromptBack, type PromptPort } from "../../contracts";
 
 const HOUR_CHOICES = [
   { value: "12" as const, label: "12 o'clock" },

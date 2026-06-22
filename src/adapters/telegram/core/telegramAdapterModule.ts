@@ -1,7 +1,8 @@
-import { ConfigError } from "@/utils";
 import type { AdapterModule } from "@/adapters/host/registry/adapterModules";
+import { ConfigError } from "@/utils";
+
+import { createTelegramScheduledRunNotifier } from "../lib/telegramScheduledRunNotifier";
 import { createTelegramAdapter } from "./telegramAdapter";
-import { createTelegramScheduledRunNotifier } from "@/adapters/telegram/lib/telegramScheduledRunNotifier";
 
 export const telegramAdapterModule: AdapterModule = {
   id: "telegram",

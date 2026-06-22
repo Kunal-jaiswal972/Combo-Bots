@@ -1,7 +1,7 @@
-import type { ScheduledTask } from "@/bots/code-redeem-bot/types";
-import type { DisplayPresenter } from "@/adapters/host/contracts/displayPresenter";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
-import { buildScheduledTaskCard } from "@/bots/code-redeem-bot/utils/scheduledTask";
+import type { DisplayPresenter, PromptPort } from "@/adapters/host/contracts";
+
+import type { ScheduledTask } from "../../types";
+import { buildScheduledTaskCard } from "../../utils/scheduledTask";
 
 export function showScheduledTaskList(
   prompt: PromptPort,

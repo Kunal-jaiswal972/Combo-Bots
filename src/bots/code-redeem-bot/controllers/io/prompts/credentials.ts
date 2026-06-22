@@ -1,7 +1,8 @@
-import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
-import { getServerPromptChoices } from "@/bots/code-redeem-bot/hoyoverse/shared/credentials";
-import type { GameLoginCredentials } from "@/bots/code-redeem-bot/types";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
+import type { PromptPort } from "@/adapters/host/contracts";
+
+import type { GameIdValue } from "../../../config/constants";
+import { getServerPromptChoices } from "../../../hoyoverse/shared/credentials";
+import type { GameLoginCredentials } from "../../../types";
 
 export async function promptCredentials(
   port: PromptPort,

@@ -1,10 +1,11 @@
+import type { TaskScheduler } from "@/tools/scheduler";
+
 import type {
   RedeemTaskTemplate,
   RunHistoryEntry,
   ScheduledTask,
-} from "@/bots/code-redeem-bot/types";
-import type { TaskScheduler } from "@/tools/scheduler";
-import { getStorage } from "@/bots/code-redeem-bot/controllers/storage";
+} from "../../../types";
+import { getStorage } from "../../storage";
 import {
   buildScheduledTasksById,
   listScheduledTasks,

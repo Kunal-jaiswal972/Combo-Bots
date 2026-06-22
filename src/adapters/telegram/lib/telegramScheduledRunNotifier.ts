@@ -1,10 +1,12 @@
 import type { Bot } from "grammy";
+
 import type {
+  PromptPort,
   SchedulableRunPayload,
   ScheduledRunNotifier,
-} from "@/adapters/host/contracts/scheduledRunNotifier";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
-import { TelegramPromptPort } from "@/adapters/telegram/core/telegramPromptPort";
+} from "@/adapters/host/contracts";
+
+import { TelegramPromptPort } from "../core/telegramPromptPort";
 import { getTelegramChatSession } from "./telegramPromptSession";
 
 function resolveTelegramChatId(payload: SchedulableRunPayload): number | null {

@@ -1,18 +1,20 @@
-import { botModules } from "@/bots/registry";
-import { getAppConfig, isAborted, logger } from "@/utils";
-import type { Bot } from "@/adapters/host/contracts/bot";
-import type { SchedulableRunPayload } from "@/adapters/host/contracts/scheduledRunNotifier";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
+import type {
+  Bot,
+  PromptPort,
+  SchedulableRunPayload,
+} from "@/adapters/host/contracts";
 import { createTerminalPorts } from "@/adapters/host/core/terminalPorts";
 import { createEnabledAdapters } from "@/adapters/host/registry/createEnabledAdapters";
 import {
   bootstrapTaskSources,
   validateTaskSource,
 } from "@/adapters/host/registry/taskSource";
-import { closeBrowser, setOnBrowserDisconnect } from "@/tools/browser";
 import { onShutdown, requestShutdown } from "@/bootstrap/shutdown";
-import { redeemTaskSchema } from "@/bots/code-redeem-bot/types";
 import { createScheduledRunHandler } from "@/bots/code-redeem-bot/controllers/scheduling/scheduledRunHandler";
+import { redeemTaskSchema } from "@/bots/code-redeem-bot/types";
+import { botModules } from "@/bots/registry";
+import { closeBrowser, setOnBrowserDisconnect } from "@/tools/browser";
+import { getAppConfig, isAborted, logger } from "@/utils";
 
 bootstrapTaskSources({
   triggerSourceIds: botModules.flatMap(

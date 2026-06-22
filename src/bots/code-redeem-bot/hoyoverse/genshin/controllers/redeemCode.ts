@@ -1,19 +1,21 @@
 import type { Page } from "puppeteer-core";
+
 import {
   BrowserDelays,
   clearInput,
   clickElement,
   enterText,
 } from "@/tools/browser";
-import { RedeemStatus } from "@/bots/code-redeem-bot/config/constants";
-import { GameId } from "@/bots/code-redeem-bot/config/constants";
-import type { CodeRedeemResult } from "@/bots/code-redeem-bot/types";
 import {
   getRandomDelay,
   logger,
   sleep,
 } from "@/utils";
-import { getRedeemMessageParser } from "@/bots/code-redeem-bot/hoyoverse/shared/redeemMessageParser";
+
+import { RedeemStatus } from "../../../config/constants";
+import { GameId } from "../../../config/constants";
+import type { CodeRedeemResult } from "../../../types";
+import { getRedeemMessageParser } from "../../shared/redeemMessageParser";
 import { genshinConfig } from "../config/config";
 import {
   dismissRedeemModal,

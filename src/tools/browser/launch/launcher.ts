@@ -1,15 +1,17 @@
 import { spawn } from "node:child_process";
 import fs from "node:fs";
 import puppeteer from "puppeteer-core";
+
 import { logger, sleep, BrowserError, getAppConfig } from "@/utils";
+
+import { openPage } from "../actions/elements";
 import { BrowserConfig, BrowserDelays } from "../constants";
+import { bindBrowser, killExistingDebugChrome } from "../lifecycle/lifecycle";
 import type {
   ChromeLaunchOptions,
   ChromeSession,
   ChromeVersionResponse,
 } from "../types/session";
-import { bindBrowser, killExistingDebugChrome } from "../lifecycle/lifecycle";
-import { openPage } from "../actions/elements";
 
 function buildChromeSpawnArgs(options: ChromeLaunchOptions): string[] {
   const args = [

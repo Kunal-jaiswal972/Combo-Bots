@@ -1,5 +1,5 @@
-import { installShutdownHandlers } from "@/bootstrap/shutdown";
 import { runApplication } from "@/bootstrap/runApplication";
+import { installShutdownHandlers } from "@/bootstrap/shutdown";
 import { loadEnvFile, logger } from "@/utils";
 
 loadEnvFile();
