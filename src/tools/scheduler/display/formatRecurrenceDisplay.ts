@@ -1,5 +1,5 @@
-import type { RecurrenceSpec } from "@/tools/scheduler/types/recurrenceSpec";
-import { computeNextRunAt } from "@/tools/scheduler/drivers/recurrenceDrivers";
+import type { RecurrenceSpec } from "../types/recurrenceSpec";
+import { computeNextRunAt } from "../drivers/recurrenceDrivers";
 import {
   advanceScheduleCursor,
   formatSchedulerInstant,

@@ -1,6 +1,6 @@
-import type { RecurrenceSpec } from "@/tools/scheduler/types/recurrenceSpec";
-import type { RecurrenceDriver } from "@/tools/scheduler/types/driver";
-import { createRecurrenceDriverRegistry } from "@/tools/scheduler/drivers/recurrenceDriverRegistry";
+import type { RecurrenceSpec } from "../types/recurrenceSpec";
+import type { RecurrenceDriver } from "../types/driver";
+import { createRecurrenceDriverRegistry } from "./recurrenceDriverRegistry";
 import {
   addCalendarDaysInTimezone,
   atTimeOnDateInTimezone,

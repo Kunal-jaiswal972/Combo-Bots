@@ -1,13 +1,12 @@
 import { randomUUID } from "node:crypto";
 import { formatSchedulerInstant, isAborted, logger } from "@/utils";
-import { computeNextRunAt, rescheduleAfterRun } from "@/tools/scheduler";
+import { computeNextRunAt, rescheduleAfterRun } from "../drivers/recurrenceDrivers";
+import type { ScheduledJob, ScheduledJobStore } from "../types/scheduledJob";
 import type {
-  ScheduledJob,
-  ScheduledJobStore,
   RegisterScheduledJobOptions,
   SchedulerTriggerHandler,
   TaskScheduler,
-} from "@/tools/scheduler";
+} from "../types/taskScheduler";
 
 const DEFAULT_POLL_INTERVAL_MS = 60_000;
 const MAX_DUE_TIMER_MS = 2_147_483_647;

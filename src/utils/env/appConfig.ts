@@ -5,7 +5,7 @@ import {
   resolveChromeExecutablePath,
   type ChromePathSearchContext,
 } from "@/tools/browser/paths/chromePaths";
-import { isValidIanaTimeZone } from "@/utils";
+import { isValidIanaTimeZone } from "../datetime/dateTime";
 import type { AppConfig } from "./appConfigTypes";
 
 const DEFAULT_DATA_BASE_DIR = "file:./src/data";

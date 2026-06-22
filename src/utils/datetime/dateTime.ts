@@ -10,7 +10,7 @@ import {
   startOfDay,
 } from "date-fns";
 import { formatInTimeZone, fromZonedTime, toZonedTime } from "date-fns-tz";
-import { getAppConfig } from "@/utils/env/appConfig";
+import { getAppConfig } from "../env/appConfig";
 
 const CALENDAR_DATE_PATTERN = "yyyy-MM-dd";
 const INSTANT_DISPLAY_PATTERN = "d MMM yyyy, h:mm a";
