@@ -1,7 +1,8 @@
 import { resolveDataBaseDir, resolveDatabasePath } from "@/tools/database";
+import { BOT_ID_CODE_REDEEM } from "@/config";
 import { getAppConfig } from "@/utils";
 
-import { BOT_ID, GameId, type GameIdValue } from "./constants";
+import { GameId, type GameIdValue } from "./constants";
 
 export const gameDatabaseIds = Object.values(GameId) as [
   GameIdValue,
@@ -14,7 +15,7 @@ export function resolveGameDatabasePath(gameId: GameIdValue): string {
 
   return resolveDatabasePath({
     basePath: resolveDataBaseDir(appConfig.dataBaseDir),
-    subfolder: BOT_ID,
+    subfolder: BOT_ID_CODE_REDEEM,
     filename: `${gameId}.db`,
   });
 }
