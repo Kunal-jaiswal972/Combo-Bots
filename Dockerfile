@@ -27,9 +27,9 @@ WORKDIR /app
 ENV NODE_ENV=production \
   HEADLESS=true \
   CHROME_EXECUTABLE_PATH=/usr/bin/chromium \
-  DATABASE_URL=file:/data \
-  SCHEDULER_TIMEZONE=Asia/Kolkata
-
+  CHROME_USER_DATA_DIR=/data/chrome \
+  DATABASE_URL=file:/data 
+  
 COPY package.json package-lock.json ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
