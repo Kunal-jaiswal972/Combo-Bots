@@ -1,7 +1,7 @@
 {
-  "name": "auto-code-redeemer",
+  "name": "comnbo-bots",
   "version": "2.0.0",
-  "description": "Modular multi-game promo code scraper and redeemer",
+  "description": "Lots of bots scaffolding and utilities",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
