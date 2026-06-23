@@ -20,7 +20,8 @@
     "resolveJsonModule": true,
     "noEmit": true,
     "verbatimModuleSyntax": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "ignoreDeprecations": "6.0"
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]

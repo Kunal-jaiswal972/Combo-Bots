@@ -1,14 +1,13 @@
 import type { AdapterModule } from "@/adapters/host/registry/adapterModules";
 import { ConfigError, getAppConfig, isModuleEnabled } from "@/utils";
+import { ADAPTER_ID_TELEGRAM, ADAPTER_LABEL_TELEGRAM } from "@/config";
 
 import { createTelegramScheduledRunNotifier } from "../lib/telegramScheduledRunNotifier";
 import { createTelegramAdapter } from "./telegramAdapter";
 
-const TELEGRAM_ADAPTER_ID = "telegram";
-
 export const telegramAdapterModule: AdapterModule = {
-  id: TELEGRAM_ADAPTER_ID,
-  label: "Telegram bot",
+  id: ADAPTER_ID_TELEGRAM,
+  label: ADAPTER_LABEL_TELEGRAM,
   lifecycle: "background",
 
   /**
@@ -17,7 +16,7 @@ export const telegramAdapterModule: AdapterModule = {
    */
   isEnabled(): boolean {
     return isModuleEnabled(
-      TELEGRAM_ADAPTER_ID,
+      ADAPTER_ID_TELEGRAM,
       getAppConfig().telegramBotToken !== null,
     );
   },

@@ -2,6 +2,7 @@ import os from "node:os";
 import dotenv from "dotenv";
 import { z } from "zod";
 
+import { APP_DEFAULTS } from "@/config";
 import {
   type ChromePathSearchContext,
   expandChromeUserDataDir,
@@ -84,10 +85,10 @@ export interface AppConfig {
   chrome: ChromeEnvConfig;
 }
 
-const DEFAULT_DATA_BASE_DIR = "file:./src/data";
-const DEFAULT_SCHEDULER_POLL_INTERVAL_MS = 10_000;
-const DEFAULT_SCHEDULER_TIMEZONE = "Asia/Kolkata";
-const DEFAULT_CHROME_DEBUG_PORT = 9222;
+const DEFAULT_DATA_BASE_DIR = APP_DEFAULTS.databaseUrl;
+const DEFAULT_SCHEDULER_POLL_INTERVAL_MS = APP_DEFAULTS.schedulerPollIntervalMs;
+const DEFAULT_SCHEDULER_TIMEZONE = APP_DEFAULTS.schedulerTimezone;
+const DEFAULT_CHROME_DEBUG_PORT = APP_DEFAULTS.chromeDebugPort;
 
 const booleanFromEnv = z
   .string()

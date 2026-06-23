@@ -6,7 +6,7 @@ Sends a MyAnimeList friend request to **every friend** of a given MAL user. Driv
 
 `index.ts` — registers `malFriendRequestBotModule`. On `start()` opens SQLite; on `stop()` closes the DB handle.
 
-**Bot id:** `mal-friend-request-sender` (`config/constants.ts`).
+**Bot id:** `mal-friend-request-sender` — defined in `src/config/index.ts` as `BOT_ID_MAL`.
 
 **Enable/disable:** gated by the `<ID>_ENABLED` convention → **`MAL_FRIEND_REQUEST_SENDER_ENABLED`**. Defaults to enabled (`isModuleEnabled(BOT_ID, true)`); set the key to `false` in `.env` to hide it from the bot menu. See [Module enabling](../../../../AGENTS.md#module-enabling) for the full convention.
 
@@ -52,7 +52,7 @@ Schema: `controllers/storage/schema.ts` — table `bot_state` (singleton row):
 ```text
 mal-friend-request-sender/
 ├── index.ts              BotModule + lifecycle
-├── config/               Selectors, delays, DB path, BOT_ID
+├── config/               Selectors, delays, DB path (bot ID + label → `@/config`)
 ├── types/                bot_state Zod schema
 ├── mal/                  MAL site automation (login, friends scrape/request)
 ├── engine/               runFriendRequestFlow + menu action

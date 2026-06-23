@@ -1,7 +1,6 @@
 import { resolveDataBaseDir, resolveDatabasePath } from "@/tools/database";
 import { getAppConfig } from "@/utils";
-
-import { BOT_ID } from "./constants";
+import { BOT_ID_MAL } from "@/config";
 
 /** e.g. src/data/mal-friend-request-sender/mal-friend-request-sender.db */
 export function resolveMalDatabasePath(): string {
@@ -9,7 +8,7 @@ export function resolveMalDatabasePath(): string {
 
   return resolveDatabasePath({
     basePath: resolveDataBaseDir(appConfig.dataBaseDir),
-    subfolder: BOT_ID,
-    filename: `${BOT_ID}.db`,
+    subfolder: BOT_ID_MAL,
+    filename: `${BOT_ID_MAL}.db`,
   });
 }

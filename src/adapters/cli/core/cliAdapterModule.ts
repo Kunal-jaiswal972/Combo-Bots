@@ -1,19 +1,18 @@
 import type { TerminalPorts } from "@/adapters/host/core/terminalPorts";
 import type { AdapterModule } from "@/adapters/host/registry/adapterModules";
 import { isModuleEnabled } from "@/utils";
+import { ADAPTER_ID_CLI, ADAPTER_LABEL_CLI } from "@/config";
 
 import { createCliAdapter } from "./cliAdapter";
 
-const CLI_ADAPTER_ID = "cli";
-
 export const cliAdapterModule: AdapterModule = {
-  id: CLI_ADAPTER_ID,
-  label: "CLI menu",
+  id: ADAPTER_ID_CLI,
+  label: ADAPTER_LABEL_CLI,
   lifecycle: "foreground",
 
   /** Enabled by default; override with `CLI_ENABLED` in the env. */
   isEnabled(): boolean {
-    return isModuleEnabled(CLI_ADAPTER_ID, true);
+    return isModuleEnabled(ADAPTER_ID_CLI, true);
   },
 
   create(options) {
@@ -24,7 +23,7 @@ export const cliAdapterModule: AdapterModule = {
         prompt: ports.prompt,
         display: ports.display,
         bots: options.bots,
-        source: CLI_ADAPTER_ID,
+        source: ADAPTER_ID_CLI,
       }),
     };
   },

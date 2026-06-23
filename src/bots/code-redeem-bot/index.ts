@@ -7,8 +7,12 @@ import type {
 } from "@/adapters/host/contracts";
 import type { SchedulerRunner } from "@/tools/scheduler";
 import { ConfigError, isModuleEnabled } from "@/utils";
+import {
+  BOT_LABEL_CODE_REDEEM,
+  BOT_ID_CODE_REDEEM,
+  TASK_SOURCE_SCHEDULER,
+} from "@/config";
 
-import { BOT_ID, SCHEDULER_TASK_SOURCE } from "./config/constants";
 import { createCodeRedeemSchedulerOnTrigger } from "./controllers/scheduling/onTrigger";
 import { createBotScheduler } from "./controllers/scheduling/scheduler";
 import {
@@ -19,21 +23,19 @@ import {
 import { buildMenuActions } from "./engine/menuActions";
 import type { RedeemTask, RedeemTaskTemplate } from "./types";
 
-const BOT_LABEL = "Code Redeemer";
-
 export function createCodeRedeemBot(options: BotModuleCreateOptions): Bot {
   let scheduler: SchedulerRunner<RedeemTaskTemplate, RedeemTask> | null = null;
 
   return {
-    id: BOT_ID,
-    label: BOT_LABEL,
+    id: BOT_ID_CODE_REDEEM,
+    label: BOT_LABEL_CODE_REDEEM,
 
     async start(): Promise<void> {
       bootstrapStorage();
 
       if (!options.terminalPrompt) {
         throw new ConfigError(
-          `${BOT_LABEL} bot requires terminalPrompt for scheduled-run fallback.`,
+          `${BOT_LABEL_CODE_REDEEM} bot requires terminalPrompt for scheduled-run fallback.`,
         );
       }
 
@@ -69,13 +71,13 @@ export function createCodeRedeemBot(options: BotModuleCreateOptions): Bot {
 }
 
 export const codeRedeemBotModule: BotModule = {
-  id: BOT_ID,
-  label: BOT_LABEL,
-  taskTriggerSources: [SCHEDULER_TASK_SOURCE],
+  id: BOT_ID_CODE_REDEEM,
+  label: BOT_LABEL_CODE_REDEEM,
+  taskTriggerSources: [TASK_SOURCE_SCHEDULER],
 
   /** Enabled by default; override with `CODE_REDEEM_ENABLED` in the env. */
   isEnabled(): boolean {
-    return isModuleEnabled(BOT_ID, true);
+    return isModuleEnabled(BOT_ID_CODE_REDEEM, true);
   },
 
   create(options: BotModuleCreateOptions): Bot {
