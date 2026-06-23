@@ -1,5 +1,5 @@
 import type { AdapterModule } from "@/adapters/host/registry/adapterModules";
-import { ConfigError, isModuleEnabled } from "@/utils";
+import { ConfigError, getAppConfig, isModuleEnabled } from "@/utils";
 
 import { createTelegramScheduledRunNotifier } from "../lib/telegramScheduledRunNotifier";
 import { createTelegramAdapter } from "./telegramAdapter";
@@ -15,10 +15,10 @@ export const telegramAdapterModule: AdapterModule = {
    * Override with `TELEGRAM_ENABLED`. When unset, defaults to enabled only if
    * a `TELEGRAM_BOT_TOKEN` is configured.
    */
-  isEnabled(appConfig): boolean {
+  isEnabled(): boolean {
     return isModuleEnabled(
       TELEGRAM_ADAPTER_ID,
-      appConfig.telegramBotToken !== null,
+      getAppConfig().telegramBotToken !== null,
     );
   },
 

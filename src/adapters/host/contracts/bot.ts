@@ -1,5 +1,4 @@
 import type { SchedulerRunner } from "@/tools/scheduler";
-import type { AppConfig } from "@/utils";
 
 import type { DisplayPresenter } from "./displayPresenter";
 import type { PromptPort } from "./promptPort";
@@ -37,7 +36,7 @@ export interface BotModule {
   readonly label: string;
   /** Non-adapter trigger ids this bot uses (e.g. scheduler). Registered at bootstrap. */
   readonly taskTriggerSources?: readonly string[];
-  isEnabled(appConfig: AppConfig): boolean;
+  isEnabled(): boolean;
   create(options: BotModuleCreateOptions): Bot;
 }
 

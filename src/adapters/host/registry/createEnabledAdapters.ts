@@ -47,7 +47,7 @@ export function createEnabledAdapters(
   const labels: string[] = [];
 
   for (const module of adapterModules) {
-    if (!module.isEnabled(appConfig)) {
+    if (!module.isEnabled()) {
       continue;
     }
 

@@ -40,7 +40,7 @@ export async function runApplication(): Promise<void> {
   >["scheduledRunNotifiers"] = [];
 
   const enabledBots: Bot[] = botModules
-    .filter((module) => module.isEnabled(appConfig))
+    .filter((module) => module.isEnabled())
     .map((module) =>
       module.create({
         terminalPrompt: terminal.prompt,

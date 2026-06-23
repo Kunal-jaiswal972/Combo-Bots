@@ -33,7 +33,7 @@ export interface AdapterModule {
   readonly id: string;
   readonly label: string;
   readonly lifecycle: AdapterLifecycle;
-  isEnabled(appConfig: AppConfig): boolean;
+  isEnabled(): boolean;
   create(options: AdapterModuleCreateOptions): AdapterModuleInstance;
 }
 
