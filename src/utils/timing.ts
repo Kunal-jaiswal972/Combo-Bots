@@ -1,9 +1,69 @@
-import { abortSignal } from "../control/abort";
-import { logger } from "../log/logger";
-import type { WaitOptions, WaitUntilOptions } from "./waitTypes";
+import { logger } from "./logger";
+
+// ── Cancellation token ──────────────────────────────────────────────────────
+// Process-wide token, tripped once on shutdown. Long waits (sleep) and run
+// loops observe it so they bail out immediately instead of finishing their
+// current iteration / fixed delay. Lives in utils (the lowest layer) so any
+// module can read it without depending on the entry point.
+
+const controller = new AbortController();
+
+export const abortSignal: AbortSignal = controller.signal;
+
+export function isAborted(): boolean {
+  return controller.signal.aborted;
+}
+
+/** Trip the token. Idempotent — owned by the shutdown sequence. */
+export function triggerAbort(): void {
+  if (!controller.signal.aborted) {
+    controller.abort();
+  }
+}
+
+// ── Options ─────────────────────────────────────────────────────────────────
+
+export interface WaitOptions {
+  ms: number;
+  reason?: string;
+}
+
+export interface WaitUntilOptions<T> {
+  reason: string;
+  operation: () => Promise<T>;
+  maxMs?: number;
+}
+
+export interface GetRandomDelayOptions {
+  min: number;
+  max: number;
+}
+
+export interface RetryOptions<T> {
+  readonly attempts: number;
+  readonly delayMs: number;
+  readonly operation: () => Promise<T>;
+  readonly shouldRetry?: (error: unknown) => boolean;
+  readonly reason?: string;
+}
+
+export interface PollUntilOptions<T> {
+  readonly intervalMs: number;
+  readonly timeoutMs: number;
+  readonly operation: () => Promise<T | null | undefined>;
+  readonly reason?: string;
+}
+
+// ── Helpers ─────────────────────────────────────────────────────────────────
 
 export function formatWaitMs(ms: number): string {
   return `${ms}ms`;
+}
+
+export function getRandomDelay(options: GetRandomDelayOptions): number {
+  return (
+    Math.floor(Math.random() * (options.max - options.min + 1)) + options.min
+  );
 }
 
 /** Fixed delay. Resolves early if shutdown is requested. */
@@ -39,14 +99,6 @@ export async function waitUntil<T>(options: WaitUntilOptions<T>): Promise<T> {
   return options.operation();
 }
 
-export interface RetryOptions<T> {
-  readonly attempts: number;
-  readonly delayMs: number;
-  readonly operation: () => Promise<T>;
-  readonly shouldRetry?: (error: unknown) => boolean;
-  readonly reason?: string;
-}
-
 export async function retry<T>(options: RetryOptions<T>): Promise<T> {
   const shouldRetry = options.shouldRetry ?? (() => true);
   let lastError: unknown;
@@ -72,13 +124,6 @@ export async function retry<T>(options: RetryOptions<T>): Promise<T> {
   }
 
   throw new Error(String(lastError));
-}
-
-export interface PollUntilOptions<T> {
-  readonly intervalMs: number;
-  readonly timeoutMs: number;
-  readonly operation: () => Promise<T | null | undefined>;
-  readonly reason?: string;
 }
 
 export async function pollUntil<T>(options: PollUntilOptions<T>): Promise<T> {
