@@ -13,7 +13,7 @@ import { onShutdown, requestShutdown } from "@/bootstrap/shutdown";
 import { createScheduledRunHandler } from "@/bots/code-redeem-bot/controllers/scheduling/scheduledRunHandler";
 import { redeemTaskSchema } from "@/bots/code-redeem-bot/types";
 import { botModules } from "@/bots/registry";
-import { closeBrowser, setOnBrowserDisconnect } from "@/tools/browser";
+import { closeBrowser } from "@/tools/browser";
 import { getAppConfig, isAborted, logger } from "@/utils";
 
 bootstrapTaskSources({
@@ -62,11 +62,6 @@ export async function runApplication(): Promise<void> {
       await bot.start();
     }
   }
-
-  // Closing the debug browser tears the whole program down.
-  setOnBrowserDisconnect(() => {
-    void requestShutdown("BROWSER_DISCONNECTED", 0);
-  });
 
   // Its own hook so it runs immediately on shutdown (concurrently with the
   // slower adapter teardown) — closing the browser aborts any in-flight run.

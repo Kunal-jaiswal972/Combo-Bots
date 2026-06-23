@@ -42,6 +42,18 @@ async function runBotMenuLoop(options: {
     }
 
     await runBotActionMenu(options);
+  } catch (error) {
+    // During shutdown let the error propagate so the app can exit.
+    if (isAborted()) {
+      throw error;
+    }
+
+    // Otherwise a bot failure (e.g. the user closed the browser) returns to the
+    // bot picker instead of crashing the app.
+    const message = error instanceof Error ? error.message : String(error);
+    options.port.warn(
+      `${options.bot.label} stopped (${message}). Returning to the bot picker.`,
+    );
   } finally {
     if (options.bot.leave) {
       await options.bot.leave();
