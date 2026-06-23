@@ -1,4 +1,4 @@
-import type { RecurrenceSpec } from "@/tools/scheduler/types/recurrenceSpec";
+import type { RecurrenceSpec } from "./recurrenceSpec";
 
 export interface RecurrenceDriver<T extends RecurrenceSpec = RecurrenceSpec> {
   readonly type: T["type"];

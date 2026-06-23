@@ -1,13 +1,4 @@
 import chalk from "chalk";
-import type { GetRandomDelayOptions } from "../timing/waitTypes";
-
-function randomInt(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-export function getRandomDelay(options: GetRandomDelayOptions): number {
-  return randomInt(options.min, options.max);
-}
 
 export function maskSecret(text: string): string {
   if (text.length === 0) {

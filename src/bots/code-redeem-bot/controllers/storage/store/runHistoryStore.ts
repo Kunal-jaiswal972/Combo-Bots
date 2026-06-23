@@ -1,13 +1,14 @@
 import { randomUUID } from "node:crypto";
 import type Database from "better-sqlite3";
-import type { RunHistoryEntry } from "@/bots/code-redeem-bot/types";
-import { gameDatabaseIds } from "@/bots/code-redeem-bot/config/database";
-import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
-import { openGameDatabase } from "../db";
+
+import type { GameIdValue } from "../../../config/constants";
+import { gameDatabaseIds } from "../../../config/database";
 import type {
   RecordRunHistoryOptions,
+  RunHistoryEntry,
   RunHistoryStore,
-} from "@/bots/code-redeem-bot/types";
+} from "../../../types";
+import { openGameDatabase } from "../db";
 
 interface RunHistoryRow {
   id: string;
@@ -36,7 +37,9 @@ function parseRedeemSummaryJson(
   }
 
   try {
-    const parsed = JSON.parse(raw) as NonNullable<RunHistoryEntry["redeemSummary"]>;
+    const parsed = JSON.parse(raw) as NonNullable<
+      RunHistoryEntry["redeemSummary"]
+    >;
 
     if (
       typeof parsed.redeemed !== "number" ||
@@ -68,7 +71,9 @@ function rowToEntry(row: RunHistoryRow): RunHistoryEntry {
   };
 }
 
-function createRunHistoryStoreContext(db: Database.Database): RunHistoryStoreContext {
+function createRunHistoryStoreContext(
+  db: Database.Database,
+): RunHistoryStoreContext {
   return {
     insertStmt: db.prepare(`
       INSERT INTO run_history (

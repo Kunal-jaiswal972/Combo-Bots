@@ -1,15 +1,17 @@
-import type { SchedulerTriggerHandler } from "@/tools/scheduler/types/taskScheduler";
-import type {
-  SchedulableRunPayload,
-  ScheduledRunNotifier,
-} from "@/adapters/host/contracts/scheduledRunNotifier";
+import type { SchedulerTriggerHandler } from "@/tools/scheduler";
 
-export interface CreateSchedulerOnTriggerOptions<TPayload extends SchedulableRunPayload> {
+import type { SchedulableRunPayload, ScheduledRunNotifier } from "../contracts";
+
+export interface CreateSchedulerOnTriggerOptions<
+  TPayload extends SchedulableRunPayload,
+> {
   readonly getScheduledRunNotifiers: () => readonly ScheduledRunNotifier[];
   readonly onFallback: (payload: TPayload) => Promise<void>;
 }
 
-export function createSchedulerOnTrigger<TPayload extends SchedulableRunPayload>(
+export function createSchedulerOnTrigger<
+  TPayload extends SchedulableRunPayload,
+>(
   options: CreateSchedulerOnTriggerOptions<TPayload>,
 ): SchedulerTriggerHandler<TPayload> {
   const { getScheduledRunNotifiers, onFallback } = options;

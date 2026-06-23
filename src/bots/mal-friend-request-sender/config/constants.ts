@@ -1,5 +1,3 @@
-export const BOT_ID = "mal-friend-request-sender" as const;
-
 export const MalConfig = {
   baseUrl: "https://myanimelist.net",
   wsFetchRetries: 20,

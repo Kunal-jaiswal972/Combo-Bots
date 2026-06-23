@@ -1,25 +1,24 @@
-/** @see ./README.md — bot overview, flow, storage, and layout */
-import type { AppConfig } from "@/utils/env/appConfigTypes";
+/** @see ./docs — bot overview, flow, storage, and layout */
 import type {
   Bot,
   BotModule,
   BotModuleCreateOptions,
-} from "@/adapters/host/contracts/bot";
-import { BOT_ID } from "./config/constants";
+} from "@/adapters/host/contracts";
+import { BOT_ID_MAL, BOT_LABEL_MAL } from "@/config";
+import { isModuleEnabled } from "@/utils";
+
 import {
   bootstrapMalStorage,
   closeMalDatabase,
 } from "./controllers/storage/db";
 import { buildMenuActions } from "./engine/menuActions";
 
-const BOT_LABEL = "MAL Friend Request Sender";
-
 export function createMalFriendRequestBot(
   _options: BotModuleCreateOptions,
 ): Bot {
   return {
-    id: BOT_ID,
-    label: BOT_LABEL,
+    id: BOT_ID_MAL,
+    label: BOT_LABEL_MAL,
 
     async start(): Promise<void> {
       bootstrapMalStorage();
@@ -36,19 +35,18 @@ export function createMalFriendRequestBot(
 }
 
 export const malFriendRequestBotModule: BotModule = {
-  id: BOT_ID,
-  label: BOT_LABEL,
+  id: BOT_ID_MAL,
+  label: BOT_LABEL_MAL,
 
   /**
-   * Enabled by default when `MAL_FRIEND_REQUEST_BOT_ENABLED` is unset.
-   * Set to `false` in `.env` to hide this bot from the app menu.
+   * Enabled by default; override with `MAL_FRIEND_REQUEST_SENDER_ENABLED` in
+   * the env. Set to `false` to hide this bot from the app menu.
    */
-  isEnabled(appConfig: AppConfig): boolean {
-    return appConfig.malFriendRequestBotEnabled ?? true;
+  isEnabled(): boolean {
+    return isModuleEnabled(BOT_ID_MAL, true);
   },
 
   create(options: BotModuleCreateOptions): Bot {
     return createMalFriendRequestBot(options);
   },
 };
-

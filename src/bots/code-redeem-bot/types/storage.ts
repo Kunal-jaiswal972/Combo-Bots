@@ -1,11 +1,9 @@
+import type { ScheduledJobStore } from "@/tools/scheduler";
+
 import type { GameIdValue } from "../config/constants";
-import type { RedeemTask, RedeemTaskTemplate } from "./task";
+import type { CodeStoreMergeResult, NormalizedScrapedCode } from "./codes";
 import type { CodeRedeemResult, RunHistoryEntry, RunResult } from "./run";
-import type {
-  CodeStoreMergeResult,
-  NormalizedScrapedCode,
-} from "./codes";
-import type { ScheduledJobStore } from "@/tools/scheduler/types/scheduledJob";
+import type { RedeemTask, RedeemTaskTemplate } from "./task";
 
 export interface MergeScrapedCodesOptions {
   gameId: GameIdValue;
@@ -20,7 +18,9 @@ export interface PersistRedeemResultOptions {
 
 export interface CodesStore {
   hasScrapedToday(gameId: GameIdValue): Promise<boolean>;
-  mergeScrapedCodes(options: MergeScrapedCodesOptions): Promise<CodeStoreMergeResult>;
+  mergeScrapedCodes(
+    options: MergeScrapedCodesOptions,
+  ): Promise<CodeStoreMergeResult>;
   getRedeemResumeStats(
     gameId: GameIdValue,
   ): Promise<{ toRedeem: string[]; skipped: number }>;

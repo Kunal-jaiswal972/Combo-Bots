@@ -1,9 +1,10 @@
-import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
-import { getGameModule } from "@/bots/code-redeem-bot/engine/gameRegistry";
-import { normalizeScrapedRows } from "@/bots/code-redeem-bot/utils/normalizeCodes";
-import { getStorage } from "@/bots/code-redeem-bot/controllers/storage";
-import type { ScrapeStats } from "@/bots/code-redeem-bot/types";
 import { logger } from "@/utils";
+
+import type { GameIdValue } from "../../config/constants";
+import { getStorage } from "../../controllers/storage";
+import type { ScrapeStats } from "../../types";
+import { normalizeScrapedRows } from "../../utils/normalizeCodes";
+import { getGameModule } from "../gameRegistry";
 
 export async function runScrape(gameId: GameIdValue): Promise<ScrapeStats> {
   const gameModule = getGameModule(gameId);

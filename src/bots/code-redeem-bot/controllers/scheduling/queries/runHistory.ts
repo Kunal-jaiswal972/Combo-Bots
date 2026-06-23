@@ -1,14 +1,12 @@
+import type { TaskScheduler } from "@/tools/scheduler";
+
 import type {
   RedeemTaskTemplate,
   RunHistoryEntry,
   ScheduledTask,
-} from "@/bots/code-redeem-bot/types";
-import type { TaskScheduler } from "@/tools/scheduler/types/taskScheduler";
-import { getStorage } from "@/bots/code-redeem-bot/controllers/storage";
-import {
-  buildScheduledTasksById,
-  listScheduledTasks,
-} from "./scheduledTasks";
+} from "../../../types";
+import { getStorage } from "../../storage";
+import { buildScheduledTasksById, listScheduledTasks } from "./scheduledTasks";
 
 export interface RunHistoryListResult {
   readonly entries: readonly RunHistoryEntry[];
@@ -28,7 +26,8 @@ export async function listRecentRunHistory(
 export async function listRecentRunHistoryWithTasks(
   scheduler: TaskScheduler<RedeemTaskTemplate>,
   limit: number,
-): Promise<RunHistoryWithTasksResult> {  const history = await listRecentRunHistory(limit);
+): Promise<RunHistoryWithTasksResult> {
+  const history = await listRecentRunHistory(limit);
   const tasks = await listScheduledTasks(scheduler);
 
   return {

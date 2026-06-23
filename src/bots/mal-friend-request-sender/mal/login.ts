@@ -1,5 +1,6 @@
 import type { Page } from "puppeteer-core";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
+
+import type { PromptPort } from "@/adapters/host/contracts";
 import {
   clearInput,
   clickElement,
@@ -14,15 +15,12 @@ import {
   logger,
   sleep,
 } from "@/utils";
+
+import { loginPageUrl, MalDelays, MalSelectors } from "../config/constants";
 import {
   loadMalBotState,
   saveMalBotState,
 } from "../controllers/storage/store/stateStore";
-import {
-  loginPageUrl,
-  MalDelays,
-  MalSelectors,
-} from "../config/constants";
 
 async function typeLikeHuman(
   page: Page,
@@ -159,7 +157,9 @@ export async function ensureMalLoggedIn(
     const username = await options.prompt.username("MAL account username:");
     const password = await options.prompt.password("MAL account password:");
 
-    logger.info(`Logging in automatically as ${formatAccountLabel(username)}...`);
+    logger.info(
+      `Logging in automatically as ${formatAccountLabel(username)}...`,
+    );
     await autoLogin(options.page, username, password);
 
     if (await verifyMalLoggedIn(options.page)) {
@@ -196,12 +196,11 @@ export async function resolveTargetUsername(
   let username = "";
 
   while (username.length === 0) {
-    const message =
-      stored !== undefined
-        ? `Enter MAL username whose friends to request (default: ${stored}):`
-        : "Enter MAL username whose friends to request:";
+    const message = "Enter MAL username whose friends to request:";
 
-    const answer = (await prompt.question(message)).trim();
+    const answer = (
+      await prompt.question(message, { defaultValue: stored })
+    ).trim();
     username = answer.length > 0 ? answer : (stored ?? "");
 
     if (username.length === 0) {

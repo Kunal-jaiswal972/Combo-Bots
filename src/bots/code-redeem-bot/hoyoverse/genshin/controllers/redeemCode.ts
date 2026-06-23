@@ -1,19 +1,16 @@
 import type { Page } from "puppeteer-core";
-import { BrowserDelays } from "@/tools/browser/constants";
-import { RedeemStatus } from "@/bots/code-redeem-bot/config/constants";
-import { GameId } from "@/bots/code-redeem-bot/config/constants";
-import type { CodeRedeemResult } from "@/bots/code-redeem-bot/types";
+
 import {
+  BrowserDelays,
   clearInput,
   clickElement,
   enterText,
 } from "@/tools/browser";
-import {
-  getRandomDelay,
-  logger,
-  sleep,
-} from "@/utils";
-import { getRedeemMessageParser } from "@/bots/code-redeem-bot/hoyoverse/shared/redeemMessageParser";
+import { getRandomDelay, logger, sleep } from "@/utils";
+
+import { GameId, RedeemStatus } from "../../../config/constants";
+import type { CodeRedeemResult } from "../../../types";
+import { getRedeemMessageParser } from "../../shared/redeemMessageParser";
 import { genshinConfig } from "../config/config";
 import {
   dismissRedeemModal,
@@ -25,16 +22,25 @@ export async function redeemSingleCode(
   page: Page,
   code: string,
 ): Promise<CodeRedeemResult> {
-  for (let attempt = 1; attempt <= genshinConfig.maxRedeemRetries; attempt += 1) {
+  for (
+    let attempt = 1;
+    attempt <= genshinConfig.maxRedeemRetries;
+    attempt += 1
+  ) {
     await ensureRedeemModalClosed(page);
-    await clearInput({ context: page, selector: genshinConfig.selectors.redeemInput });
+    await clearInput({
+      context: page,
+      selector: genshinConfig.selectors.redeemInput,
+    });
     await enterText({
       context: page,
       selector: genshinConfig.selectors.redeemInput,
       text: code,
       reason: "redeem code input",
     });
-    logger.gray(`Submitting code: ${code}${attempt > 1 ? ` (retry ${attempt})` : ""}`);
+    logger.gray(
+      `Submitting code: ${code}${attempt > 1 ? ` (retry ${attempt})` : ""}`,
+    );
     await sleep({
       ms: getRandomDelay({ min: 100, max: 500 }),
       reason: "before submitting code",
@@ -74,7 +80,10 @@ export async function redeemSingleCode(
     if (parsed.action === "retry") {
       await dismissRedeemModal(page);
       await ensureRedeemModalClosed(page);
-      await sleep({ ms: genshinConfig.redeemCooldownMs, reason: "redeem cooldown before retry" });
+      await sleep({
+        ms: genshinConfig.redeemCooldownMs,
+        reason: "redeem cooldown before retry",
+      });
       continue;
     }
 
@@ -87,15 +96,24 @@ export async function redeemSingleCode(
       await dismissRedeemModal(page);
       await ensureRedeemModalClosed(page);
       logger.warn(`No modal response for ${code} — retrying submit.`);
-      await sleep({ ms: genshinConfig.redeemCooldownMs, reason: "no modal response, retrying" });
+      await sleep({
+        ms: genshinConfig.redeemCooldownMs,
+        reason: "no modal response, retrying",
+      });
       continue;
     }
 
-    if (parsed.action === "pending" && attempt < genshinConfig.maxRedeemRetries) {
+    if (
+      parsed.action === "pending" &&
+      attempt < genshinConfig.maxRedeemRetries
+    ) {
       await dismissRedeemModal(page);
       await ensureRedeemModalClosed(page);
       logger.warn(`Redeem inconclusive for ${code} — retrying submit.`);
-      await sleep({ ms: genshinConfig.redeemCooldownMs, reason: "inconclusive response, retrying" });
+      await sleep({
+        ms: genshinConfig.redeemCooldownMs,
+        reason: "inconclusive response, retrying",
+      });
       continue;
     }
 

@@ -2,7 +2,7 @@ import type {
   CodesStore,
   RunHistoryStore,
   ScheduledTaskStore,
-} from "@/bots/code-redeem-bot/types";
+} from "../../../types";
 import { bootstrapGameDatabases } from "../db";
 import { createCodesStore } from "./codesStore";
 import { createRunHistoryStore } from "./runHistoryStore";

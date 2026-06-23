@@ -1,6 +1,11 @@
 import { z } from "zod";
-import { GameId, GenshinServer, type GameIdValue } from "@/bots/code-redeem-bot/config/constants";
-import type { GameLoginCredentials } from "@/bots/code-redeem-bot/types";
+
+import {
+  GameId,
+  type GameIdValue,
+  GenshinServer,
+} from "../../config/constants";
+import type { GameLoginCredentials } from "../../types";
 import { HsrServer } from "../hsr/constants";
 
 export interface ServerPromptChoice {
@@ -37,7 +42,9 @@ const hsrCredentialsSchema = z.object({
   server: z.enum(hsrServerValues),
 });
 
-export function getServerPromptChoices(gameId: GameIdValue): ServerPromptChoice[] {
+export function getServerPromptChoices(
+  gameId: GameIdValue,
+): ServerPromptChoice[] {
   switch (gameId) {
     case GameId.GENSHIN:
       return genshinServerValues.map((value) => ({ value, label: value }));

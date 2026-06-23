@@ -6,6 +6,9 @@ export const PROMPT_BACK_LABEL = "← Back";
 /** Telegram inline-button callback data for Back. */
 export const TELEGRAM_BACK_CALLBACK = "prompt:back";
 
+/** Telegram inline-button callback data for "use the default value". */
+export const TELEGRAM_DEFAULT_CALLBACK = "prompt:default";
+
 /** CLI/Telegram text reply that means Back on free-form prompts. */
 export const PROMPT_BACK_TEXT = "back";
 

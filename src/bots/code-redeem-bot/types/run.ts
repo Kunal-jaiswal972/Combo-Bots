@@ -1,7 +1,9 @@
 import { z } from "zod";
+
+import type { ChromeSession } from "@/tools/browser";
+
 import type { GameIdValue } from "../config/constants";
 import { redeemStatusValues } from "../config/constants";
-import type { ChromeSession } from "@/tools/browser";
 import { type GameLoginCredentials } from "./task";
 
 export const redeemSummarySchema = z.object({

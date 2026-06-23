@@ -1,9 +1,9 @@
-import type { RunResult, RunHistoryEntry } from "@/bots/code-redeem-bot/types";
-import type { ScheduledTask } from "@/bots/code-redeem-bot/types";
-import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
-import { getGameModule } from "@/bots/code-redeem-bot/engine/gameRegistry";
+import type { DisplayCard, DisplayCardRow } from "@/adapters/host/contracts";
 import { formatSchedulerInstant } from "@/utils";
-import type { DisplayCard, DisplayCardRow } from "@/adapters/host/contracts/displayCard";
+
+import type { GameIdValue } from "../config/constants";
+import { getGameModule } from "../engine/gameRegistry";
+import type { RunHistoryEntry, RunResult, ScheduledTask } from "../types";
 
 function formatRunStatusLabel(status: RunResult["status"]): string {
   switch (status) {
@@ -54,7 +54,10 @@ function formatDuration(startedAt: string, finishedAt: string): string {
     return "—";
   }
 
-  const seconds = Math.max(0, Math.round((end.getTime() - start.getTime()) / 1000));
+  const seconds = Math.max(
+    0,
+    Math.round((end.getTime() - start.getTime()) / 1000),
+  );
 
   if (seconds < 60) {
     return `${seconds}s`;
@@ -78,12 +81,17 @@ export function buildRunHistoryCard(
     { label: "Source", value: entry.source },
     { label: "Started", value: formatSchedulerInstant(entry.startedAt) },
     { label: "Finished", value: formatSchedulerInstant(entry.finishedAt) },
-    { label: "Duration", value: formatDuration(entry.startedAt, entry.finishedAt) },
+    {
+      label: "Duration",
+      value: formatDuration(entry.startedAt, entry.finishedAt),
+    },
   ];
 
   if (scheduledTask) {
-    const username = scheduledTask.payloadTemplate.credentials.username?.trim() ?? "";
-    const server = scheduledTask.payloadTemplate.credentials.server?.trim() ?? "";
+    const username =
+      scheduledTask.payloadTemplate.credentials.username?.trim() ?? "";
+    const server =
+      scheduledTask.payloadTemplate.credentials.server?.trim() ?? "";
 
     if (username.length > 0) {
       rows.push({ label: "Account", value: username });

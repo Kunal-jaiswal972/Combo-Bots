@@ -1,7 +1,9 @@
 import axios from "axios";
 import type { CheerioAPI } from "cheerio";
+
+import { HttpError, ScrapeError } from "@/utils";
+
 import { loadHtml } from "../dom/query";
-import { HttpError, ScrapeError } from "@/utils/errors";
 
 export interface FetchHtmlOptions {
   readonly url: string;
@@ -10,7 +12,9 @@ export interface FetchHtmlOptions {
   readonly params?: Readonly<Record<string, string>>;
 }
 
-export async function fetchHtml(options: FetchHtmlOptions): Promise<CheerioAPI> {
+export async function fetchHtml(
+  options: FetchHtmlOptions,
+): Promise<CheerioAPI> {
   try {
     const response = await axios.get<string>(options.url, {
       params: options.params,

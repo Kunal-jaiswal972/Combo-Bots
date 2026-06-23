@@ -1,6 +1,8 @@
 import type { Page } from "puppeteer-core";
-import { BrowserDelays } from "@/tools/browser/constants";
+
+import { BrowserDelays } from "@/tools/browser";
 import { formatWaitMs, logger, sleep } from "@/utils";
+
 import { genshinConfig } from "../config/config";
 
 export async function isRedeemModalOpen(page: Page): Promise<boolean> {

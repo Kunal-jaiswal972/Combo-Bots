@@ -1,5 +1,5 @@
-import type { ScheduledJob } from "./scheduledJob";
 import type { RecurrenceSpec } from "./recurrenceSpec";
+import type { ScheduledJob } from "./scheduledJob";
 
 export interface RegisterScheduledJobOptions<TPayload> {
   payload: TPayload;

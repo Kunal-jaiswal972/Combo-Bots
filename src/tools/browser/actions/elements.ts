@@ -1,6 +1,7 @@
 import type { Frame, Page } from "puppeteer-core";
-import { BrowserError } from "@/utils/errors";
-import { getRandomDelay, logger, waitUntil } from "@/utils";
+
+import { BrowserError, getRandomDelay, logger, waitUntil } from "@/utils";
+
 import { BrowserConfig, BrowserDelays } from "../constants";
 import type {
   ClearInputOptions,
@@ -48,7 +49,9 @@ export async function waitForNetworkIdle(
   });
 }
 
-export async function evaluateClick(options: EvaluateClickOptions): Promise<void> {
+export async function evaluateClick(
+  options: EvaluateClickOptions,
+): Promise<void> {
   const timeout = options.timeout ?? BrowserDelays.LONG;
 
   await waitUntil({
@@ -93,7 +96,9 @@ export async function readElementText(
   }, options.selector);
 }
 
-export async function clickElement(options: ClickElementOptions): Promise<void> {
+export async function clickElement(
+  options: ClickElementOptions,
+): Promise<void> {
   const timeout = options.timeout ?? BrowserDelays.LONG;
 
   await waitUntil({
@@ -105,7 +110,9 @@ export async function clickElement(options: ClickElementOptions): Promise<void> 
       });
 
       if (!element) {
-        throw new BrowserError(`Element not found for selector: ${options.selector}`);
+        throw new BrowserError(
+          `Element not found for selector: ${options.selector}`,
+        );
       }
 
       await element.click();
@@ -153,7 +160,9 @@ export async function getIframeContentFrame(
   const frameHandle = await options.page.$(options.iframeSelector);
 
   if (!frameHandle) {
-    throw new BrowserError(`Iframe not found (${label}): ${options.iframeSelector}`);
+    throw new BrowserError(
+      `Iframe not found (${label}): ${options.iframeSelector}`,
+    );
   }
 
   const frame = await frameHandle.contentFrame();

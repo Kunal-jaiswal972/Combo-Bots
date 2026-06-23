@@ -1,18 +1,19 @@
 import type { Page } from "puppeteer-core";
-import { BrowserDelays } from "@/tools/browser/constants";
-import { type GenshinServerValue } from "@/bots/code-redeem-bot/config/constants";
-import {
-  evaluateClick,
-  readElementText,
-} from "@/tools/browser";
+
+import { BrowserDelays, evaluateClick, readElementText } from "@/tools/browser";
 import { logger, sleep } from "@/utils";
+
+import { type GenshinServerValue } from "../../../config/constants";
 import {
+  genshinConfig,
   genshinServerNthChild,
   getServerMenuSelector,
-  genshinConfig,
 } from "../config/config";
 
-function serverLabelMatches(label: string, server: GenshinServerValue): boolean {
+function serverLabelMatches(
+  label: string,
+  server: GenshinServerValue,
+): boolean {
   const normalizedLabel = label.toLowerCase();
   const normalizedServer = server.toLowerCase();
 

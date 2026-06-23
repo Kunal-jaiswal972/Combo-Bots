@@ -2,7 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import type Database from "better-sqlite3";
 import BetterSqlite3 from "better-sqlite3";
-import { StorageError } from "@/utils/errors";
+
+import { StorageError } from "@/utils";
 
 export interface DbHandle {
   readonly path: string;
@@ -66,17 +67,4 @@ export function closeAllDatabases(): void {
     db.close();
     registry.delete(key);
   }
-}
-
-export interface ResolveDatabasePathOptions {
-  readonly basePath: string;
-  readonly subfolder: string;
-  readonly filename: string;
-}
-
-export function resolveDatabasePath(
-  options: ResolveDatabasePathOptions,
-): string {
-  const filename = options.filename;
-  return path.resolve(options.basePath, options.subfolder, filename);
 }

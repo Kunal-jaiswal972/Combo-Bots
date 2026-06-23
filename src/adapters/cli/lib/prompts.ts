@@ -1,12 +1,12 @@
 import * as clack from "@clack/prompts";
-import { registerActivePromptCloser } from "@/adapters/host/core/promptShutdown";
-import type { PromptOptions } from "@/adapters/host/contracts/promptPort";
+
 import {
   PROMPT_BACK_CHOICE_VALUE,
   PROMPT_BACK_LABEL,
   PROMPT_BACK_TEXT,
   PromptBackError,
-} from "@/adapters/host/contracts/promptBack";
+  type PromptOptions,
+} from "@/adapters/host/contracts";
 
 function isBackText(answer: string): boolean {
   return answer.trim().toLowerCase() === PROMPT_BACK_TEXT;
@@ -28,23 +28,18 @@ function unwrapClackResult<T>(result: T | symbol, allowBack = false): T {
   return result;
 }
 
-/**
- * Registered with promptShutdown on SIGINT/SIGTERM.
- * Clack has no cancellable prompt handle — this is intentionally a no-op.
- */
-export function closeActivePrompt(): void {
-  // No-op: @clack/prompts manages readline per prompt.
-}
-
-registerActivePromptCloser(closeActivePrompt);
-
-export async function askQuestion(prompt: string, options?: PromptOptions): Promise<string> {
+export async function askQuestion(
+  prompt: string,
+  options?: PromptOptions,
+): Promise<string> {
   if (!process.stdin.isTTY) {
-    return "";
+    return options?.defaultValue ?? "";
   }
 
   const result = await clack.text({
     message: prompt,
+    placeholder: options?.defaultValue,
+    defaultValue: options?.defaultValue,
   });
 
   const value = unwrapClackResult(result, options?.allowBack === true).trim();
@@ -160,7 +155,10 @@ export async function askPassword(message = "Password"): Promise<string> {
   return unwrapClackResult(result);
 }
 
-export async function askYesNo(prompt: string, defaultYes: boolean): Promise<boolean> {
+export async function askYesNo(
+  prompt: string,
+  defaultYes: boolean,
+): Promise<boolean> {
   if (!process.stdin.isTTY) {
     return defaultYes;
   }

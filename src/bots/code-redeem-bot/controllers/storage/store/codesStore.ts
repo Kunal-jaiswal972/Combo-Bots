@@ -1,17 +1,20 @@
 import type Database from "better-sqlite3";
+
+import { getTodayRunDate } from "@/utils";
+
 import {
   CodeStatus,
-  RedeemStatus,
   type GameIdValue,
+  RedeemStatus,
   type RedeemStatusValue,
 } from "../../../config/constants";
-import type { CodeRedeemResult, CodeStoreMergeResult } from "@/bots/code-redeem-bot/types";
 import type {
+  CodeRedeemResult,
   CodesStore,
+  CodeStoreMergeResult,
   MergeScrapedCodesOptions,
   PersistRedeemResultOptions,
-} from "@/bots/code-redeem-bot/types";
-import { getTodayRunDate } from "@/utils";
+} from "../../../types";
 import { openGameDatabase } from "../db";
 
 const skipRedeemStatuses: RedeemStatusValue[] = [
@@ -235,7 +238,9 @@ export function createCodesStore(): CodesStore {
       return getRedeemableFromRows(rows).length > 0;
     },
 
-    async persistRedeemResult(options: PersistRedeemResultOptions): Promise<void> {
+    async persistRedeemResult(
+      options: PersistRedeemResultOptions,
+    ): Promise<void> {
       const { updateRedeemStmt } = getContext(options.gameId);
       const result: CodeRedeemResult = options.result;
 

@@ -3,7 +3,9 @@ import type { ParsedRedeemMessage } from "./redeemMessageTypes";
 /**
  * Default parser for Hoyoverse gift-page modal text (Genshin, HSR, ZZZ share the same cdkey UI).
  */
-export function parseHoyoverseRedeemMessage(rawMessage: string): ParsedRedeemMessage {
+export function parseHoyoverseRedeemMessage(
+  rawMessage: string,
+): ParsedRedeemMessage {
   const message = rawMessage.trim();
   const lower = message.toLowerCase();
 

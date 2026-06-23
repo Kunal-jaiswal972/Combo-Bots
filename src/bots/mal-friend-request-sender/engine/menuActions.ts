@@ -1,4 +1,5 @@
-import type { BotContext, BotMenuAction } from "@/adapters/host/contracts/bot";
+import type { BotContext, BotMenuAction } from "@/adapters/host/contracts";
+
 import { runFriendRequestFlow } from "./runFriendRequestFlow";
 
 export function buildMenuActions(): BotMenuAction[] {

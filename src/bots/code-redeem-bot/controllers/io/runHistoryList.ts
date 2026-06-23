@@ -1,7 +1,7 @@
-import type { RunHistoryEntry, ScheduledTask } from "@/bots/code-redeem-bot/types";
-import type { DisplayPresenter } from "@/adapters/host/contracts/displayPresenter";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
-import { buildRunHistoryCard } from "@/bots/code-redeem-bot/utils/runHistory";
+import type { DisplayPresenter, PromptPort } from "@/adapters/host/contracts";
+
+import type { RunHistoryEntry, ScheduledTask } from "../../types";
+import { buildRunHistoryCard } from "../../utils/runHistory";
 
 export function showRunHistoryList(
   prompt: PromptPort,

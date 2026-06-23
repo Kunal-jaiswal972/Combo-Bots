@@ -1,6 +1,11 @@
-import type { Bot, BotContext } from "@/adapters/host/contracts/bot";
-import type { DisplayPresenter } from "@/adapters/host/contracts/displayPresenter";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
+import { isAborted } from "@/utils";
+
+import type {
+  Bot,
+  BotContext,
+  DisplayPresenter,
+  PromptPort,
+} from "../contracts";
 
 export interface RunBotRouterOptions {
   readonly port: PromptPort;
@@ -21,7 +26,9 @@ async function pickBot(
   ];
 
   const picked = await port.choose("Which bot?", choices);
-  return picked === "exit" ? "exit" : (bots.find((bot) => bot.id === picked) ?? "exit");
+  return picked === "exit"
+    ? "exit"
+    : (bots.find((bot) => bot.id === picked) ?? "exit");
 }
 
 async function runBotMenuLoop(options: {
@@ -32,6 +39,10 @@ async function runBotMenuLoop(options: {
   const actions = options.bot.menuActions(options.ctx);
 
   while (true) {
+    if (isAborted()) {
+      return;
+    }
+
     const choices = [
       ...actions.map((action) => ({ value: action.id, label: action.label })),
       { value: "back" as const, label: "Back to bot picker" },
@@ -51,10 +62,17 @@ async function runBotMenuLoop(options: {
     if (action) {
       await action.run(options.ctx);
     }
+
+    // A run may have been interrupted by shutdown — don't re-render the menu.
+    if (isAborted()) {
+      return;
+    }
   }
 }
 
-export async function runBotRouter(options: RunBotRouterOptions): Promise<void> {
+export async function runBotRouter(
+  options: RunBotRouterOptions,
+): Promise<void> {
   const ctx: BotContext = {
     prompt: options.port,
     display: options.display,
@@ -70,6 +88,10 @@ export async function runBotRouter(options: RunBotRouterOptions): Promise<void> 
   options.port.step(options.title ?? "Auto Code Redeemer");
 
   while (true) {
+    if (isAborted()) {
+      return;
+    }
+
     const picked = await pickBot(options.port, options.bots);
 
     if (picked === "exit") {

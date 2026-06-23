@@ -1,8 +1,4 @@
-import type {
-  RedeemSummary,
-  RunResult,
-  ScrapeStats,
-} from "@/bots/code-redeem-bot/types";
+import type { RedeemSummary, RunResult, ScrapeStats } from "../types";
 
 function formatScrapeStatsLine(stats: ScrapeStats): string {
   return `Scrape: ${stats.codesUpserted} codes (${stats.newCodes.length} new)`;
@@ -22,7 +18,9 @@ export interface RunResultDisplayLines {
   readonly error?: string;
 }
 
-export function formatRunResultForDisplay(result: RunResult): RunResultDisplayLines {
+export function formatRunResultForDisplay(
+  result: RunResult,
+): RunResultDisplayLines {
   const grayLines: string[] = [];
 
   if (result.scraped && result.scrapeStats) {

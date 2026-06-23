@@ -1,14 +1,15 @@
-import type { AppConfig } from "@/utils/env/appConfigTypes";
-import type { Bot } from "@/adapters/host/contracts/bot";
+import { cliAdapterModule } from "@/adapters/cli";
+import { telegramAdapterModule } from "@/adapters/telegram";
+import type { AppConfig } from "@/utils";
+
 import type {
+  Bot,
+  PromptPort,
   SchedulableRunPayload,
   ScheduledRunNotifier,
-} from "@/adapters/host/contracts/scheduledRunNotifier";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
-import type { TaskInputAdapter } from "@/adapters/host/contracts/taskInputAdapter";
-import type { TerminalPorts } from "@/adapters/host/core/terminalPorts";
-import { cliAdapterModule } from "@/adapters/cli/core/cliAdapterModule";
-import { telegramAdapterModule } from "@/adapters/telegram/core/telegramAdapterModule";
+  TaskInputAdapter,
+} from "../contracts";
+import type { TerminalPorts } from "../core/terminalPorts";
 
 export type AdapterLifecycle = "background" | "foreground";
 
@@ -32,7 +33,7 @@ export interface AdapterModule {
   readonly id: string;
   readonly label: string;
   readonly lifecycle: AdapterLifecycle;
-  isEnabled(appConfig: AppConfig): boolean;
+  isEnabled(): boolean;
   create(options: AdapterModuleCreateOptions): AdapterModuleInstance;
 }
 

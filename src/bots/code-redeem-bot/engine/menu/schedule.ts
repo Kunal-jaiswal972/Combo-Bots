@@ -1,15 +1,13 @@
-import { createRedeemTask } from "@/bots/code-redeem-bot/engine/createRedeemTask";
-import type { TaskSource } from "@/bots/code-redeem-bot/types";
-import type { RecurrenceSpec } from "@/tools/scheduler/types/recurrenceSpec";
-import type { RedeemTaskTemplate } from "@/bots/code-redeem-bot/types";
-import type { TaskScheduler } from "@/tools/scheduler/types/taskScheduler";
-import { formatSchedulerInstant } from "@/utils";
-import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
-import { isPromptBack } from "@/adapters/host/contracts/promptBack";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
-import { promptCredentials } from "@/bots/code-redeem-bot/controllers/io/prompts/credentials";
-import { promptGameSelection } from "@/bots/code-redeem-bot/controllers/io/prompts/gameSelection";
+import { isPromptBack, type PromptPort } from "@/adapters/host/contracts";
 import { promptRecurrenceSpec } from "@/adapters/host/core/prompts/promptSchedule";
+import type { RecurrenceSpec, TaskScheduler } from "@/tools/scheduler";
+import { formatSchedulerInstant } from "@/utils";
+
+import type { GameIdValue } from "../../config/constants";
+import { promptCredentials } from "../../controllers/io/prompts/credentials";
+import { promptGameSelection } from "../../controllers/io/prompts/gameSelection";
+import type { RedeemTaskTemplate, TaskSource } from "../../types";
+import { createRedeemTask } from "../createRedeemTask";
 
 export interface ScheduleMenuOptions {
   port: PromptPort;
@@ -74,7 +72,9 @@ export async function scheduleMenu(
 
     port.success(`Scheduled task created: ${scheduled.id}`);
     port.gray(`Next run: ${formatSchedulerInstant(scheduled.nextRunAt)}`);
-    port.gray("Keep this process running — scheduled tasks fire while dev or start is active.");
+    port.gray(
+      "Keep this process running — scheduled tasks fire while dev or start is active.",
+    );
     return;
   }
 }

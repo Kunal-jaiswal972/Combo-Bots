@@ -1,8 +1,11 @@
+import type {
+  PromptPort,
+  ScheduledRunNotifier,
+} from "@/adapters/host/contracts";
 import { createSchedulerOnTrigger } from "@/adapters/host/core/schedulerOnTrigger";
-import type { ScheduledRunNotifier } from "@/adapters/host/contracts/scheduledRunNotifier";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
-import type { SchedulerTriggerHandler } from "@/tools/scheduler/types/taskScheduler";
-import type { RedeemTask } from "@/bots/code-redeem-bot/types";
+import type { SchedulerTriggerHandler } from "@/tools/scheduler";
+
+import type { RedeemTask } from "../../types";
 import { createScheduledRunHandler } from "./scheduledRunHandler";
 
 export interface CreateCodeRedeemSchedulerOnTriggerOptions {

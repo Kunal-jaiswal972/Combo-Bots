@@ -1,6 +1,3 @@
-import type { RecurrenceSpec } from "@/tools/scheduler/types/recurrenceSpec";
-import type { RecurrenceDriver } from "@/tools/scheduler/types/driver";
-import { createRecurrenceDriverRegistry } from "@/tools/scheduler/drivers/recurrenceDriverRegistry";
 import {
   addCalendarDaysInTimezone,
   atTimeOnDateInTimezone,
@@ -8,8 +5,13 @@ import {
   getWeekdayInTimezone,
 } from "@/utils";
 
+import type { RecurrenceDriver } from "../types/driver";
+import type { RecurrenceSpec } from "../types/recurrenceSpec";
+import { createRecurrenceDriverRegistry } from "./recurrenceDriverRegistry";
+
 type OnceRecurrence = Extract<RecurrenceSpec, { type: "once" }>;
-type DailyRecurrence = Extract<RecurrenceSpec, { type: "daily" }>;type WeekdaysRecurrence = Extract<RecurrenceSpec, { type: "weekdays" }>;
+type DailyRecurrence = Extract<RecurrenceSpec, { type: "daily" }>;
+type WeekdaysRecurrence = Extract<RecurrenceSpec, { type: "weekdays" }>;
 
 const onceRecurrenceDriver: RecurrenceDriver<OnceRecurrence> = {
   type: "once",
@@ -53,11 +55,7 @@ const dailyRecurrenceDriver: RecurrenceDriver<DailyRecurrence> = {
   },
 };
 
-function computeWeekdaysNextRun(
-  days: number[],
-  at: string,
-  from: Date,
-): Date {
+function computeWeekdaysNextRun(days: number[], at: string, from: Date): Date {
   if (days.length === 0) {
     throw new Error("Select at least one weekday.");
   }

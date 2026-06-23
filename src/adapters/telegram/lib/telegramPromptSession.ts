@@ -1,12 +1,19 @@
-import type { PromptChoice } from "@/adapters/host/contracts/promptPort";
+import type { PromptChoice } from "@/adapters/host/contracts";
 
-export type PendingPromptKind = "choose" | "question" | "yesNo" | "username" | "password";
+export type PendingPromptKind =
+  | "choose"
+  | "question"
+  | "yesNo"
+  | "username"
+  | "password";
 
 export interface PendingPrompt {
   readonly kind: PendingPromptKind;
   readonly allowBack?: boolean;
   readonly choices?: readonly PromptChoice[];
   readonly defaultYes?: boolean;
+  /** Value to resolve with when the user taps "Use default" on a text prompt. */
+  readonly defaultValue?: string;
   readonly resolve: (value: string | boolean) => void;
   readonly reject: (error: Error) => void;
 }

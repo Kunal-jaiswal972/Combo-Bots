@@ -1,6 +1,5 @@
-import type { RedeemTask } from "@/bots/code-redeem-bot/types";
-import type { RunResult } from "@/bots/code-redeem-bot/types";
-import { getStorage } from "@/bots/code-redeem-bot/controllers/storage";
+import { getStorage } from "../../controllers/storage";
+import type { RedeemTask, RunResult } from "../../types";
 import { executeRedeemRun } from "./redeemRun";
 
 export interface RunRedeemTaskOptions {

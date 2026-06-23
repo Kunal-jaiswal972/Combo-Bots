@@ -1,34 +1,38 @@
-import { isPromptBack } from "@/adapters/host/contracts/promptBack";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
-import {
-  getWeekdayPickerLabel,
-  WEEKDAY_PICKER_CHOICES,
-} from "@/utils";
+import { getWeekdayPickerLabel, WEEKDAY_PICKER_CHOICES } from "@/utils";
 
-type WeekdayPickValue = (typeof WEEKDAY_PICKER_CHOICES)[number]["value"] | "done";
+import { isPromptBack, type PromptPort } from "../../contracts";
+
+type WeekdayPickValue =
+  | (typeof WEEKDAY_PICKER_CHOICES)[number]["value"]
+  | "done";
 
 export async function promptSingleWeekday(port: PromptPort): Promise<number> {
-  const day = await port.choose("Which day of the week?", [...WEEKDAY_PICKER_CHOICES], {
-    allowBack: true,
-  });
+  const day = await port.choose(
+    "Which day of the week?",
+    [...WEEKDAY_PICKER_CHOICES],
+    {
+      allowBack: true,
+    },
+  );
   return Number.parseInt(day, 10);
 }
 
 /** Tap days to include, then choose Done — no numeric codes. */
-export async function promptMultipleWeekdays(port: PromptPort): Promise<number[]> {
+export async function promptMultipleWeekdays(
+  port: PromptPort,
+): Promise<number[]> {
   const selected = new Set<number>();
 
   while (true) {
-    const choices: { value: WeekdayPickValue; label: string }[] = WEEKDAY_PICKER_CHOICES.map(
-      (choice) => {
+    const choices: { value: WeekdayPickValue; label: string }[] =
+      WEEKDAY_PICKER_CHOICES.map((choice) => {
         const day = Number.parseInt(choice.value, 10);
         const mark = selected.has(day) ? " ✓" : "";
         return {
           value: choice.value,
           label: `${choice.label}${mark}`,
         };
-      },
-    );
+      });
 
     if (selected.size > 0) {
       choices.push({
@@ -43,7 +47,9 @@ export async function promptMultipleWeekdays(port: PromptPort): Promise<number[]
         : "Add another day, or tap Done";
 
     try {
-      const pick = await port.choose<WeekdayPickValue>(prompt, choices, { allowBack: true });
+      const pick = await port.choose<WeekdayPickValue>(prompt, choices, {
+        allowBack: true,
+      });
 
       if (pick === "done") {
         return [...selected].sort((left, right) => left - right);

@@ -10,7 +10,11 @@ export interface OpenPageOptions {
 export interface NavigateOptions {
   readonly page: Page;
   readonly url: string;
-  readonly waitUntil?: "domcontentloaded" | "load" | "networkidle0" | "networkidle2";
+  readonly waitUntil?:
+    | "domcontentloaded"
+    | "load"
+    | "networkidle0"
+    | "networkidle2";
 }
 
 export interface WaitForNetworkIdleOptions {

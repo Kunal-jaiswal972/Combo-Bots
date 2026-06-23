@@ -101,10 +101,13 @@ Created at runtime from `.env` defaults (`DATABASE_URL`):
 
 | Path | Purpose |
 |------|---------|
-| `src/data/genshin.db` | Genshin: `codes`, `scheduled_tasks`, `run_history`, `scheduled_jobs` |
-| `src/data/hsr.db` | HSR: same tables |
+| Path | Purpose |
+|------|---------|
+| `src/data/code-redeem/genshin.db` | Genshin: `codes`, `scheduled_tasks`, `run_history`, `scheduled_jobs` |
+| `src/data/code-redeem/hsr.db` | HSR: same tables |
+| `src/data/mal-friend-request-sender/mal-friend-request-sender.db` | MAL bot state |
 
-Per-game DBs live directly under `<DATABASE_URL>` (default dev: `src/data/`). Override base via `DATABASE_URL` in `.env`. Docker mounts `/data`.
+Bot DBs live under `<DATABASE_URL>/<bot-id>/` (default dev: `src/data/`). Override base via `DATABASE_URL` in `.env`. Docker mounts `/data`.
 
 ---
 
@@ -172,19 +175,51 @@ bots → tools + utils
 
 ---
 
+## Module enabling
+
+Every bot **and** adapter owns its own enable decision via `isEnabled()`, gated by a **dynamic env key derived from the module id**:
+
+```
+<ID>_ENABLED        # id uppercased, non-alphanumerics -> "_"
+```
+
+`isEnabled()` returns `isModuleEnabled(id, <source-default>)` (`@/utils`):
+
+- **Env key set** (`1/true/yes/on` or `0/false/no/off`) → that value wins.
+- **Env key unset / unrecognized** → the module's source-code default applies.
+
+This means new modules need **no schema changes** — they declare their default in code and are overridable per-deployment by env.
+
+| Module | id | Env key | Default |
+|--------|-----|---------|---------|
+| CLI menu | `cli` | `CLI_ENABLED` | enabled |
+| Telegram | `telegram` | `TELEGRAM_ENABLED` | enabled iff `TELEGRAM_BOT_TOKEN` set |
+| Code Redeemer | `code-redeem` | `CODE_REDEEM_ENABLED` | enabled |
+| MAL Friend Request | `mal-friend-request-sender` | `MAL_FRIEND_REQUEST_SENDER_ENABLED` | enabled |
+
+```ts
+// in a bot/adapter module
+isEnabled(): boolean {
+  return isModuleEnabled(BOT_ID, /* default */ true);
+}
+```
+
+`appConfig` only holds genuinely shared config (Chrome paths, scheduler, `TELEGRAM_BOT_TOKEN`) — **not** per-module enable flags.
+
 ## How to add a bot
 
 1. Create `src/bots/<name>/` implementing the `BotModule` contract (`index.ts`, `config/`, `types/`, `engine/`, `controllers/` as needed). Use **`code-redeem-bot`** as the reference.
 2. Read bot-specific env in the bot's `config/` (not shared `appConfig`).
-3. Append the module to **`src/bots/registry.ts`**.
+3. Implement `isEnabled()` → `isModuleEnabled(BOT_ID, <default>)` (see [Module enabling](#module-enabling)).
+4. Append the module to **`src/bots/registry.ts`**.
 
 The router and `runApplication` pick it up automatically. Optional: `start()`/`stop()` for DB + scheduler, `hoyoverse/<target>/` namespace for multi-game bots.
 
 ### How to add an input adapter
 
 1. Create `src/adapters/<name>/core/<name>AdapterModule.ts` implementing `AdapterModule`.
-2. Append to `src/adapters/host/registry/adapterModules.ts`.
-3. Add env flag in `appConfig.ts`, `.env.example`, and README.
+2. Implement `isEnabled()` → `isModuleEnabled(id, <default>)`; the `<ID>_ENABLED` env key is automatic (see [Module enabling](#module-enabling)). No `appConfig` flag needed.
+3. Append to `src/adapters/host/registry/adapterModules.ts`, and document the env key in `.env.example` + README.
 
 ### How to add a game (code-redeem-bot)
 

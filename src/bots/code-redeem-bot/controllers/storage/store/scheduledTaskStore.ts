@@ -1,14 +1,16 @@
 import type Database from "better-sqlite3";
+
+import type { RecurrenceSpec } from "@/tools/scheduler";
+
+import type { GameIdValue } from "../../../config/constants";
+import { gameDatabaseIds } from "../../../config/database";
 import type {
   RedeemTaskTemplate,
   ScheduledTask,
   ScheduledTaskStore,
-} from "@/bots/code-redeem-bot/types";
-import { scheduledTaskRecordSchema } from "@/bots/code-redeem-bot/types";
-import { parseStoredCredentials } from "@/bots/code-redeem-bot/utils/credentials";
-import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
-import { gameDatabaseIds } from "@/bots/code-redeem-bot/config/database";
-import type { RecurrenceSpec } from "@/tools/scheduler/types/recurrenceSpec";
+} from "../../../types";
+import { scheduledTaskRecordSchema } from "../../../types";
+import { parseStoredCredentials } from "../../../utils/credentials";
 import { openGameDatabase } from "../db";
 
 interface ScheduledTaskRow {

@@ -1,8 +1,5 @@
 import * as clack from "@clack/prompts";
-import { logger } from "@/utils";
-import type { DisplayPresenter } from "@/adapters/host/contracts/displayPresenter";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
-import { formatDisplayCardCliBody } from "./formatters/formatDisplayCard";
+
 import {
   askChoice,
   askPassword,
@@ -11,6 +8,10 @@ import {
   askUsername,
   askYesNo,
 } from "@/adapters/cli/lib/prompts";
+import { logger } from "@/utils";
+
+import type { DisplayPresenter, PromptPort } from "../contracts";
+import { formatDisplayCardCliBody } from "./formatters/formatDisplayCard";
 
 /** Shared terminal I/O — scheduler fallback and optional CLI menu adapter. */
 export interface TerminalPorts {

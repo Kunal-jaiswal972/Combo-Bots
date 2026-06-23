@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-import { ConfigError } from "@/utils/errors";
+
+import { ConfigError } from "@/utils";
 
 export interface ChromePathSearchContext {
   readonly platform: NodeJS.Platform;
@@ -19,7 +20,9 @@ export interface ExpandChromeUserDataDirOptions {
   readonly localAppData: string;
 }
 
-export function getChromeCandidates(context: ChromePathSearchContext): string[] {
+export function getChromeCandidates(
+  context: ChromePathSearchContext,
+): string[] {
   const candidates: string[] = [];
 
   if (context.platform === "win32") {

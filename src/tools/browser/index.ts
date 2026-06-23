@@ -1,4 +1,24 @@
+export {
+  clearInput,
+  clickElement,
+  enterText,
+  evaluateClick,
+  getIframeContentFrame,
+  navigate,
+  openPage,
+  readElementText,
+  waitForNetworkIdle,
+} from "./actions/elements";
 export { BrowserConfig, BrowserDelays } from "./constants";
+export {
+  buildChromeLaunchOptions,
+  launchChromeSession,
+} from "./launch/launcher";
+export {
+  bindBrowser,
+  closeBrowser,
+  setOnBrowserDisconnect,
+} from "./lifecycle/lifecycle";
 export type {
   ChromePathSearchContext,
   ExpandChromeUserDataDirOptions,
@@ -9,11 +29,6 @@ export {
   getChromeCandidates,
   resolveChromeExecutablePath,
 } from "./paths/chromePaths";
-export type {
-  ChromeLaunchOptions,
-  ChromeSession,
-  ChromeVersionResponse,
-} from "./types/session";
 export type {
   ClearInputOptions,
   ClickElementOptions,
@@ -26,21 +41,8 @@ export type {
   ReadElementTextOptions,
   WaitForNetworkIdleOptions,
 } from "./types/actions";
-export { buildChromeLaunchOptions, launchChromeSession } from "./launch/launcher";
-export {
-  bindBrowser,
-  closeBrowser,
-  registerShutdownHandlers,
-  registerShutdownHook,
-} from "./lifecycle/shutdown";
-export {
-  clearInput,
-  clickElement,
-  enterText,
-  evaluateClick,
-  getIframeContentFrame,
-  navigate,
-  openPage,
-  readElementText,
-  waitForNetworkIdle,
-} from "./actions/elements";
+export type {
+  ChromeLaunchOptions,
+  ChromeSession,
+  ChromeVersionResponse,
+} from "./types/session";

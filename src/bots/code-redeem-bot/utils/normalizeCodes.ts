@@ -1,8 +1,5 @@
-import { CodeStatus } from "@/bots/code-redeem-bot/config/constants";
-import type {
-  NormalizedScrapedCode,
-  ScrapedCodeRow,
-} from "@/bots/code-redeem-bot/types";
+import { CodeStatus } from "../config/constants";
+import type { NormalizedScrapedCode, ScrapedCodeRow } from "../types";
 
 /** Flattens scraper rows into individual codes with a status for store upsert. */
 export function normalizeScrapedRows(

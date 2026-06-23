@@ -1,6 +1,7 @@
-import type { GameIdValue } from "@/bots/code-redeem-bot/config/constants";
-import { gameModules } from "@/bots/code-redeem-bot/engine/gameRegistry";
-import type { PromptOptions, PromptPort } from "@/adapters/host/contracts/promptPort";
+import type { PromptOptions, PromptPort } from "@/adapters/host/contracts";
+
+import type { GameIdValue } from "../../../config/constants";
+import { gameModules } from "../../../engine/gameRegistry";
 
 export async function promptGameSelection(
   port: PromptPort,

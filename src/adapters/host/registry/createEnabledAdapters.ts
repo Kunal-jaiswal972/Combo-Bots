@@ -1,14 +1,18 @@
-import { ConfigError } from "@/utils/errors";
-import type { AppConfig } from "@/utils/env/appConfigTypes";
-import type { Bot } from "@/adapters/host/contracts/bot";
+import { type AppConfig, ConfigError } from "@/utils";
+
 import type {
+  Bot,
+  PromptPort,
   SchedulableRunPayload,
   ScheduledRunNotifier,
-} from "@/adapters/host/contracts/scheduledRunNotifier";
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
-import type { TaskInputAdapter } from "@/adapters/host/contracts/taskInputAdapter";
-import type { TerminalPorts } from "@/adapters/host/core/terminalPorts";
-import { adapterModules, type AdapterModuleCreateOptions } from "./adapterModules";
+  TaskInputAdapter,
+} from "../contracts";
+import type { TerminalPorts } from "../core/terminalPorts";
+import {
+  type AdapterModuleCreateOptions,
+  adapterModules,
+} from "./adapterModules";
+
 export interface CreateEnabledAdaptersOptions {
   readonly terminal: TerminalPorts;
   readonly appConfig: AppConfig;
@@ -43,7 +47,7 @@ export function createEnabledAdapters(
   const labels: string[] = [];
 
   for (const module of adapterModules) {
-    if (!module.isEnabled(appConfig)) {
+    if (!module.isEnabled()) {
       continue;
     }
 

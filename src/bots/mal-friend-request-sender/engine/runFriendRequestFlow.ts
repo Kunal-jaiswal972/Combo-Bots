@@ -1,10 +1,11 @@
-import type { PromptPort } from "@/adapters/host/contracts/promptPort";
+import type { PromptPort } from "@/adapters/host/contracts";
 import {
   buildChromeLaunchOptions,
   closeBrowser,
   launchChromeSession,
 } from "@/tools/browser";
-import { logger, sleep } from "@/utils";
+import { isAborted, logger, sleep } from "@/utils";
+
 import { MalDelays } from "../config/constants";
 import { fetchFriendProfileLinks, processProfileLink } from "../mal/friends";
 import { ensureMalLoggedIn, resolveTargetUsername } from "../mal/login";
@@ -32,6 +33,11 @@ export async function runFriendRequestFlow(
     const total = profileLinks.length;
 
     for (let index = 0; index < total; index += 1) {
+      if (isAborted()) {
+        logger.gray("Shutdown requested — stopping profile visits.");
+        break;
+      }
+
       const profileUrl = profileLinks[index];
 
       if (profileUrl === undefined || profileUrl.length === 0) {

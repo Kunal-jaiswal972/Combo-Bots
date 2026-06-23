@@ -1,5 +1,6 @@
-import type { RecurrenceSpec } from "@/tools/scheduler/types/recurrenceSpec";
-import type { RecurrenceDriver } from "@/tools/scheduler/types/driver";
+import type { RecurrenceDriver } from "../types/driver";
+import type { RecurrenceSpec } from "../types/recurrenceSpec";
+
 export interface RecurrenceDriverRegistry {
   getDriver(type: RecurrenceSpec["type"]): RecurrenceDriver;
   computeNextRunAt(recurrence: RecurrenceSpec, from?: Date): string | null;

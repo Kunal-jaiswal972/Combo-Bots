@@ -1,15 +1,17 @@
 import { randomUUID } from "node:crypto";
-import { formatSchedulerInstant, logger } from "@/utils";
+
+import { formatSchedulerInstant, isAborted, logger } from "@/utils";
+
 import {
   computeNextRunAt,
   rescheduleAfterRun,
-} from "@/tools/scheduler/drivers/recurrenceDrivers";
-import type { ScheduledJob, ScheduledJobStore } from "@/tools/scheduler/types/scheduledJob";
+} from "../drivers/recurrenceDrivers";
+import type { ScheduledJob, ScheduledJobStore } from "../types/scheduledJob";
 import type {
   RegisterScheduledJobOptions,
   SchedulerTriggerHandler,
   TaskScheduler,
-} from "@/tools/scheduler/types/taskScheduler";
+} from "../types/taskScheduler";
 
 const DEFAULT_POLL_INTERVAL_MS = 60_000;
 const MAX_DUE_TIMER_MS = 2_147_483_647;
@@ -21,9 +23,10 @@ export interface SchedulerRunnerOptions<TTemplate, TTrigger> {
   pollIntervalMs?: number;
 }
 
-export class SchedulerRunner<TTemplate, TTrigger>
-  implements TaskScheduler<TTemplate>
-{
+export class SchedulerRunner<
+  TTemplate,
+  TTrigger,
+> implements TaskScheduler<TTemplate> {
   private readonly store: ScheduledJobStore<TTemplate>;
   private readonly onTrigger: SchedulerTriggerHandler<TTrigger>;
   private readonly materialize: (
@@ -135,7 +138,7 @@ export class SchedulerRunner<TTemplate, TTrigger>
   }
 
   private async tick(): Promise<void> {
-    if (this.ticking) {
+    if (this.ticking || isAborted()) {
       return;
     }
 

@@ -5,7 +5,4 @@ export const hsrConfig = {
   source: "honkai-star-rail.fandom.com",
 } as const;
 
-export const hsrStubCodes = [
-  "HSR-STUB-001",
-  "HSR-STUB-002",
-] as const;
+export const hsrStubCodes = ["HSR-STUB-001", "HSR-STUB-002"] as const;

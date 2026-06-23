@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { getRegisteredAdapterIds } from "./adapterModules";
 
 const taskSourceFormatSchema = z.string().trim().min(1);
@@ -7,7 +8,9 @@ let allowedSources: ReadonlySet<string> = new Set();
 
 export function registerAllowedTaskSources(sources: readonly string[]): void {
   allowedSources = new Set(
-    sources.map((source) => source.trim()).filter((source) => source.length > 0),
+    sources
+      .map((source) => source.trim())
+      .filter((source) => source.length > 0),
   );
 }
 

@@ -1,8 +1,8 @@
-import { GameId } from "@/bots/code-redeem-bot/config/constants";
-import type { GameModule } from "@/bots/code-redeem-bot/engine/gameRegistry";
+import { GameId } from "../../config/constants";
+import type { GameModule } from "../../engine/gameRegistry";
 import { hsrConfig } from "./config";
-import { redeemHsrCodes } from "./redeemer";
 import { scrapeHsrCodes } from "./controllers/scrapeCodes";
+import { redeemHsrCodes } from "./redeemer";
 
 export const hsrGameModule: GameModule = {
   id: GameId.HSR,
