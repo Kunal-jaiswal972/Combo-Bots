@@ -1,69 +1,47 @@
+import type { Page } from "puppeteer-core";
+
 import type { PromptPort } from "@/adapters/host/contracts";
-import {
-  buildChromeLaunchOptions,
-  closeBrowser,
-  launchChromeSession,
-} from "@/tools/browser";
 import { isAborted, logger, sleep } from "@/utils";
 
 import { MalDelays } from "../config/constants";
 import { fetchFriendProfileLinks, processProfileLink } from "../mal/friends";
-import { ensureMalLoggedIn, resolveTargetUsername } from "../mal/login";
+import { resolveTargetUsername } from "../mal/login";
 
-export interface RunFriendRequestFlowOptions {
-  readonly prompt: PromptPort;
-}
-
-export async function runFriendRequestFlow(
-  options: RunFriendRequestFlowOptions,
+export async function sendBulkFriendRequests(
+  page: Page,
+  prompt: PromptPort,
 ): Promise<void> {
-  const launchOptions = buildChromeLaunchOptions();
+  const target = await resolveTargetUsername(prompt);
 
-  try {
-    const session = await launchChromeSession(launchOptions);
-    const { page } = session;
+  logger.step("Fetching all friend profiles...");
+  const profileLinks = await fetchFriendProfileLinks(page, target);
 
-    await ensureMalLoggedIn({ page, prompt: options.prompt });
+  const total = profileLinks.length;
 
-    const username = await resolveTargetUsername(options.prompt);
-
-    logger.step("Fetching all friend profiles...");
-    const profileLinks = await fetchFriendProfileLinks(page, username);
-
-    const total = profileLinks.length;
-
-    for (let index = 0; index < total; index += 1) {
-      if (isAborted()) {
-        logger.gray("Shutdown requested — stopping profile visits.");
-        break;
-      }
-
-      const profileUrl = profileLinks[index];
-
-      if (profileUrl === undefined || profileUrl.length === 0) {
-        continue;
-      }
-
-      await processProfileLink({
-        page,
-        profileUrl,
-        done: index,
-        total,
-      });
-
-      if (index < total - 1) {
-        logger.gray(
-          `Waiting ${MalDelays.betweenProfiles / 1_000}s before the next profile...`,
-        );
-        await sleep({
-          ms: MalDelays.betweenProfiles,
-          reason: "between MAL profile visits",
-        });
-      }
+  for (let index = 0; index < total; index += 1) {
+    if (isAborted()) {
+      logger.gray("Shutdown requested — stopping profile visits.");
+      break;
     }
 
-    options.prompt.success("Friend request run finished.");
-  } finally {
-    await closeBrowser("MAL friend request run finished");
+    const profileUrl = profileLinks[index];
+
+    if (profileUrl === undefined || profileUrl.length === 0) {
+      continue;
+    }
+
+    await processProfileLink({ page, profileUrl, done: index, total });
+
+    if (index < total - 1) {
+      logger.gray(
+        `Waiting ${MalDelays.betweenProfiles / 1_000}s before the next profile...`,
+      );
+      await sleep({
+        ms: MalDelays.betweenProfiles,
+        reason: "between MAL profile visits",
+      });
+    }
   }
+
+  prompt.success("Friend request run finished.");
 }

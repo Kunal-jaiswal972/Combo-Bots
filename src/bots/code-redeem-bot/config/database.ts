@@ -1,5 +1,5 @@
-import { resolveDataBaseDir, resolveDatabasePath } from "@/tools/database";
 import { BOT_ID_CODE_REDEEM } from "@/config";
+import { resolveDataBaseDir, resolveDatabasePath } from "@/tools/database";
 import { getAppConfig } from "@/utils";
 
 import { GameId, type GameIdValue } from "./constants";

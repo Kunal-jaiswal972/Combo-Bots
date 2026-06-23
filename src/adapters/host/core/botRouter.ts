@@ -36,6 +36,24 @@ async function runBotMenuLoop(options: {
   readonly bot: Bot;
   readonly ctx: BotContext;
 }): Promise<void> {
+  try {
+    if (options.bot.enter) {
+      await options.bot.enter(options.ctx);
+    }
+
+    await runBotActionMenu(options);
+  } finally {
+    if (options.bot.leave) {
+      await options.bot.leave();
+    }
+  }
+}
+
+async function runBotActionMenu(options: {
+  readonly port: PromptPort;
+  readonly bot: Bot;
+  readonly ctx: BotContext;
+}): Promise<void> {
   const actions = options.bot.menuActions(options.ctx);
 
   while (true) {

@@ -23,6 +23,10 @@ export interface Bot {
   readonly label: string;
   start?(): Promise<void>;
   stop?(): Promise<void>;
+  /** Runs once when the user opens this bot, before its action menu. */
+  enter?(ctx: BotContext): Promise<void>;
+  /** Runs when leaving the bot (Back / shutdown), for per-session cleanup. */
+  leave?(): Promise<void>;
   menuActions(ctx: BotContext): BotMenuAction[];
 }
 

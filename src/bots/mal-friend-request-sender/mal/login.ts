@@ -4,6 +4,7 @@ import type { PromptPort } from "@/adapters/host/contracts";
 import {
   clearInput,
   clickElement,
+  enterText,
   navigate,
   readElementText,
 } from "@/tools/browser";
@@ -16,32 +17,64 @@ import {
   sleep,
 } from "@/utils";
 
-import { loginPageUrl, MalDelays, MalSelectors } from "../config/constants";
+import {
+  homeUrl,
+  loginPageUrl,
+  MalDelays,
+  MalSelectors,
+} from "../config/constants";
 import {
   loadMalBotState,
   saveMalBotState,
 } from "../controllers/storage/store/stateStore";
 
-async function typeLikeHuman(
-  page: Page,
-  selector: string,
-  text: string,
-): Promise<void> {
-  await page.focus(selector);
+/**
+ * Resolve the logged-in MAL account from the live page (not the database):
+ * `login.php` redirects a logged-in user to the homepage, where the header
+ * avatar button (`a.header-profile-button`) carries the username in its
+ * `title`/`href`. Returns the username, or `null` when not logged in.
+ */
+export async function getLoggedInUsername(page: Page): Promise<string | null> {
+  await navigate({ page, url: loginPageUrl() });
 
-  for (const character of text) {
-    await page.keyboard.type(character);
-    await sleep({
-      ms: getRandomDelay({ min: MalDelays.typeMin, max: MalDelays.typeMax }),
-      reason: "human-like typing",
-    });
+  if (page.url().includes("login.php")) {
+    return null;
   }
+
+  const raw = await page.evaluate((selector) => {
+    const el = document.querySelector(selector);
+    if (!el) {
+      return null;
+    }
+    return el.getAttribute("title") || el.getAttribute("href") || null;
+  }, MalSelectors.headerProfileButton);
+
+  if (!raw) {
+    return null;
+  }
+
+  const afterProfile = raw.split("/profile/")[1];
+  const username = (afterProfile ?? raw).split(/[/?#]/)[0]?.trim() ?? "";
+
+  return username.length > 0 ? username : null;
 }
 
-/** True when logged in: loading login.php redirects away only when logged in. */
-export async function verifyMalLoggedIn(page: Page): Promise<boolean> {
-  await navigate({ page, url: loginPageUrl() });
-  return !page.url().includes("login.php");
+/** Submit the MAL logout form (POST to logout.php) from the profile dropdown. */
+export async function logoutMal(page: Page): Promise<void> {
+  logger.info("Logging out of MAL...");
+  await navigate({ page, url: homeUrl() });
+
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: "domcontentloaded" }).catch(() => {}),
+    page.evaluate((selector) => {
+      const form = document.querySelector(selector);
+      if (form instanceof HTMLFormElement) {
+        form.submit();
+      }
+    }, MalSelectors.logoutForm),
+  ]);
+
+  await sleep({ ms: MalDelays.pageSettle, reason: "MAL logout to settle" });
 }
 
 async function autoLogin(
@@ -66,10 +99,20 @@ async function autoLogin(
   await clearInput({ context: page, selector: MalSelectors.loginPassword });
 
   logger.info("Typing username...");
-  await typeLikeHuman(page, MalSelectors.loginUsername, username);
+  await enterText({
+    context: page,
+    selector: MalSelectors.loginUsername,
+    text: username,
+    reason: "MAL username",
+  });
 
   logger.info("Typing password...");
-  await typeLikeHuman(page, MalSelectors.loginPassword, password);
+  await enterText({
+    context: page,
+    selector: MalSelectors.loginPassword,
+    text: password,
+    reason: "MAL password",
+  });
 
   logger.gray("Enabling remember me...");
   await page.evaluate((selector) => {
@@ -123,75 +166,76 @@ async function manualLogin(page: Page, prompt: PromptPort): Promise<void> {
   );
 }
 
-export interface EnsureMalLoggedInOptions {
-  readonly page: Page;
-  readonly prompt: PromptPort;
-}
-
-/**
- * Ensures a MAL session before the friend-request flow.
- * Order: saved flag → existing browser session → prompted auto-login → manual login.
- */
-export async function ensureMalLoggedIn(
-  options: EnsureMalLoggedInOptions,
+export async function loginToMal(
+  page: Page,
+  prompt: PromptPort,
 ): Promise<void> {
-  const state = loadMalBotState();
-
-  if (state.isLoggedIn === true) {
-    logger.success("Already logged in (saved from a previous run).");
-    return;
-  }
-
-  if (await verifyMalLoggedIn(options.page)) {
-    saveMalBotState({ isLoggedIn: true });
-    logger.success("Already logged in (existing browser session).");
-    return;
-  }
-
-  const useAutoLogin = await options.prompt.yesNo(
+  const useAutoLogin = await prompt.yesNo(
     "Log in to MAL automatically with username and password?",
     true,
   );
 
   if (useAutoLogin) {
-    const username = await options.prompt.username("MAL account username:");
-    const password = await options.prompt.password("MAL account password:");
+    const username = await prompt.username("MAL account username:");
+    const password = await prompt.password("MAL account password:");
 
     logger.info(
       `Logging in automatically as ${formatAccountLabel(username)}...`,
     );
-    await autoLogin(options.page, username, password);
+    await autoLogin(page, username, password);
 
-    if (await verifyMalLoggedIn(options.page)) {
-      saveMalBotState({ isLoggedIn: true });
-      logger.success("Auto-login succeeded — future runs will skip this step.");
+    if ((await getLoggedInUsername(page)) !== null) {
       return;
     }
 
-    logger.warn(
-      "Auto-login did not succeed (wrong credentials or MAL challenge). Falling back to manual login.",
+    prompt.warn(
+      "Login did not succeed (wrong credentials or a MAL challenge). Falling back to manual login.",
     );
   } else {
     logger.gray("Using manual login.");
   }
 
-  await manualLogin(options.page, options.prompt);
+  await manualLogin(page, prompt);
+}
 
-  if (await verifyMalLoggedIn(options.page)) {
-    saveMalBotState({ isLoggedIn: true });
-    logger.success("Login saved — future runs will skip this step.");
-    return;
+export async function ensureMalAccount(
+  page: Page,
+  prompt: PromptPort,
+): Promise<void> {
+  let account = await getLoggedInUsername(page);
+
+  if (account) {
+    prompt.info(`Already logged in as ${account}.`);
+
+    const choice = await prompt.choose("How would you like to continue?", [
+      { value: "continue", label: `Continue as ${account}` },
+      { value: "logout", label: "Log out and use another account" },
+    ]);
+
+    if (choice === "logout") {
+      await logoutMal(page);
+      account = null;
+    }
   }
 
-  logger.warn(
-    "Still not detected as logged in — continuing; login will retry next run.",
-  );
+  if (!account) {
+    await loginToMal(page, prompt);
+    account = await getLoggedInUsername(page);
+
+    if (account) {
+      prompt.success(`Logged in as ${account}.`);
+    } else {
+      prompt.warn(
+        "Could not confirm MAL login — continuing, but requests may fail.",
+      );
+    }
+  }
 }
 
 export async function resolveTargetUsername(
   prompt: PromptPort,
 ): Promise<string> {
-  const stored = loadMalBotState().lastUsername;
+  const stored = loadMalBotState().lastScrapedUsername;
 
   let username = "";
 
@@ -208,6 +252,6 @@ export async function resolveTargetUsername(
     }
   }
 
-  saveMalBotState({ lastUsername: username });
+  saveMalBotState({ lastScrapedUsername: username });
   return username;
 }

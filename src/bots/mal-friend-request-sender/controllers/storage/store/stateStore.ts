@@ -5,18 +5,15 @@ import { type MalBotState, malBotStateSchema } from "../../../types/state";
 import { getMalDbHandle } from "../db";
 
 interface BotStateRow {
-  readonly is_logged_in: number;
   readonly last_username: string | null;
 }
 
-const SELECT_STATE_SQL =
-  "SELECT is_logged_in, last_username FROM bot_state WHERE id = 1";
+const SELECT_STATE_SQL = "SELECT last_username FROM bot_state WHERE id = 1";
 
 const UPSERT_STATE_SQL = `
-  INSERT INTO bot_state (id, is_logged_in, last_username)
-  VALUES (1, ?, ?)
+  INSERT INTO bot_state (id, last_username)
+  VALUES (1, ?)
   ON CONFLICT(id) DO UPDATE SET
-    is_logged_in = excluded.is_logged_in,
     last_username = excluded.last_username
 `;
 
@@ -29,15 +26,10 @@ export function loadMalBotState(): MalBotState {
   }
 
   const state: MalBotState = {};
-
-  if (row.is_logged_in === 1) {
-    state.isLoggedIn = true;
-  }
-
   const username = row.last_username?.trim() ?? "";
 
   if (username.length > 0) {
-    state.lastUsername = username;
+    state.lastScrapedUsername = username;
   }
 
   return state;
@@ -46,12 +38,10 @@ export function loadMalBotState(): MalBotState {
 export function saveMalBotState(patch: MalBotState): MalBotState {
   const next = malBotStateSchema.parse({ ...loadMalBotState(), ...patch });
   const handle = getMalDbHandle();
-
-  const isLoggedIn = next.isLoggedIn === true ? 1 : 0;
-  const lastUsername = next.lastUsername ?? null;
+  const lastUsername = next.lastScrapedUsername ?? null;
 
   try {
-    dbRun(handle, UPSERT_STATE_SQL, [isLoggedIn, lastUsername]);
+    dbRun(handle, UPSERT_STATE_SQL, [lastUsername]);
   } catch (error) {
     const cause = error instanceof Error ? error : undefined;
     throw new StorageError("Could not save MAL bot state.", cause);

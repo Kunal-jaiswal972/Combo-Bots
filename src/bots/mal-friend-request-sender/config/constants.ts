@@ -12,6 +12,10 @@ export const MalSelectors = {
   loginRemember: "input[name='cookie']",
   loginSubmit: "input[type='submit'].btn-form-submit",
   loginError: ".badresult",
+  /** Header avatar link; its `title`/`href` carries the logged-in username. */
+  headerProfileButton: "a.header-profile-button",
+  /** Logout form (POST to logout.php) in the profile dropdown. */
+  logoutForm: 'form[action*="logout.php"]',
 } as const;
 
 /** Pacing tuned for MAL rate limits (from standalone script). */
@@ -32,4 +36,8 @@ export function friendsPageUrl(username: string): string {
 
 export function loginPageUrl(): string {
   return `${MalConfig.baseUrl}/login.php`;
+}
+
+export function homeUrl(): string {
+  return `${MalConfig.baseUrl}/`;
 }

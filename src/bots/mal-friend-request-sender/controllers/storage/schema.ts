@@ -4,7 +4,6 @@ import type Database from "better-sqlite3";
 const SCHEMA = `
   CREATE TABLE IF NOT EXISTS bot_state (
     id INTEGER PRIMARY KEY CHECK (id = 1),
-    is_logged_in INTEGER NOT NULL DEFAULT 0,
     last_username TEXT
   );
 `;
