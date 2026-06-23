@@ -13,6 +13,7 @@ import type { AppConfig } from "./appConfigTypes";
 const DEFAULT_DATA_BASE_DIR = "file:./src/data";
 const DEFAULT_SCHEDULER_POLL_INTERVAL_MS = 10_000;
 const DEFAULT_SCHEDULER_TIMEZONE = "Asia/Kolkata";
+const DEFAULT_CHROME_DEBUG_PORT = 9222;
 
 const booleanFromEnv = z
   .string()
@@ -36,7 +37,12 @@ const appConfigSchema = z.object({
     .default(DEFAULT_SCHEDULER_POLL_INTERVAL_MS),
   CHROME_EXECUTABLE_PATH: z.string().optional(),
   CHROME_USER_DATA_DIR: z.string().optional(),
-  CHROME_DEBUG_PORT: z.coerce.number().int().min(1024).max(65535).default(9222),
+  CHROME_DEBUG_PORT: z.coerce
+    .number()
+    .int()
+    .min(1024)
+    .max(65535)
+    .default(DEFAULT_CHROME_DEBUG_PORT),
   HEADLESS: booleanFromEnv,
   TELEGRAM_BOT_TOKEN: z.string().optional(),
 });
