@@ -32,6 +32,7 @@ export {
 } from "./datetime/weekdays";
 export { getAppConfig } from "./env/appConfig";
 export type { AppConfig, ChromeEnvConfig } from "./env/appConfigTypes";
+export { isModuleEnabled, moduleEnabledEnvKey } from "./env/featureFlag";
 export { loadEnvFile } from "./env/loadEnv";
 export {
   AppError,

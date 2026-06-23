@@ -1,5 +1,6 @@
 import type { TerminalPorts } from "@/adapters/host/core/terminalPorts";
 import type { AdapterModule } from "@/adapters/host/registry/adapterModules";
+import { isModuleEnabled } from "@/utils";
 
 import { createCliAdapter } from "./cliAdapter";
 
@@ -10,8 +11,9 @@ export const cliAdapterModule: AdapterModule = {
   label: "CLI menu",
   lifecycle: "foreground",
 
-  isEnabled(appConfig): boolean {
-    return appConfig.cliAdapterEnabled;
+  /** Enabled by default; override with `CLI_ENABLED` in the env. */
+  isEnabled(): boolean {
+    return isModuleEnabled(CLI_ADAPTER_ID, true);
   },
 
   create(options) {

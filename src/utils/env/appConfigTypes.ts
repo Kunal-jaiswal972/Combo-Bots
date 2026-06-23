@@ -11,10 +11,7 @@ export interface AppConfig {
   /** IANA timezone for schedule times and display (`SCHEDULER_TIMEZONE`). */
   schedulerTimezone: string;
   schedulerPollIntervalMs: number;
-  cliAdapterEnabled: boolean;
+  /** Telegram bot token (`TELEGRAM_BOT_TOKEN`), or null when unset. */
   telegramBotToken: string | null;
-  telegramEnabled: boolean;
-  /** Unset in env = enabled; set `MAL_FRIEND_REQUEST_BOT_ENABLED=false` to disable. */
-  malFriendRequestBotEnabled?: boolean;
   chrome: ChromeEnvConfig;
 }

@@ -101,14 +101,6 @@ export async function runApplication(): Promise<void> {
   logger.info(`Active adapters: ${adapterLabels}`);
   logger.info(`Enabled bots: ${botLabels}`);
 
-  if (!appConfig.cliAdapterEnabled) {
-    logger.gray("CLI menu: off (set CLI_ADAPTER_ENABLED=true to enable)");
-  }
-
-  if (!appConfig.telegramEnabled && appConfig.telegramBotToken) {
-    logger.gray("Telegram: off (set TELEGRAM_ENABLED=true)");
-  }
-
   await Promise.all(enabled.background.map((adapter) => adapter.start()));
 
   if (enabled.foreground !== null) {

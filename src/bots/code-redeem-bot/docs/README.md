@@ -11,6 +11,10 @@ Scrapes Hoyoverse promo codes from community wikis and redeems them in-game via 
 
 On `stop()`: stops scheduler, resets in-memory stores, closes DB connections.
 
+**Bot id:** `code-redeem` (`config/constants.ts`).
+
+**Enable/disable:** gated by the `<ID>_ENABLED` convention → **`CODE_REDEEM_ENABLED`**. Defaults to enabled (`isModuleEnabled(BOT_ID, true)`); set the key to `false` in `.env` to hide it from the bot menu. See [Module enabling](../../../../AGENTS.md#module-enabling) for the full convention.
+
 ## How a run works
 
 ```text

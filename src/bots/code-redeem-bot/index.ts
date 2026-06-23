@@ -6,7 +6,7 @@ import type {
   BotModuleCreateOptions,
 } from "@/adapters/host/contracts";
 import type { SchedulerRunner } from "@/tools/scheduler";
-import { type AppConfig, ConfigError } from "@/utils";
+import { ConfigError, isModuleEnabled } from "@/utils";
 
 import { BOT_ID, SCHEDULER_TASK_SOURCE } from "./config/constants";
 import { createCodeRedeemSchedulerOnTrigger } from "./controllers/scheduling/onTrigger";
@@ -73,8 +73,9 @@ export const codeRedeemBotModule: BotModule = {
   label: BOT_LABEL,
   taskTriggerSources: [SCHEDULER_TASK_SOURCE],
 
-  isEnabled(_appConfig: AppConfig): boolean {
-    return true;
+  /** Enabled by default; override with `CODE_REDEEM_ENABLED` in the env. */
+  isEnabled(): boolean {
+    return isModuleEnabled(BOT_ID, true);
   },
 
   create(options: BotModuleCreateOptions): Bot {

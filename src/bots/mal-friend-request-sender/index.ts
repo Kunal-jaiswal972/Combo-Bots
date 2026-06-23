@@ -4,7 +4,7 @@ import type {
   BotModule,
   BotModuleCreateOptions,
 } from "@/adapters/host/contracts";
-import type { AppConfig } from "@/utils";
+import { isModuleEnabled } from "@/utils";
 
 import { BOT_ID } from "./config/constants";
 import {
@@ -41,11 +41,11 @@ export const malFriendRequestBotModule: BotModule = {
   label: BOT_LABEL,
 
   /**
-   * Enabled by default when `MAL_FRIEND_REQUEST_BOT_ENABLED` is unset.
-   * Set to `false` in `.env` to hide this bot from the app menu.
+   * Enabled by default; override with `MAL_FRIEND_REQUEST_SENDER_ENABLED` in
+   * the env. Set to `false` to hide this bot from the app menu.
    */
-  isEnabled(appConfig: AppConfig): boolean {
-    return appConfig.malFriendRequestBotEnabled ?? true;
+  isEnabled(): boolean {
+    return isModuleEnabled(BOT_ID, true);
   },
 
   create(options: BotModuleCreateOptions): Bot {

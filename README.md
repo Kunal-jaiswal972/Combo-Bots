@@ -29,19 +29,41 @@ npm install
 npm run dev
 ```
 
-Ensure `.env` has `CLI_ADAPTER_ENABLED=true` (default). The app shows a **bot picker** first, then the Code Redeemer menu: **Run now**, **Schedule**, **List**, **Cancel**, **History**, **Exit**.
-
 Scheduled tasks fire while the process is running.
+
+---
+
+## Module enabling (bots & adapters)
+
+Every **bot** and **input adapter** owns its own on/off state, gated by a **dynamic env key derived from its id**:
+
+```text
+<ID>_ENABLED        # id uppercased, non-alphanumerics → "_"
+```
+
+- Key **set** (`1/true/yes/on` or `0/false/no/off`) → that value wins.
+- Key **unset** (or unrecognized) → the module's built-in **source-code default** applies.
+
+Enabling/disabling a module therefore never needs a config-schema change — the env key is derived automatically and is purely opt-in per deployment.
+
+| Module | Kind | id | Env key | Default |
+|--------|------|-----|---------|---------|
+| CLI menu | adapter | `cli` | `CLI_ENABLED` | enabled |
+| Telegram | adapter | `telegram` | `TELEGRAM_ENABLED` | enabled **only if** `TELEGRAM_BOT_TOKEN` is set |
+| Code Redeemer | bot | `code-redeem` | `CODE_REDEEM_ENABLED` | enabled |
+| MAL Friend Request | bot | `mal-friend-request-sender` | `MAL_FRIEND_REQUEST_SENDER_ENABLED` | enabled |
+
+On startup the resolved set is logged: `Active adapters: …` and `Enabled bots: …`.
 
 ---
 
 ## Input adapters
 
-Adapters are registered in `src/adapters/host/registry/adapterModules.ts`. Enable each via `.env`:
+Adapters are registered in `src/adapters/host/registry/adapterModules.ts` and gated by the [`<ID>_ENABLED` convention](#module-enabling-bots--adapters):
 
 | Variable | Adapter | Lifecycle |
 |----------|---------|-----------|
-| `CLI_ADAPTER_ENABLED=true` | Terminal menu | Foreground (blocks until Exit) |
+| `CLI_ENABLED=true` | Terminal menu | Foreground (blocks until Exit) |
 | `TELEGRAM_ENABLED=true` + `TELEGRAM_BOT_TOKEN` | Telegram bot | Background (polling) |
 
 With both enabled, Telegram runs in the background while the CLI menu runs in the foreground.
@@ -64,7 +86,7 @@ Persists DBs and Chrome profile to **`./src/data`** on the host (same path as lo
 
 ```bash
 cp .env.example .env
-# Set TELEGRAM_BOT_TOKEN; set CLI_ADAPTER_ENABLED=false for headless containers
+# Set TELEGRAM_BOT_TOKEN; set CLI_ENABLED=false for headless containers
 
 docker compose up --build -d
 ```
@@ -134,11 +156,11 @@ Contributor rules: **[AGENTS.md](./AGENTS.md)**. Implementation tracking: **[PLA
 ## Adding a new input adapter
 
 1. Create `src/adapters/<name>/core/<name>AdapterModule.ts` implementing `AdapterModule`:
-   - `isEnabled(appConfig)` — read a new `.env` flag from `appConfig.ts`
+   - `isEnabled()` — return `isModuleEnabled(id, default)`; the `<ID>_ENABLED` env key is automatic (see [Module enabling](#module-enabling-bots--adapters)). No `appConfig` flag needed.
    - `lifecycle`: `"background"` (Discord, HTTP) or `"foreground"` (CLI)
    - `create()` — return `{ adapter: TaskInputAdapter, scheduledRunNotifier? }`
 2. Append the module to `src/adapters/host/registry/adapterModules.ts`
-3. Add env vars to `appConfig.ts`, `.env.example`, and this README
+3. Document the `<ID>_ENABLED` key in `.env.example` and this README
 
 The shared `botRouter` works for any adapter that implements `PromptPort` + `DisplayPresenter`.
 
@@ -165,12 +187,13 @@ Copy `.env.example` → `.env`. Application config only — no game credentials.
 
 | Variable | Purpose |
 |----------|---------|
-| `CLI_ADAPTER_ENABLED` | Terminal menu (`true` / `false`, default `true`) |
+| `<ID>_ENABLED` | Per-module toggle for any bot/adapter — see [Module enabling](#module-enabling-bots--adapters) |
+| `CLI_ENABLED` | Terminal menu (`true` / `false`, default `true`) |
+| `TELEGRAM_ENABLED` | Telegram adapter; default on only if `TELEGRAM_BOT_TOKEN` is set |
+| `TELEGRAM_BOT_TOKEN` | Bot token from @BotFather |
 | `DATABASE_URL` | Data directory — per-game DBs are `<path>/genshin.db`, `<path>/hsr.db` |
 | `SCHEDULER_POLL_INTERVAL_MS` | Scheduler poll interval (default 60000) |
 | `CHROME_*`, `HEADLESS` | Browser launch |
-| `TELEGRAM_BOT_TOKEN` | Bot token from @BotFather |
-| `TELEGRAM_ENABLED` | `false` to disable bot while keeping token |
 
 ---
 
@@ -197,7 +220,8 @@ Scrapers must use `@/tools/scraper` only. Browser steps must use `@/tools/browse
 ## Adding a new bot
 
 1. Create `src/bots/<name>/` implementing `BotModule` (see `code-redeem-bot` as reference)
-2. Append to `src/bots/registry.ts`
+2. Implement `isEnabled()` → `isModuleEnabled(BOT_ID, default)`; the bot is then toggled by `<BOT_ID>_ENABLED` (see [Module enabling](#module-enabling-bots--adapters))
+3. Append to `src/bots/registry.ts`
 
 Details in **[AGENTS.md](./AGENTS.md)**.
 
