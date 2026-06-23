@@ -12,6 +12,8 @@ export interface PendingPrompt {
   readonly allowBack?: boolean;
   readonly choices?: readonly PromptChoice[];
   readonly defaultYes?: boolean;
+  /** Value to resolve with when the user taps "Use default" on a text prompt. */
+  readonly defaultValue?: string;
   readonly resolve: (value: string | boolean) => void;
   readonly reject: (error: Error) => void;
 }

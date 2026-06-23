@@ -15,6 +15,7 @@ export {
   PROMPT_BACK_TEXT,
   PromptBackError,
   TELEGRAM_BACK_CALLBACK,
+  TELEGRAM_DEFAULT_CALLBACK,
 } from "./promptBack";
 export type { PromptChoice, PromptOptions, PromptPort } from "./promptPort";
 export type {

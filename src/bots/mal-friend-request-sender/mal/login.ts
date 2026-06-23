@@ -196,12 +196,11 @@ export async function resolveTargetUsername(
   let username = "";
 
   while (username.length === 0) {
-    const message =
-      stored !== undefined
-        ? `Enter MAL username whose friends to request (default: ${stored}):`
-        : "Enter MAL username whose friends to request:";
+    const message = "Enter MAL username whose friends to request:";
 
-    const answer = (await prompt.question(message)).trim();
+    const answer = (
+      await prompt.question(message, { defaultValue: stored })
+    ).trim();
     username = answer.length > 0 ? answer : (stored ?? "");
 
     if (username.length === 0) {

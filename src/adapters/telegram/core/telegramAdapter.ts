@@ -194,6 +194,20 @@ export function createTelegramAdapter(
         return;
       }
 
+      if (parsed.kind === "default") {
+        if (pending.defaultValue === undefined) {
+          await ctx.answerCallbackQuery({ text: "No default available." });
+          return;
+        }
+
+        await ctx.answerCallbackQuery();
+        logAdapter(TELEGRAM_ADAPTER_ID, "Resolved prompt default", {
+          scope: chatId,
+        });
+        pending.resolve(pending.defaultValue);
+        return;
+      }
+
       if (pending.kind === "choose" && parsed.kind === "choose") {
         await ctx.answerCallbackQuery();
         logAdapter(TELEGRAM_ADAPTER_ID, `Resolved choose → ${parsed.value}`, {

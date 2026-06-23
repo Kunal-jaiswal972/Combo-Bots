@@ -33,11 +33,13 @@ export async function askQuestion(
   options?: PromptOptions,
 ): Promise<string> {
   if (!process.stdin.isTTY) {
-    return "";
+    return options?.defaultValue ?? "";
   }
 
   const result = await clack.text({
     message: prompt,
+    placeholder: options?.defaultValue,
+    defaultValue: options?.defaultValue,
   });
 
   const value = unwrapClackResult(result, options?.allowBack === true).trim();

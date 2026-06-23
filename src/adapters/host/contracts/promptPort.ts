@@ -6,6 +6,11 @@ export interface PromptChoice<T extends string = string> {
 export interface PromptOptions {
   /** When true, the user can go back to the previous step (adapter-specific UI). */
   readonly allowBack?: boolean;
+  /**
+   * Pre-filled value the user can accept without typing — Enter in the CLI,
+   * a "Use default" button in Telegram. Applies to `question`.
+   */
+  readonly defaultValue?: string;
 }
 
 /** Interactive input/output surface for CLI, Telegram, and future adapters. */

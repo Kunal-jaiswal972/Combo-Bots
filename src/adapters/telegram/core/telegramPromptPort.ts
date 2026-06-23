@@ -9,6 +9,7 @@ import {
   type PromptOptions,
   type PromptPort,
   TELEGRAM_BACK_CALLBACK,
+  TELEGRAM_DEFAULT_CALLBACK,
 } from "@/adapters/host/contracts";
 import {
   type AdapterLogger,
@@ -82,15 +83,26 @@ export class TelegramPromptPort implements PromptPort, DisplayPresenter {
 
   async question(message: string, options?: PromptOptions): Promise<string> {
     const allowBack = options?.allowBack === true;
-    const valuePromise = this.waitForString("question", allowBack);
+    const defaultValue = options?.defaultValue;
+    const valuePromise = this.waitForString(
+      "question",
+      allowBack,
+      defaultValue,
+    );
     this.adapterLog.debug(`Prompt question: ${message}`);
 
-    const replyMarkup = allowBack
-      ? new InlineKeyboard().text(PROMPT_BACK_LABEL, TELEGRAM_BACK_CALLBACK)
-      : undefined;
+    const keyboard = new InlineKeyboard();
+    if (defaultValue !== undefined && defaultValue.length > 0) {
+      keyboard
+        .text(`Use default: ${defaultValue}`, TELEGRAM_DEFAULT_CALLBACK)
+        .row();
+    }
+    if (allowBack) {
+      keyboard.text(PROMPT_BACK_LABEL, TELEGRAM_BACK_CALLBACK).row();
+    }
 
     await this.api.sendMessage(this.chatId, message, {
-      reply_markup: replyMarkup,
+      reply_markup: keyboard.inline_keyboard.length > 0 ? keyboard : undefined,
     });
 
     return valuePromise;
@@ -198,6 +210,7 @@ export class TelegramPromptPort implements PromptPort, DisplayPresenter {
   private waitForString(
     kind: PendingPromptKind,
     allowBack = false,
+    defaultValue?: string,
   ): Promise<string> {
     if (this.session.pending) {
       this.session.pending.reject(new Error("Replaced by a new prompt."));
@@ -207,6 +220,7 @@ export class TelegramPromptPort implements PromptPort, DisplayPresenter {
       this.session.pending = {
         kind,
         allowBack,
+        defaultValue,
         resolve: (value) => {
           if (typeof value !== "string") {
             reject(new Error("Expected string response."));
@@ -258,9 +272,14 @@ export function resolveTelegramCallbackData(
   | { kind: "yes" }
   | { kind: "no" }
   | { kind: "back" }
+  | { kind: "default" }
   | null {
   if (data === TELEGRAM_BACK_CALLBACK) {
     return { kind: "back" };
+  }
+
+  if (data === TELEGRAM_DEFAULT_CALLBACK) {
+    return { kind: "default" };
   }
 
   if (data.startsWith(CHOOSE_PREFIX)) {
