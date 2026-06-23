@@ -5,13 +5,13 @@ import type {
   BotModule,
   BotModuleCreateOptions,
 } from "@/adapters/host/contracts";
-import type { SchedulerRunner } from "@/tools/scheduler";
-import { ConfigError, isModuleEnabled } from "@/utils";
 import {
-  BOT_LABEL_CODE_REDEEM,
   BOT_ID_CODE_REDEEM,
+  BOT_LABEL_CODE_REDEEM,
   TASK_SOURCE_SCHEDULER,
 } from "@/config";
+import type { SchedulerRunner } from "@/tools/scheduler";
+import { ConfigError, isModuleEnabled } from "@/utils";
 
 import { createCodeRedeemSchedulerOnTrigger } from "./controllers/scheduling/onTrigger";
 import { createBotScheduler } from "./controllers/scheduling/scheduler";

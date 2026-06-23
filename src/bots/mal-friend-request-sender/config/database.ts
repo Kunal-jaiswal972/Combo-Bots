@@ -1,6 +1,6 @@
+import { BOT_ID_MAL } from "@/config";
 import { resolveDataBaseDir, resolveDatabasePath } from "@/tools/database";
 import { getAppConfig } from "@/utils";
-import { BOT_ID_MAL } from "@/config";
 
 /** e.g. src/data/mal-friend-request-sender/mal-friend-request-sender.db */
 export function resolveMalDatabasePath(): string {

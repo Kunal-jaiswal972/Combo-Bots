@@ -1,7 +1,7 @@
 import type { TerminalPorts } from "@/adapters/host/core/terminalPorts";
 import type { AdapterModule } from "@/adapters/host/registry/adapterModules";
-import { isModuleEnabled } from "@/utils";
 import { ADAPTER_ID_CLI, ADAPTER_LABEL_CLI } from "@/config";
+import { isModuleEnabled } from "@/utils";
 
 import { createCliAdapter } from "./cliAdapter";
 

@@ -4,8 +4,8 @@ import type {
   BotModule,
   BotModuleCreateOptions,
 } from "@/adapters/host/contracts";
-import { isModuleEnabled } from "@/utils";
 import { BOT_ID_MAL, BOT_LABEL_MAL } from "@/config";
+import { isModuleEnabled } from "@/utils";
 
 import {
   bootstrapMalStorage,

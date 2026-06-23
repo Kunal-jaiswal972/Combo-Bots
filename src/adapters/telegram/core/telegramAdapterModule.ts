@@ -1,6 +1,6 @@
 import type { AdapterModule } from "@/adapters/host/registry/adapterModules";
-import { ConfigError, getAppConfig, isModuleEnabled } from "@/utils";
 import { ADAPTER_ID_TELEGRAM, ADAPTER_LABEL_TELEGRAM } from "@/config";
+import { ConfigError, getAppConfig, isModuleEnabled } from "@/utils";
 
 import { createTelegramScheduledRunNotifier } from "../lib/telegramScheduledRunNotifier";
 import { createTelegramAdapter } from "./telegramAdapter";
