@@ -198,40 +198,6 @@ export async function loginToMal(
   await manualLogin(page, prompt);
 }
 
-export async function ensureMalAccount(
-  page: Page,
-  prompt: PromptPort,
-): Promise<void> {
-  let account = await getLoggedInUsername(page);
-
-  if (account) {
-    prompt.info(`Already logged in as ${account}.`);
-
-    const choice = await prompt.choose("How would you like to continue?", [
-      { value: "continue", label: `Continue as ${account}` },
-      { value: "logout", label: "Log out and use another account" },
-    ]);
-
-    if (choice === "logout") {
-      await logoutMal(page);
-      account = null;
-    }
-  }
-
-  if (!account) {
-    await loginToMal(page, prompt);
-    account = await getLoggedInUsername(page);
-
-    if (account) {
-      prompt.success(`Logged in as ${account}.`);
-    } else {
-      prompt.warn(
-        "Could not confirm MAL login — continuing, but requests may fail.",
-      );
-    }
-  }
-}
-
 export async function resolveTargetUsername(
   prompt: PromptPort,
 ): Promise<string> {
