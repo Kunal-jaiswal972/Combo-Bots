@@ -123,7 +123,7 @@ async function autoLoginToMal(
   logger.gray(`Waiting ${waitMs}ms before clicking Login...`);
   await sleep({ ms: waitMs, reason: "before login submit" });
 
-  logger.info("Clicking Login...");
+  logger.info("Checking login...");
   await Promise.all([
     page.waitForNavigation({ waitUntil: "domcontentloaded" }).catch(() => {}),
     clickElement({
