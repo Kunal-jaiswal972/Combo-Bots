@@ -1,8 +1,11 @@
 import { spawn } from "node:child_process";
 import fs from "node:fs";
-import puppeteer from "puppeteer-core";
+import puppeteerExtra from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
 
 import { BrowserError, getAppConfig, logger, sleep } from "@/utils";
+
+puppeteerExtra.use(StealthPlugin());
 
 import { openPage } from "../actions/elements";
 import { BrowserConfig, BrowserDelays } from "../constants";
@@ -19,6 +22,11 @@ function buildChromeSpawnArgs(options: ChromeLaunchOptions): string[] {
     `--user-data-dir=${options.userDataDir}`,
     "--no-first-run",
     "--no-default-browser-check",
+    // Remove the CDP automation banner and navigator.webdriver flag that sites
+    // use to detect headless/automated browsers.
+    "--disable-blink-features=AutomationControlled",
+    "--exclude-switches=enable-automation",
+    "--disable-infobars",
   ];
 
   if (options.headless) {
@@ -117,7 +125,7 @@ export async function launchChromeSession(
   const browserWSEndpoint = await fetchWebSocketDebuggerUrl(options.debugPort);
   logger.gray(`Connected to: ${browserWSEndpoint}`);
 
-  const browser = await puppeteer.connect({
+  const browser = await puppeteerExtra.connect({
     browserWSEndpoint,
     protocolTimeout: BrowserConfig.PROTOCOL_TIMEOUT,
   });
