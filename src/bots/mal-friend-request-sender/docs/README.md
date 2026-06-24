@@ -1,78 +1,121 @@
 # MAL Friend Request Sender (`mal-friend-request-sender`)
 
-Sends a MyAnimeList friend request to **every friend** of a given MAL user. Drives Chrome via Puppeteer (remote debugging on a dedicated profile), logs into MAL once, then walks the target user's friends list and clicks **Add Friend** where possible.
+Sends a MyAnimeList friend request to every friend of a given MAL user. Drives Chrome via Puppeteer (remote debugging on a shared profile), confirms the active MAL account on entry, then walks the target user's friends list and clicks **Add Friend** where possible.
 
-## Entry point
+**Bot id:** `mal-friend-request-sender` — `BOT_ID_MAL` in `src/config/index.ts`.
 
-`index.ts` — registers `malFriendRequestBotModule`. On `start()` opens SQLite; on `stop()` closes the DB handle.
+**Enable/disable:** `MAL_FRIEND_REQUEST_SENDER_ENABLED` env key. Defaults to enabled. See [Module enabling](../../../../AGENTS.md#module-enabling).
 
-**Bot id:** `mal-friend-request-sender` — defined in `src/config/index.ts` as `BOT_ID_MAL`.
+---
 
-**Enable/disable:** gated by the `<ID>_ENABLED` convention → **`MAL_FRIEND_REQUEST_SENDER_ENABLED`**. Defaults to enabled (`isModuleEnabled(BOT_ID, true)`); set the key to `false` in `.env` to hide it from the bot menu. See [Module enabling](../../../../AGENTS.md#module-enabling) for the full convention.
+## How it works
 
-## How a run works
+This bot is built with `createBotService` (`@/services/bot-builder`) using a typed workflow definition. Two workflows run in sequence:
+
+### 1. Enter workflow (`malEnterWorkflow`) — runs before the menu
 
 ```text
-CLI menu → Run
-  → runFriendRequestFlow
-       1. launchChromeSession — shared Chrome debug profile (@/tools/browser)
-       2. ensureMalLoggedIn — saved flag → existing session → auto-login prompt → manual login
-       3. resolveTargetUsername — whose friends list to scrape (remembers last choice)
-       4. fetchFriendProfileLinks — scrape /profile/{user}/friends
-       5. for each friend profile:
-            visit profile → read #request button state
-            → send request / skip (already friends, pending, disabled)
-            → pace: 5s between profiles, 25s after each sent request
-       6. closeBrowser
+detect-account     → read a.header-profile-button from the live page
+                     (null = not logged in)
+
+already-logged-in  → show "Already logged in as {username}."
+                     → prompt: Continue as {username} | Log out and use another account
+                     → if logout: submit logout.php form, clear account
+
+needs-login        → loginToMal: ask "Log in to MAL automatically with username and password?"
+                       yes → auto-fill credentials via enterText, submit
+                       no  → prompt for manual login, wait for confirmation
+                     → re-read page to confirm login succeeded
+                     → show "Logged in as {username}." or warn if unconfirmed
 ```
 
-Login session persists in the Chrome user-data dir (`CHROME_USER_DATA_DIR`). Login flag and last target username persist in SQLite.
+Login is detected **from the live page** — no database flag. The Chrome user-data dir persists the session across restarts.
+
+### 2. Send bulk requests workflow (`sendBulkWorkflow`) — the menu action
+
+```text
+target-username    → prompt for MAL username to scrape
+                     (defaults to last used username from SQLite)
+
+fetch-friends      → GET /profile/{username}/friends, collect profile links
+
+send-requests      → for each profile link:
+                       visit page → read #request button state
+                       → send request / skip (already friends, pending, or disabled)
+                       → wait betweenProfiles (5s) between visits
+                       → wait afterRequest (25s) after each sent request
+```
+
+---
 
 ## Menu actions
 
 | Action | What it does |
-|--------|----------------|
-| Run | Full flow above (login if needed, then bulk friend requests) |
+|--------|--------------|
+| Send bulk friend requests | Full send-requests workflow above |
 
 No scheduler — run-on-demand only.
 
+---
+
 ## Storage
 
-Single SQLite file: `src/data/mal-friend-request-sender.db` (under `DATABASE_URL`).
+Single SQLite: `src/data/mal-friend-request-sender/mal-friend-request-sender.db` (under `DATABASE_URL`).
 
-Schema: `controllers/storage/schema.ts` — table `bot_state` (singleton row):
+Schema: `storage/schema.ts` — table `bot_state` (singleton row):
 
 | Column | Purpose |
 |--------|---------|
-| `is_logged_in` | Skip login step on future runs |
-| `last_username` | Default for “whose friends to request” prompt |
+| `last_username` | Default for the "whose friends to scrape" prompt (`lastScrapedUsername`) |
+
+Login state is **not** stored — detected from the live page each time.
+
+---
 
 ## Layout
 
 ```text
 mal-friend-request-sender/
-├── index.ts              BotModule + lifecycle
-├── config/               Selectors, delays, DB path (bot ID + label → `@/config`)
-├── types/                bot_state Zod schema
-├── mal/                  MAL site automation (login, friends scrape/request)
-├── engine/               runFriendRequestFlow + menu action
-└── controllers/storage/  SQLite open/schema/state store
+├── index.ts                  re-exports malFriendRequestBotModule
+├── constants.ts              MalConfig, MalSelectors, MalDelays, URL helpers
+├── core/
+│   ├── entry.ts              BotModule + BotDefinition (createBotService)
+│   └── workflow.ts           MalState, malEnterWorkflow, sendBulkWorkflow
+├── functions/
+│   ├── malLogin.ts           getLoggedInMalUsername, loginToMal, logOutOfMal,
+│   │                         resolveMalTargetUsername
+│   └── malFriendRequestHandler.ts  fetchMalFriendProfileLinks, processMalFriendProfile
+├── storage/
+│   ├── db.ts                 openMalDatabase, getMalDbHandle, bootstrapMalStorage, closeMalDatabase
+│   ├── schema.ts             initSchema (bot_state table)
+│   └── stateStore.ts         loadMalBotState, saveMalBotState, MalBotState
+└── docs/README.md
 ```
 
-## MAL-specific config
+> This bot is the reference implementation for **workflow-based bots** using `createBotService` from `@/services/bot-builder`.
 
-`config/constants.ts` — `MalSelectors` (friends list, login form, friend button), `MalDelays` (rate-limit pacing). Update selectors if MAL changes markup.
+---
+
+## Selectors and delays
+
+`constants.ts` — update `MalSelectors` if MAL changes its markup. `MalDelays` controls rate-limit pacing (tuned from manual testing).
+
+---
 
 ## Shared tools
 
 - **Browser** — `@/tools/browser` (same Chrome profile as Code Redeemer; separate site cookies)
 
+---
+
 ## Credentials
 
-MAL login username/password are **prompted** at runtime when auto-login is chosen — not stored in `.env`. To reset login, delete `mal-friend-request-sender.db` and log in again in the Chrome debug window.
+MAL username/password are **prompted at runtime** when auto-login is chosen — never stored in `.env` or the database. The Chrome user-data dir persists the logged-in cookie session. To force a fresh login, close the Chrome window and run the bot again.
+
+---
 
 ## Configuration
 
 Global env: `CHROME_EXECUTABLE_PATH`, `CHROME_USER_DATA_DIR`, `CHROME_DEBUG_PORT`, `HEADLESS`.
 
-`HEADLESS=true` requires a prior saved session or successful auto-login; manual login needs a visible browser window.
+`HEADLESS=true` requires a prior saved session or successful auto-login — manual login needs a visible browser window.
