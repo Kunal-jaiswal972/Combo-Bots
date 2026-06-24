@@ -11,7 +11,7 @@ import {
   zonedDateTimeToUtc,
 } from "@/utils";
 
-import { MONTH_CHOICES } from "./promptConstants";
+import { MONTH_CHOICES } from "../promptConstants";
 import { promptTimeOfDay } from "./timeOfDayPrompt";
 
 type DateWhenChoice = "today" | "tomorrow" | "custom";

@@ -8,7 +8,7 @@ import {
   MINUTE_MAX,
   MINUTE_MIN,
   PERIOD_CHOICES,
-} from "./promptConstants";
+} from "../promptConstants";
 
 type TimeStep = "hour" | "minute" | "period";
 
@@ -69,7 +69,7 @@ export async function promptTimeOfDay(port: PromptPort): Promise<string> {
     }
 
     try {
-      const period = await port.choose("AM or PM?", PERIOD_CHOICES, {
+      const period = await port.choose<"AM" | "PM">("AM or PM?", PERIOD_CHOICES, {
         allowBack: true,
       });
       const at = formatTimeOfDayString({
