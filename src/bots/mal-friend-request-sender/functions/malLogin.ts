@@ -22,11 +22,11 @@ import {
   loginPageUrl,
   MalDelays,
   MalSelectors,
-} from "../config/constants";
+} from "../constants";
 import {
   loadMalBotState,
   saveMalBotState,
-} from "../controllers/storage/store/stateStore";
+} from "../storage/stateStore";
 
 /**
  * Resolve the logged-in MAL account from the live page (not the database):
@@ -34,7 +34,7 @@ import {
  * avatar button (`a.header-profile-button`) carries the username in its
  * `title`/`href`. Returns the username, or `null` when not logged in.
  */
-export async function getLoggedInUsername(page: Page): Promise<string | null> {
+export async function getLoggedInMalUsername(page: Page): Promise<string | null> {
   await navigate({ page, url: loginPageUrl() });
 
   if (page.url().includes("login.php")) {
@@ -60,7 +60,7 @@ export async function getLoggedInUsername(page: Page): Promise<string | null> {
 }
 
 /** Submit the MAL logout form (POST to logout.php) from the profile dropdown. */
-export async function logoutMal(page: Page): Promise<void> {
+export async function logOutOfMal(page: Page): Promise<void> {
   logger.info("Logging out of MAL...");
   await navigate({ page, url: homeUrl() });
 
@@ -77,7 +77,7 @@ export async function logoutMal(page: Page): Promise<void> {
   await sleep({ ms: MalDelays.pageSettle, reason: "MAL logout to settle" });
 }
 
-async function autoLogin(
+async function autoLoginToMal(
   page: Page,
   username: string,
   password: string,
@@ -151,7 +151,7 @@ async function autoLogin(
   }
 }
 
-async function manualLogin(page: Page, prompt: PromptPort): Promise<void> {
+async function manualLoginToMal(page: Page, prompt: PromptPort): Promise<void> {
   const { headless } = getAppConfig().chrome;
 
   if (headless) {
@@ -182,9 +182,9 @@ export async function loginToMal(
     logger.info(
       `Logging in automatically as ${formatAccountLabel(username)}...`,
     );
-    await autoLogin(page, username, password);
+    await autoLoginToMal(page, username, password);
 
-    if ((await getLoggedInUsername(page)) !== null) {
+    if ((await getLoggedInMalUsername(page)) !== null) {
       return;
     }
 
@@ -195,10 +195,10 @@ export async function loginToMal(
     logger.gray("Using manual login.");
   }
 
-  await manualLogin(page, prompt);
+  await manualLoginToMal(page, prompt);
 }
 
-export async function resolveTargetUsername(
+export async function resolveMalTargetUsername(
   prompt: PromptPort,
 ): Promise<string> {
   const stored = loadMalBotState().lastScrapedUsername;

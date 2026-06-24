@@ -7,7 +7,7 @@ import { isModuleEnabled } from "@/utils";
 import {
   bootstrapMalStorage,
   closeMalDatabase,
-} from "../controllers/storage/db";
+} from "../storage/db";
 import {
   createInitialState,
   malEnterWorkflow,

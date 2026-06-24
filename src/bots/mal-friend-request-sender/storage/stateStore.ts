@@ -1,8 +1,16 @@
+import { z } from "zod";
+
 import { dbGet, dbRun } from "@/tools/database";
 import { StorageError } from "@/utils";
 
-import { type MalBotState, malBotStateSchema } from "../../../types/state";
-import { getMalDbHandle } from "../db";
+import { getMalDbHandle } from "./db";
+
+export const malBotStateSchema = z.object({
+  /** Last MAL username whose friend list was scraped (default for the prompt). */
+  lastScrapedUsername: z.string().min(1).optional(),
+});
+
+export type MalBotState = z.infer<typeof malBotStateSchema>;
 
 interface BotStateRow {
   readonly last_username: string | null;

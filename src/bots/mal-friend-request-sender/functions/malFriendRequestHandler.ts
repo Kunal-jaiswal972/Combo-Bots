@@ -3,15 +3,15 @@ import type { Page } from "puppeteer-core";
 import { navigate } from "@/tools/browser";
 import { logger, sleep } from "@/utils";
 
-import { friendsPageUrl, MalDelays, MalSelectors } from "../config/constants";
+import { friendsPageUrl, MalDelays, MalSelectors } from "../constants";
 
-type FriendRequestStatus =
+type MalFriendButtonStatus =
   | { readonly type: "add"; readonly link: string }
   | { readonly type: "remove"; readonly link: string }
   | { readonly type: "invalid"; readonly link: string }
   | { readonly type: "disabled"; readonly title: string };
 
-export async function fetchFriendProfileLinks(
+export async function fetchMalUserFriendProfileLinks(
   page: Page,
   username: string,
 ): Promise<string[]> {
@@ -38,7 +38,7 @@ export async function fetchFriendProfileLinks(
   return links;
 }
 
-async function sendFriendRequest(
+async function submitMalFriendRequest(
   page: Page,
   profileUrl: string,
   friendRequestUrl: string,
@@ -74,7 +74,7 @@ async function sendFriendRequest(
   logger.warn(`Friend request submit button not found for ${profileUrl}`);
 }
 
-async function getFriendRequestStatus(
+async function handleMalFriendButton(
   page: Page,
   profileUrl: string,
 ): Promise<void> {
@@ -107,7 +107,7 @@ async function getFriendRequestStatus(
     }
 
     return null;
-  }, MalSelectors.friendRequestButton)) as FriendRequestStatus | null;
+  }, MalSelectors.friendRequestButton)) as MalFriendButtonStatus | null;
 
   if (status === null) {
     logger.gray(`No Add Friend button found on ${profileUrl}`);
@@ -117,7 +117,7 @@ async function getFriendRequestStatus(
   switch (status.type) {
     case "add":
       logger.step(`Navigating to Add Friend page: ${status.link}`);
-      await sendFriendRequest(page, profileUrl, status.link);
+      await submitMalFriendRequest(page, profileUrl, status.link);
       break;
     case "remove":
       logger.info(`Already friends: ${profileUrl}`);
@@ -142,15 +142,15 @@ async function getFriendRequestStatus(
   }
 }
 
-export interface ProcessProfileLinkOptions {
+export interface ProcessMalUserProfileOptions {
   readonly page: Page;
   readonly profileUrl: string;
   readonly done: number;
   readonly total: number;
 }
 
-export async function processProfileLink(
-  options: ProcessProfileLinkOptions,
+export async function processMalUserProfile(
+  options: ProcessMalUserProfileOptions,
 ): Promise<void> {
   const { page, profileUrl, done, total } = options;
 
@@ -158,7 +158,7 @@ export async function processProfileLink(
     logger.info(`Visiting profile (${done + 1}/${total}): ${profileUrl}`);
     await navigate({ page, url: profileUrl });
     await sleep({ ms: MalDelays.pageSettle, reason: "profile page to settle" });
-    await getFriendRequestStatus(page, profileUrl);
+    await handleMalFriendButton(page, profileUrl);
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Unknown profile visit error";

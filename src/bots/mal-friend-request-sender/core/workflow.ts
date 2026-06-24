@@ -5,14 +5,14 @@ import {
 } from "@/services/bot-builder";
 import { logger, sleep } from "@/utils";
 
-import { MalDelays } from "../config/constants";
-import { fetchFriendProfileLinks, processProfileLink } from "../mal/friends";
+import { MalDelays } from "../constants";
+import { fetchMalUserFriendProfileLinks, processMalUserProfile } from "../functions/malFriendRequestHandler";
 import {
-  getLoggedInUsername,
+  getLoggedInMalUsername,
   loginToMal,
-  logoutMal,
-  resolveTargetUsername,
-} from "../mal/login";
+  logOutOfMal,
+  resolveMalTargetUsername,
+} from "../functions/malLogin";
 
 export interface MalState {
   /** Logged-in MAL account (from the live page), or null when not logged in. */
@@ -42,7 +42,7 @@ export const malEnterWorkflow: Workflow<MalState> = workflow<MalState>(
   "mal-confirm-account",
 )
   .step("detect-account", async (ctx) => {
-    ctx.state.account = await getLoggedInUsername(requirePage(ctx));
+    ctx.state.account = await getLoggedInMalUsername(requirePage(ctx));
   })
   .branch(
     "already-logged-in",
@@ -57,7 +57,7 @@ export const malEnterWorkflow: Workflow<MalState> = workflow<MalState>(
         ]);
 
         if (choice === "logout") {
-          await logoutMal(requirePage(ctx));
+          await logOutOfMal(requirePage(ctx));
           ctx.state.account = null;
         }
       }),
@@ -68,7 +68,7 @@ export const malEnterWorkflow: Workflow<MalState> = workflow<MalState>(
     (then) =>
       then.step("login", async (ctx) => {
         await loginToMal(requirePage(ctx), ctx.prompt);
-        ctx.state.account = await getLoggedInUsername(requirePage(ctx));
+        ctx.state.account = await getLoggedInMalUsername(requirePage(ctx));
 
         if (ctx.state.account) {
           ctx.prompt.success(`Logged in as ${ctx.state.account}.`);
@@ -86,11 +86,11 @@ export const sendBulkWorkflow: Workflow<MalState> = workflow<MalState>(
   "mal-send-bulk",
 )
   .prompt("target-username", async (ctx) => {
-    ctx.state.target = await resolveTargetUsername(ctx.prompt);
+    ctx.state.target = await resolveMalTargetUsername(ctx.prompt);
   })
   .step("fetch-friends", async (ctx) => {
     logger.step("Fetching all friend profiles...");
-    ctx.state.friends = await fetchFriendProfileLinks(
+    ctx.state.friends = await fetchMalUserFriendProfileLinks(
       requirePage(ctx),
       ctx.state.target,
     );
@@ -104,7 +104,7 @@ export const sendBulkWorkflow: Workflow<MalState> = workflow<MalState>(
       }
 
       const total = ctx.state.friends.length;
-      await processProfileLink({
+      await processMalUserProfile({
         page: requirePage(ctx),
         profileUrl,
         done: index,

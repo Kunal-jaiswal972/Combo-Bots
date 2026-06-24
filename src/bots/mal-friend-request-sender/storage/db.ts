@@ -1,14 +1,28 @@
 import type Database from "better-sqlite3";
 
+import { BOT_ID_MAL } from "@/config";
 import {
   closeDatabase,
   type DbHandle,
   getNativeDatabase,
   openDatabase,
+  resolveDataBaseDir,
+  resolveDatabasePath,
 } from "@/tools/database";
+import { getAppConfig } from "@/utils";
 
-import { resolveMalDatabasePath } from "../../config/database";
 import { initSchema } from "./schema";
+
+/** e.g. src/data/mal-friend-request-sender/mal-friend-request-sender.db */
+function resolveMalDatabasePath(): string {
+  const appConfig = getAppConfig();
+
+  return resolveDatabasePath({
+    basePath: resolveDataBaseDir(appConfig.dataBaseDir),
+    subfolder: BOT_ID_MAL,
+    filename: `${BOT_ID_MAL}.db`,
+  });
+}
 
 const initializedPaths = new Set<string>();
 let malDbHandle: DbHandle | null = null;
