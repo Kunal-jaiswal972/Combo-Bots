@@ -1,4 +1,4 @@
-import type { PromptPort } from "@/adapters/host/contracts";
+import type { PromptPort } from "@/services/bridge";
 import type { ChromeSession } from "@/tools/browser";
 
 /**
@@ -24,7 +24,11 @@ export type Predicate<S> = (
  * sugar (prompt, forEach, notify) is compiled down to these by the builder.
  */
 export type Step<S> =
-  | { readonly kind: "action"; readonly name: string; readonly run: StepHandler<S> }
+  | {
+      readonly kind: "action";
+      readonly name: string;
+      readonly run: StepHandler<S>;
+    }
   | {
       readonly kind: "branch";
       readonly name: string;

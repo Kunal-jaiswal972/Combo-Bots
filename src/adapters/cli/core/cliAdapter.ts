@@ -1,10 +1,10 @@
+import { runBotRouter } from "@/services/adapter-builder";
 import type {
   Bot,
   DisplayPresenter,
   PromptPort,
   TaskInputAdapter,
-} from "@/adapters/host/contracts";
-import { runBotRouter } from "@/adapters/host/core/botRouter";
+} from "@/services/bridge";
 
 const CLI_ADAPTER_ID = "cli";
 

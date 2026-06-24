@@ -1,5 +1,5 @@
-import { isPromptBack, type PromptPort } from "@/adapters/host/contracts";
-import { promptRecurrenceSpec } from "@/adapters/host/core/prompts/promptSchedule";
+import { promptRecurrenceSpec } from "@/services/adapter-builder";
+import { isPromptBack, type PromptPort } from "@/services/bridge";
 import type { RecurrenceSpec, TaskScheduler } from "@/tools/scheduler";
 import { formatSchedulerInstant } from "@/utils";
 

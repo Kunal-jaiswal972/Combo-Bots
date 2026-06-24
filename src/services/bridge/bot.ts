@@ -1,8 +1,8 @@
 import type { SchedulerRunner } from "@/tools/scheduler";
 
-import type { DisplayPresenter } from "./displayPresenter";
-import type { PromptPort } from "./promptPort";
-import type { ScheduledRunNotifier } from "./scheduledRunNotifier";
+import type { DisplayPresenter } from "./display/display";
+import type { PromptPort } from "./prompts/prompts";
+import type { ScheduledRunNotifier } from "./scheduling";
 
 export interface BotContext {
   readonly prompt: PromptPort;

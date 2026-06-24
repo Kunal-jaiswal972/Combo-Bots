@@ -1,3 +1,5 @@
+import type { PromptPort } from "@/services/bridge";
+import { isPromptBack } from "@/services/bridge";
 import {
   addCalendarDaysInTimezone,
   atTimeOnDateInTimezone,
@@ -9,23 +11,8 @@ import {
   zonedDateTimeToUtc,
 } from "@/utils";
 
-import { isPromptBack, type PromptPort } from "../../contracts";
-import { promptTimeOfDay } from "./promptTimePicker";
-
-const MONTH_CHOICES = [
-  { value: "0" as const, label: "January" },
-  { value: "1" as const, label: "February" },
-  { value: "2" as const, label: "March" },
-  { value: "3" as const, label: "April" },
-  { value: "4" as const, label: "May" },
-  { value: "5" as const, label: "June" },
-  { value: "6" as const, label: "July" },
-  { value: "7" as const, label: "August" },
-  { value: "8" as const, label: "September" },
-  { value: "9" as const, label: "October" },
-  { value: "10" as const, label: "November" },
-  { value: "11" as const, label: "December" },
-];
+import { MONTH_CHOICES } from "./promptConstants";
+import { promptTimeOfDay } from "./timeOfDayPrompt";
 
 type DateWhenChoice = "today" | "tomorrow" | "custom";
 type DateStep = "month" | "day";

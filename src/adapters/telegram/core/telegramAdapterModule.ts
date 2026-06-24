@@ -1,5 +1,5 @@
-import type { AdapterModule } from "@/adapters/host/registry/adapterModules";
 import { ADAPTER_ID_TELEGRAM, ADAPTER_LABEL_TELEGRAM } from "@/config";
+import type { AdapterModule } from "@/services/bridge";
 import { ConfigError, getAppConfig, isModuleEnabled } from "@/utils";
 
 import { createTelegramScheduledRunNotifier } from "../lib/telegramScheduledRunNotifier";
@@ -22,7 +22,7 @@ export const telegramAdapterModule: AdapterModule = {
   },
 
   create(options) {
-    const token = options.appConfig.telegramBotToken;
+    const token = getAppConfig().telegramBotToken;
 
     if (!token) {
       throw new ConfigError(

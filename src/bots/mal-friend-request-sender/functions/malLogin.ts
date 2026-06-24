@@ -1,6 +1,6 @@
 import type { Page } from "puppeteer-core";
 
-import type { PromptPort } from "@/adapters/host/contracts";
+import type { PromptPort } from "@/services/bridge";
 import {
   clearInput,
   clickElement,
@@ -17,16 +17,8 @@ import {
   sleep,
 } from "@/utils";
 
-import {
-  homeUrl,
-  loginPageUrl,
-  MalDelays,
-  MalSelectors,
-} from "../constants";
-import {
-  loadMalBotState,
-  saveMalBotState,
-} from "../storage/stateStore";
+import { homeUrl, loginPageUrl, MalDelays, MalSelectors } from "../constants";
+import { loadMalBotState, saveMalBotState } from "../storage/stateStore";
 
 /**
  * Resolve the logged-in MAL account from the live page (not the database):
@@ -34,7 +26,9 @@ import {
  * avatar button (`a.header-profile-button`) carries the username in its
  * `title`/`href`. Returns the username, or `null` when not logged in.
  */
-export async function getLoggedInMalUsername(page: Page): Promise<string | null> {
+export async function getLoggedInMalUsername(
+  page: Page,
+): Promise<string | null> {
   await navigate({ page, url: loginPageUrl() });
 
   if (page.url().includes("login.php")) {

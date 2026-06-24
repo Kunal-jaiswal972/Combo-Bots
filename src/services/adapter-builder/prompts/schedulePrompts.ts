@@ -1,24 +1,21 @@
+import type { PromptPort } from "@/services/bridge";
+import { isPromptBack } from "@/services/bridge";
 import type { RecurrenceSpec } from "@/tools/scheduler";
 
-import { isPromptBack, type PromptPort } from "../../contracts";
-import { promptOnceDateTime } from "./promptDatePicker";
-import { promptTimeOfDay } from "./promptTimePicker";
-import { promptMultipleWeekdays, promptSingleWeekday } from "./promptWeekdays";
+import { promptOnceDateTime } from "./prompt-types/dateTimePrompt";
+import { promptTimeOfDay } from "./prompt-types/timeOfDayPrompt";
+import {
+  promptMultipleWeekdays,
+  promptSingleWeekday,
+} from "./prompt-types/weekdayPrompt";
+import {
+  RECURRENCE_KIND_CHOICES,
+  type RecurrenceKind,
+} from "./promptConstants";
 
-type RecurrenceKind = "daily" | "weekly" | "once" | "weeklyOnce";
-
-const RECURRENCE_KIND_CHOICES = [
-  { value: "daily" as const, label: "Every day at a set time" },
-  {
-    value: "weekly" as const,
-    label: "On selected days every week at a set time",
-  },
-  { value: "once" as const, label: "Once at a specific date and time" },
-  {
-    value: "weeklyOnce" as const,
-    label: "Every week on one day at a set time",
-  },
-];
+// Public entry point for the schedule builder: pick a recurrence kind, then
+// gather the day(s)/date and time-of-day for that kind. The individual pickers
+// live in sibling files (timeOfDayPrompt, weekdayPrompt, dateTimePrompt).
 
 async function promptRecurrenceKind(port: PromptPort): Promise<RecurrenceKind> {
   return port.choose<RecurrenceKind>(

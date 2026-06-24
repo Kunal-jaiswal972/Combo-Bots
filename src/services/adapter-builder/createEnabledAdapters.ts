@@ -1,21 +1,18 @@
-import { type AppConfig, ConfigError } from "@/utils";
-
 import type {
+  AdapterModule,
   Bot,
   PromptPort,
   SchedulableRunPayload,
   ScheduledRunNotifier,
   TaskInputAdapter,
-} from "../contracts";
-import type { TerminalPorts } from "../core/terminalPorts";
-import {
-  type AdapterModuleCreateOptions,
-  adapterModules,
-} from "./adapterModules";
+  TerminalPorts,
+} from "@/services/bridge";
+import { ConfigError } from "@/utils";
 
 export interface CreateEnabledAdaptersOptions {
+  /** Adapter registry to instantiate from — passed in to keep this engine acyclic. */
+  readonly modules: readonly AdapterModule[];
   readonly terminal: TerminalPorts;
-  readonly appConfig: AppConfig;
   readonly bots: readonly Bot[];
   readonly onScheduledRun?: (
     port: PromptPort,
@@ -33,10 +30,8 @@ export interface EnabledAdapters {
 export function createEnabledAdapters(
   options: CreateEnabledAdaptersOptions,
 ): EnabledAdapters {
-  const { appConfig } = options;
-  const createOptions: AdapterModuleCreateOptions = {
+  const createOptions = {
     terminal: options.terminal,
-    appConfig,
     bots: options.bots,
     onScheduledRun: options.onScheduledRun,
   };
@@ -46,7 +41,7 @@ export function createEnabledAdapters(
   const scheduledRunNotifiers: ScheduledRunNotifier[] = [];
   const labels: string[] = [];
 
-  for (const module of adapterModules) {
+  for (const module of options.modules) {
     if (!module.isEnabled()) {
       continue;
     }

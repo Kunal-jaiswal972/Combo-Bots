@@ -1,22 +1,20 @@
-import type {
-  Bot,
-  PromptPort,
-  SchedulableRunPayload,
-} from "@/adapters/host/contracts";
-import { createTerminalPorts } from "@/adapters/host/core/terminalPorts";
-import { createEnabledAdapters } from "@/adapters/host/registry/createEnabledAdapters";
-import {
-  bootstrapTaskSources,
-  validateTaskSource,
-} from "@/adapters/host/registry/taskSource";
+import { adapterModules, getRegisteredAdapterIds } from "@/adapters/registry";
 import { onShutdown, requestShutdown } from "@/bootstrap/shutdown";
 import { createScheduledRunHandler } from "@/bots/code-redeem-bot/controllers/scheduling/scheduledRunHandler";
 import { redeemTaskSchema } from "@/bots/code-redeem-bot/types";
 import { botModules } from "@/bots/registry";
+import {
+  bootstrapTaskSources,
+  createEnabledAdapters,
+  createTerminalPorts,
+  validateTaskSource,
+} from "@/services/adapter-builder";
+import type { Bot, PromptPort, SchedulableRunPayload } from "@/services/bridge";
 import { closeBrowser } from "@/tools/browser";
 import { getAppConfig, isAborted, logger } from "@/utils";
 
 bootstrapTaskSources({
+  adapterSourceIds: getRegisteredAdapterIds(),
   triggerSourceIds: botModules.flatMap(
     (module) => module.taskTriggerSources ?? [],
   ),
@@ -49,8 +47,8 @@ export async function runApplication(): Promise<void> {
     );
 
   const enabled = createEnabledAdapters({
+    modules: adapterModules,
     terminal,
-    appConfig,
     bots: enabledBots,
     onScheduledRun: runScheduledPayload,
   });

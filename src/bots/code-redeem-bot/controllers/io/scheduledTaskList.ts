@@ -1,4 +1,4 @@
-import type { DisplayPresenter, PromptPort } from "@/adapters/host/contracts";
+import type { DisplayPresenter, PromptPort } from "@/services/bridge";
 
 import type { ScheduledTask } from "../../types";
 import { buildScheduledTaskCard } from "../../utils/scheduledTask";

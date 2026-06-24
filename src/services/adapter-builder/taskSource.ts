@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-import { getRegisteredAdapterIds } from "./adapterModules";
-
 const taskSourceFormatSchema = z.string().trim().min(1);
 
 let allowedSources: ReadonlySet<string> = new Set();
@@ -19,14 +17,16 @@ export function getAllowedTaskSources(): readonly string[] {
 }
 
 /**
- * Bootstrap: input adapter ids from registry + per-bot trigger ids (e.g. scheduler).
- * Call once from `bootstrap/runApplication` before bots handle tasks.
+ * Bootstrap: register every legal task `source`. Pass the input adapter ids
+ * (from the adapter registry) plus per-bot trigger ids (e.g. scheduler). Call
+ * once from `bootstrap/runApplication` before bots handle tasks.
  */
 export function bootstrapTaskSources(options: {
+  readonly adapterSourceIds: readonly string[];
   readonly triggerSourceIds: readonly string[];
 }): void {
   registerAllowedTaskSources([
-    ...getRegisteredAdapterIds(),
+    ...options.adapterSourceIds,
     ...options.triggerSourceIds,
   ]);
 }

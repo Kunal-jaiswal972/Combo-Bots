@@ -6,7 +6,10 @@ import {
 import { logger, sleep } from "@/utils";
 
 import { MalDelays } from "../constants";
-import { fetchMalUserFriendProfileLinks, processMalUserProfile } from "../functions/malFriendRequestHandler";
+import {
+  fetchMalUserFriendProfileLinks,
+  processMalUserProfile,
+} from "../functions/malFriendRequestHandler";
 import {
   getLoggedInMalUsername,
   loginToMal,
@@ -51,10 +54,13 @@ export const malEnterWorkflow: Workflow<MalState> = workflow<MalState>(
       then.prompt("continue-or-logout", async (ctx) => {
         ctx.prompt.info(`Already logged in as ${ctx.state.account}.`);
 
-        const choice = await ctx.prompt.choose("How would you like to continue?", [
-          { value: "continue", label: `Continue as ${ctx.state.account}` },
-          { value: "logout", label: "Log out and use another account" },
-        ]);
+        const choice = await ctx.prompt.choose(
+          "How would you like to continue?",
+          [
+            { value: "continue", label: `Continue as ${ctx.state.account}` },
+            { value: "logout", label: "Log out and use another account" },
+          ],
+        );
 
         if (choice === "logout") {
           await logOutOfMal(requirePage(ctx));

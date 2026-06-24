@@ -1,4 +1,4 @@
-import type { PromptPort } from "@/adapters/host/contracts";
+import type { PromptPort } from "@/services/bridge";
 
 import { displayRunResult } from "../../controllers/io/displayRunResult";
 import { promptCredentials } from "../../controllers/io/prompts/credentials";

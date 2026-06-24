@@ -1,12 +1,11 @@
 import { Bot, type Context } from "grammy";
 
+import { logAdapter, runBotRouter } from "@/services/adapter-builder";
 import {
   type Bot as RegisteredBot,
   PROMPT_BACK_TEXT,
   type TaskInputAdapter,
-} from "@/adapters/host/contracts";
-import { logAdapter } from "@/adapters/host/core/adapterLogger";
-import { runBotRouter } from "@/adapters/host/core/botRouter";
+} from "@/services/bridge";
 import { logger } from "@/utils";
 
 import {

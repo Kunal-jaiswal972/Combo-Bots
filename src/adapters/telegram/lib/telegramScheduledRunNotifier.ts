@@ -4,7 +4,7 @@ import type {
   PromptPort,
   SchedulableRunPayload,
   ScheduledRunNotifier,
-} from "@/adapters/host/contracts";
+} from "@/services/bridge";
 
 import { TelegramPromptPort } from "../core/telegramPromptPort";
 import { getTelegramChatSession } from "./telegramPromptSession";

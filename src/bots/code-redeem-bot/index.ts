@@ -1,15 +1,15 @@
 /** @see ./docs — bot overview, flow, storage, and layout */
-import type {
-  Bot,
-  BotContext,
-  BotModule,
-  BotModuleCreateOptions,
-} from "@/adapters/host/contracts";
 import {
   BOT_ID_CODE_REDEEM,
   BOT_LABEL_CODE_REDEEM,
   TASK_SOURCE_SCHEDULER,
 } from "@/config";
+import type {
+  Bot,
+  BotContext,
+  BotModule,
+  BotModuleCreateOptions,
+} from "@/services/bridge";
 import type { SchedulerRunner } from "@/tools/scheduler";
 import { ConfigError, isModuleEnabled } from "@/utils";
 

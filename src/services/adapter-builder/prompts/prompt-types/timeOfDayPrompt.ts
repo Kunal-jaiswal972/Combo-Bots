@@ -1,16 +1,14 @@
+import type { PromptPort } from "@/services/bridge";
+import { isPromptBack } from "@/services/bridge";
 import { formatTimeOfDayLabel, formatTimeOfDayString, to24Hour } from "@/utils";
 
-import { isPromptBack, type PromptPort } from "../../contracts";
-
-const PERIOD_CHOICES = [
-  { value: "AM" as const, label: "AM (morning)" },
-  { value: "PM" as const, label: "PM (afternoon/evening)" },
-];
-
-const HOUR_MIN = 1;
-const HOUR_MAX = 12;
-const MINUTE_MIN = 0;
-const MINUTE_MAX = 59;
+import {
+  HOUR_MAX,
+  HOUR_MIN,
+  MINUTE_MAX,
+  MINUTE_MIN,
+  PERIOD_CHOICES,
+} from "./promptConstants";
 
 type TimeStep = "hour" | "minute" | "period";
 

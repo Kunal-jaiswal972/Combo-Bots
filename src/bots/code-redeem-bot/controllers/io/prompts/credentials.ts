@@ -1,4 +1,4 @@
-import type { PromptPort } from "@/adapters/host/contracts";
+import type { PromptPort } from "@/services/bridge";
 
 import type { GameIdValue } from "../../../config/constants";
 import { getServerPromptChoices } from "../../../hoyoverse/shared/credentials";

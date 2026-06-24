@@ -1,6 +1,5 @@
-import type { TerminalPorts } from "@/adapters/host/core/terminalPorts";
-import type { AdapterModule } from "@/adapters/host/registry/adapterModules";
 import { ADAPTER_ID_CLI, ADAPTER_LABEL_CLI } from "@/config";
+import type { AdapterModule, TerminalPorts } from "@/services/bridge";
 import { isModuleEnabled } from "@/utils";
 
 import { createCliAdapter } from "./cliAdapter";

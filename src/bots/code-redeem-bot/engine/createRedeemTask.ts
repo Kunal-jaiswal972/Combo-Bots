@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 
-import { validateTaskSource } from "@/adapters/host/registry/taskSource";
+import { validateTaskSource } from "@/services/adapter-builder";
 
 import type { GameIdValue } from "../config/constants";
 import { validateGameCredentials } from "../hoyoverse/shared/credentials";

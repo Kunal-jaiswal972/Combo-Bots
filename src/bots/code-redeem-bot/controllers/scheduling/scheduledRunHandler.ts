@@ -1,4 +1,4 @@
-import type { PromptPort } from "@/adapters/host/contracts";
+import type { PromptPort } from "@/services/bridge";
 
 import { runRedeemTask } from "../../engine/run/runRedeemTask";
 import type { RedeemTask } from "../../types";

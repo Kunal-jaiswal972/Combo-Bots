@@ -1,13 +1,10 @@
 /** @see ../docs — bot overview, flow, storage, and layout */
-import type { BotModule } from "@/adapters/host/contracts";
 import { BOT_ID_MAL, BOT_LABEL_MAL } from "@/config";
 import { type BotDefinition, createBotService } from "@/services/bot-builder";
+import type { BotModule } from "@/services/bridge";
 import { isModuleEnabled } from "@/utils";
 
-import {
-  bootstrapMalStorage,
-  closeMalDatabase,
-} from "../storage/db";
+import { bootstrapMalStorage, closeMalDatabase } from "../storage/db";
 import {
   createInitialState,
   malEnterWorkflow,

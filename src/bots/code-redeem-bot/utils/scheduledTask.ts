@@ -1,4 +1,4 @@
-import type { DisplayCard, DisplayCardRow } from "@/adapters/host/contracts";
+import type { DisplayCard, DisplayCardRow } from "@/services/bridge";
 import {
   formatRecurrenceDescription,
   formatUpcomingRuns,

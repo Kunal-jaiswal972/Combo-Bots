@@ -1,4 +1,4 @@
-import type { BotContext, BotMenuAction } from "@/adapters/host/contracts";
+import type { BotContext, BotMenuAction } from "@/services/bridge";
 import type { SchedulerRunner } from "@/tools/scheduler";
 
 import { showRunHistoryList } from "../controllers/io/runHistoryList";

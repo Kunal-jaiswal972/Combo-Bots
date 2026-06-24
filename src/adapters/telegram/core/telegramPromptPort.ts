@@ -1,6 +1,11 @@
 import { type Api, InlineKeyboard } from "grammy";
 
 import {
+  type AdapterLogger,
+  createAdapterLogger,
+  formatDisplayCardTelegramHtml,
+} from "@/services/adapter-builder";
+import {
   type DisplayCard,
   type DisplayPresenter,
   PROMPT_BACK_LABEL,
@@ -10,12 +15,7 @@ import {
   type PromptPort,
   TELEGRAM_BACK_CALLBACK,
   TELEGRAM_DEFAULT_CALLBACK,
-} from "@/adapters/host/contracts";
-import {
-  type AdapterLogger,
-  createAdapterLogger,
-} from "@/adapters/host/core/adapterLogger";
-import { formatDisplayCardTelegramHtml } from "@/adapters/host/core/formatters/formatDisplayCard";
+} from "@/services/bridge";
 
 import type {
   PendingPromptKind,

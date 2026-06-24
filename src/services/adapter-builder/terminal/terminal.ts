@@ -1,12 +1,23 @@
 import * as clack from "@clack/prompts";
 
+import type {
+  DisplayPresenter,
+  PromptOptions,
+  PromptPort,
+  TerminalPorts,
+} from "@/services/bridge";
 import {
   PROMPT_BACK_CHOICE_VALUE,
   PROMPT_BACK_LABEL,
   PROMPT_BACK_TEXT,
   PromptBackError,
-  type PromptOptions,
-} from "@/adapters/host/contracts";
+} from "@/services/bridge";
+import { logger } from "@/utils";
+
+import { formatDisplayCardCliBody } from "../display/displayFormatter";
+
+// Default terminal (clack-based) implementation of the prompt + display ports.
+// Used by the CLI menu adapter and as the scheduler's fallback I/O surface.
 
 function isBackText(answer: string): boolean {
   return answer.trim().toLowerCase() === PROMPT_BACK_TEXT;
@@ -28,7 +39,7 @@ function unwrapClackResult<T>(result: T | symbol, allowBack = false): T {
   return result;
 }
 
-export async function askQuestion(
+async function askQuestion(
   prompt: string,
   options?: PromptOptions,
 ): Promise<string> {
@@ -51,7 +62,7 @@ export async function askQuestion(
   return value;
 }
 
-export interface ChoiceOption<T extends string> {
+interface ChoiceOption<T extends string> {
   value: T;
   label: string;
 }
@@ -97,7 +108,7 @@ async function askClackChoice<T extends string>(
   return result as T;
 }
 
-export async function askChoice<T extends string>(
+async function askChoice<T extends string>(
   prompt: string,
   choices: readonly ChoiceOption<T>[],
   options?: PromptOptions,
@@ -117,7 +128,7 @@ export async function askChoice<T extends string>(
   return askClackChoice(prompt, choices, options?.allowBack === true);
 }
 
-export async function askUsername(message = "Username"): Promise<string> {
+async function askUsername(message = "Username"): Promise<string> {
   if (!process.stdin.isTTY) {
     return askQuestion(`${message}: `);
   }
@@ -136,7 +147,7 @@ export async function askUsername(message = "Username"): Promise<string> {
   return unwrapClackResult(result).trim();
 }
 
-export async function askPassword(message = "Password"): Promise<string> {
+async function askPassword(message = "Password"): Promise<string> {
   if (!process.stdin.isTTY) {
     return askQuestion(`${message}: `);
   }
@@ -155,10 +166,7 @@ export async function askPassword(message = "Password"): Promise<string> {
   return unwrapClackResult(result);
 }
 
-export async function askYesNo(
-  prompt: string,
-  defaultYes: boolean,
-): Promise<boolean> {
+async function askYesNo(prompt: string, defaultYes: boolean): Promise<boolean> {
   if (!process.stdin.isTTY) {
     return defaultYes;
   }
@@ -175,7 +183,7 @@ export async function askYesNo(
   return result;
 }
 
-export async function askPositiveInteger(prompt: string): Promise<number> {
+async function askPositiveInteger(prompt: string): Promise<number> {
   while (true) {
     const result = await clack.text({
       message: `${prompt} (enter a number ≥ 1)`,
@@ -197,4 +205,31 @@ export async function askPositiveInteger(prompt: string): Promise<number> {
       return parsed;
     }
   }
+}
+
+export function createTerminalPorts(): TerminalPorts {
+  const display: DisplayPresenter = {
+    displayCards: (cards) => {
+      for (const card of cards) {
+        clack.note(formatDisplayCardCliBody(card), card.title);
+      }
+    },
+  };
+
+  const prompt: PromptPort = {
+    choose: askChoice,
+    question: askQuestion,
+    yesNo: askYesNo,
+    username: askUsername,
+    password: askPassword,
+    positiveInteger: askPositiveInteger,
+    step: (message) => logger.step(message),
+    info: (message) => logger.info(message),
+    success: (message) => logger.success(message),
+    warn: (message) => logger.warn(message),
+    gray: (message) => logger.gray(message),
+    error: (message, error) => logger.error(message, error),
+  };
+
+  return { prompt, display };
 }

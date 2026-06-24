@@ -1,11 +1,10 @@
-import { isAborted } from "@/utils";
-
 import type {
   Bot,
   BotContext,
   DisplayPresenter,
   PromptPort,
-} from "../contracts";
+} from "@/services/bridge";
+import { isAborted } from "@/utils";
 
 export interface RunBotRouterOptions {
   readonly port: PromptPort;

@@ -1,8 +1,5 @@
-import type {
-  PromptPort,
-  ScheduledRunNotifier,
-} from "@/adapters/host/contracts";
-import { createSchedulerOnTrigger } from "@/adapters/host/core/schedulerOnTrigger";
+import { createSchedulerOnTrigger } from "@/services/adapter-builder";
+import type { PromptPort, ScheduledRunNotifier } from "@/services/bridge";
 import type { SchedulerTriggerHandler } from "@/tools/scheduler";
 
 import type { RedeemTask } from "../../types";

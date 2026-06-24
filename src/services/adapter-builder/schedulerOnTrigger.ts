@@ -1,6 +1,8 @@
+import type {
+  SchedulableRunPayload,
+  ScheduledRunNotifier,
+} from "@/services/bridge";
 import type { SchedulerTriggerHandler } from "@/tools/scheduler";
-
-import type { SchedulableRunPayload, ScheduledRunNotifier } from "../contracts";
 
 export interface CreateSchedulerOnTriggerOptions<
   TPayload extends SchedulableRunPayload,

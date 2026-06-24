@@ -1,4 +1,4 @@
-import type { PromptPort } from "@/adapters/host/contracts";
+import type { PromptPort } from "@/services/bridge";
 
 import type { RunResult } from "../../types";
 import { formatRunResultForDisplay } from "../../utils/runResult";

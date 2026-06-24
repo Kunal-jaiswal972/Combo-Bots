@@ -3,7 +3,7 @@ import type {
   BotContext,
   BotMenuAction,
   PromptPort,
-} from "@/adapters/host/contracts";
+} from "@/services/bridge";
 import {
   buildChromeLaunchOptions,
   type ChromeSession,

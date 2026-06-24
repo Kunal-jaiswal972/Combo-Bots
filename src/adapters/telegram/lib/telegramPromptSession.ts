@@ -1,4 +1,4 @@
-import type { PromptChoice } from "@/adapters/host/contracts";
+import type { PromptChoice } from "@/services/bridge";
 
 export type PendingPromptKind =
   | "choose"

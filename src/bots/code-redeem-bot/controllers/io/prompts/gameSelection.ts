@@ -1,4 +1,4 @@
-import type { PromptOptions, PromptPort } from "@/adapters/host/contracts";
+import type { PromptOptions, PromptPort } from "@/services/bridge";
 
 import type { GameIdValue } from "../../../config/constants";
 import { gameModules } from "../../../engine/gameRegistry";
