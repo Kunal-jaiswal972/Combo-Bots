@@ -65,7 +65,8 @@ export async function scheduleMenu(
         gameId: redeemTask.gameId,
         credentials: redeemTask.credentials,
         scrapePolicy: redeemTask.scrapePolicy,
-        metadata: redeemTask.metadata,
+        // Preserve the adapter that created this schedule so triggered runs
+        metadata: { ...redeemTask.metadata, originalSource: source },
       },
       schedule,
     });
