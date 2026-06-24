@@ -1,13 +1,3 @@
-export type {
-  AdapterLogger,
-  AdapterLogLevel,
-  AdapterLogOptions,
-} from "./adapterLogger";
-export {
-  createAdapterLogger,
-  formatAdapterLogPrefix,
-  logAdapter,
-} from "./adapterLogger";
 export type { RunBotRouterOptions } from "./botRouter";
 export { runBotRouter } from "./botRouter";
 export type {
@@ -19,13 +9,23 @@ export {
   formatDisplayCardCliBody,
   formatDisplayCardTelegramHtml,
 } from "./display/displayFormatter";
-export { promptRecurrenceSpec } from "./prompts/schedulePrompts";
-export type { CreateSchedulerOnTriggerOptions } from "./schedulerOnTrigger";
-export { createSchedulerOnTrigger } from "./schedulerOnTrigger";
+export type {
+  AdapterLogger,
+  AdapterLogLevel,
+  AdapterLogOptions,
+} from "./lib/adapterLogger";
+export {
+  createAdapterLogger,
+  formatAdapterLogPrefix,
+  logAdapter,
+} from "./lib/adapterLogger";
 export {
   bootstrapTaskSources,
   getAllowedTaskSources,
   registerAllowedTaskSources,
   validateTaskSource,
-} from "./taskSource";
+} from "./lib/adapterSourceValidator";
+export type { CreateSchedulerOnTriggerOptions } from "./lib/schedulerOnTrigger";
+export { createSchedulerOnTrigger } from "./lib/schedulerOnTrigger";
+export { promptRecurrenceSpec } from "./prompts/schedulePrompts";
 export { createTerminalPorts } from "./terminal/terminal";
