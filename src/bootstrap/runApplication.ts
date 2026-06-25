@@ -1,15 +1,12 @@
 import { adapterModules, getRegisteredAdapterIds } from "@/adapters/registry";
 import { onShutdown, requestShutdown } from "@/bootstrap/shutdown";
-import { createScheduledRunHandler } from "@/bots/code-redeem-bot/controllers/scheduling/scheduledRunHandler";
-import { redeemTaskSchema } from "@/bots/code-redeem-bot/types";
 import { botModules } from "@/bots/registry";
 import {
   bootstrapTaskSources,
   createEnabledAdapters,
   createTerminalPorts,
-  validateTaskSource,
 } from "@/services/adapter-builder";
-import type { Bot, PromptPort, SchedulableRunPayload } from "@/services/bridge";
+import type { Bot } from "@/services/bridge";
 import { closeBrowser } from "@/tools/browser";
 import { getAppConfig, isAborted, logger } from "@/utils";
 
@@ -19,16 +16,6 @@ bootstrapTaskSources({
     (module) => module.taskTriggerSources ?? [],
   ),
 });
-
-async function runScheduledPayload(
-  port: PromptPort,
-  payload: SchedulableRunPayload,
-): Promise<void> {
-  const parsed = redeemTaskSchema.parse(payload);
-  const task = { ...parsed, source: validateTaskSource(parsed.source) };
-  const handler = createScheduledRunHandler(port);
-  await handler(task);
-}
 
 export async function runApplication(): Promise<void> {
   const appConfig = getAppConfig();
@@ -50,7 +37,18 @@ export async function runApplication(): Promise<void> {
     modules: adapterModules,
     terminal,
     bots: enabledBots,
-    onScheduledRun: runScheduledPayload,
+    // Route a scheduler-triggered payload to whichever enabled bot owns it.
+    onScheduledRun: async (port, payload) => {
+      for (const bot of enabledBots) {
+        if (
+          bot.runScheduledTask &&
+          (await bot.runScheduledTask(port, payload))
+        ) {
+          return;
+        }
+      }
+      logger.warn("No enabled bot handled the scheduled payload.");
+    },
   });
 
   scheduledRunNotifiers = enabled.scheduledRunNotifiers;

@@ -226,9 +226,9 @@ Data is bind-mounted at `./src/data` — `down -v` does **not** delete host file
 
 ### Add a game (Code Redeemer)
 
-1. Add the id to `GameId` in `src/bots/code-redeem-bot/config/constants.ts`.
+1. Add the id to `GameId` in `src/bots/code-redeem-bot/constants.ts`.
 2. Create `src/bots/code-redeem-bot/hoyoverse/<gameId>/` — `config/`, `controllers/`, `core/`.
-3. Register in `src/bots/code-redeem-bot/engine/gameRegistry.ts`.
+3. Register in `src/bots/code-redeem-bot/functions/gameRegistry.ts`.
 
 ---
 

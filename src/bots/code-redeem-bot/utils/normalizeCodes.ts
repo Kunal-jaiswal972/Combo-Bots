@@ -1,4 +1,4 @@
-import { CodeStatus } from "../config/constants";
+import { CodeStatus } from "../constants";
 import type { NormalizedScrapedCode, ScrapedCodeRow } from "../types";
 
 /** Flattens scraper rows into individual codes with a status for store upsert. */

@@ -8,10 +8,10 @@ import {
 } from "@/tools/browser";
 import { getRandomDelay, logger, sleep } from "@/utils";
 
-import { GameId, RedeemStatus } from "../../../config/constants";
+import { GameId, RedeemStatus } from "../../../constants";
 import type { CodeRedeemResult } from "../../../types";
 import { getRedeemMessageParser } from "../../shared/redeemMessageParser";
-import { genshinConfig } from "../config/config";
+import { genshinConfig } from "../config/genshinConfig";
 import {
   dismissRedeemModal,
   ensureRedeemModalClosed,

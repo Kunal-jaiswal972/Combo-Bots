@@ -298,8 +298,8 @@ The router and `runApplication` pick it up automatically.
 
 ### How to add a game (Code Redeemer)
 
-1. Add id to `GameId` in `src/bots/code-redeem-bot/config/constants.ts`.
+1. Add id to `GameId` in `src/bots/code-redeem-bot/constants.ts`.
 2. Create `src/bots/code-redeem-bot/hoyoverse/<gameId>/` — `config/`, `controllers/`, `core/`.
-3. Register in `src/bots/code-redeem-bot/engine/gameRegistry.ts`.
+3. Register in `src/bots/code-redeem-bot/functions/gameRegistry.ts`.
 
 Scrapers must use `@/tools/scraper` only; browser steps must use `@/tools/browser` only.

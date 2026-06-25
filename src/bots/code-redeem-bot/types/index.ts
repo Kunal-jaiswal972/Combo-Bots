@@ -4,12 +4,13 @@ export {
   codeStatusValues,
   GameId,
   type GameIdValue,
-  GenshinServer,
-  type GenshinServerValue,
+  HoyoServer,
+  type HoyoServerValue,
+  hoyoServerValues,
   RedeemStatus,
   type RedeemStatusValue,
   redeemStatusValues,
-} from "../config/constants";
+} from "../constants";
 export type {
   CodeStoreEntry,
   CodeStoreMergeResult,

@@ -1,8 +1,8 @@
 import type { DisplayCard, DisplayCardRow } from "@/services/bridge";
 import { formatSchedulerInstant } from "@/utils";
 
-import type { GameIdValue } from "../config/constants";
-import { getGameModule } from "../engine/gameRegistry";
+import type { GameIdValue } from "../constants";
+import { getGameModule } from "../functions/gameRegistry";
 import type { RunHistoryEntry, RunResult, ScheduledTask } from "../types";
 
 function formatRunStatusLabel(status: RunResult["status"]): string {

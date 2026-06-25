@@ -3,6 +3,7 @@ import type {
   BotContext,
   BotMenuAction,
   PromptPort,
+  SchedulableRunPayload,
 } from "@/services/bridge";
 import {
   buildChromeLaunchOptions,
@@ -33,6 +34,14 @@ export interface BotDefinition<S> {
   /** Runs when the user opens the bot, before the action menu (e.g. login). */
   readonly onEnter?: Workflow<S>;
   readonly actions: readonly BotActionDefinition<S>[];
+  /**
+   * Handle a scheduler-triggered payload owned by this bot (validate + run).
+   * Returns `true` if handled. Surfaced as {@link Bot.runScheduledTask}.
+   */
+  readonly runScheduledTask?: (
+    port: PromptPort,
+    payload: SchedulableRunPayload,
+  ) => Promise<boolean>;
 }
 
 /**
@@ -44,11 +53,18 @@ export function createBotService<S>(def: BotDefinition<S>): Bot {
   let state: S | null = null;
   let session: ChromeSession | null = null;
 
-  const contextFor = (prompt: PromptPort): WorkflowContext<S> => {
+  const contextFor = (ctx: BotContext): WorkflowContext<S> => {
     if (state === null) {
       state = def.createState();
     }
-    return { prompt, state, session };
+    return {
+      prompt: ctx.prompt,
+      display: ctx.display,
+      state,
+      session,
+      source: ctx.source,
+      metadata: ctx.metadata,
+    };
   };
 
   return {
@@ -69,7 +85,7 @@ export function createBotService<S>(def: BotDefinition<S>): Bot {
         session = await launchChromeSession(buildChromeLaunchOptions());
       }
       if (def.onEnter) {
-        await runWorkflow(def.onEnter, contextFor(ctx.prompt));
+        await runWorkflow(def.onEnter, contextFor(ctx));
       }
     },
 
@@ -86,9 +102,11 @@ export function createBotService<S>(def: BotDefinition<S>): Bot {
         id: action.id,
         label: action.label,
         run: async (runCtx: BotContext) => {
-          await runWorkflow(action.workflow, contextFor(runCtx.prompt));
+          await runWorkflow(action.workflow, contextFor(runCtx));
         },
       }));
     },
+
+    runScheduledTask: def.runScheduledTask,
   };
 }

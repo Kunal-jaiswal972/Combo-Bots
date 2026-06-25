@@ -3,7 +3,7 @@ import type { Page } from "puppeteer-core";
 import { BrowserDelays } from "@/tools/browser";
 import { formatWaitMs, logger, sleep } from "@/utils";
 
-import { genshinConfig } from "../config/config";
+import { genshinConfig } from "../config/genshinConfig";
 
 export async function isRedeemModalOpen(page: Page): Promise<boolean> {
   return page.evaluate((modalSelector) => {

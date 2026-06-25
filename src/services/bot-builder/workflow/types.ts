@@ -1,4 +1,4 @@
-import type { PromptPort } from "@/services/bridge";
+import type { DisplayPresenter, PromptPort } from "@/services/bridge";
 import type { ChromeSession } from "@/tools/browser";
 
 /**
@@ -8,9 +8,15 @@ import type { ChromeSession } from "@/tools/browser";
  */
 export interface WorkflowContext<S> {
   readonly prompt: PromptPort;
+  /** Rich card/list output surface (CLI tables, Telegram messages). */
+  readonly display: DisplayPresenter;
   readonly state: S;
   /** Browser session for session-backed bots; null when none was opened. */
   readonly session: ChromeSession | null;
+  /** Open adapter id that drove this run: `"cli"`, `"telegram"`, … */
+  readonly source: string;
+  /** Adapter-supplied metadata (e.g. notification routing), if any. */
+  readonly metadata?: Record<string, string>;
 }
 
 export type StepHandler<S> = (ctx: WorkflowContext<S>) => Promise<void> | void;

@@ -2,7 +2,7 @@ import type { SchedulerRunner } from "@/tools/scheduler";
 
 import type { DisplayPresenter } from "./display/display";
 import type { PromptPort } from "./prompts/prompts";
-import type { ScheduledRunNotifier } from "./scheduling";
+import type { SchedulableRunPayload, ScheduledRunNotifier } from "./scheduling";
 
 export interface BotContext {
   readonly prompt: PromptPort;
@@ -28,6 +28,16 @@ export interface Bot {
   /** Runs when leaving the bot (Back / shutdown), for per-session cleanup. */
   leave?(): Promise<void>;
   menuActions(ctx: BotContext): BotMenuAction[];
+  /**
+   * Execute a scheduler-triggered payload that belongs to this bot. The bot
+   * validates the payload (e.g. against its own schema) and returns `true` if
+   * it handled it, or `false` to let another bot try. Keeps scheduled-run
+   * dispatch out of the bootstrap layer.
+   */
+  runScheduledTask?(
+    port: PromptPort,
+    payload: SchedulableRunPayload,
+  ): Promise<boolean>;
 }
 
 export interface BotModuleCreateOptions {

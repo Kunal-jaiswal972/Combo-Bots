@@ -2,8 +2,8 @@ import { z } from "zod";
 
 import type { ChromeSession } from "@/tools/browser";
 
-import type { GameIdValue } from "../config/constants";
-import { redeemStatusValues } from "../config/constants";
+import type { GameIdValue } from "../constants";
+import { redeemStatusValues } from "../constants";
 import { type GameLoginCredentials } from "./task";
 
 export const redeemSummarySchema = z.object({
@@ -53,6 +53,11 @@ export type CodeRedeemResult = z.infer<typeof codeRedeemResultSchema>;
 export interface GameRedeemOptions {
   credentials: GameLoginCredentials;
   codes: string[];
+  /**
+   * Skip the login step — the caller already established the session (the
+   * interactive "Redeem codes" flow logs in on enter, so no password is held).
+   */
+  alreadyLoggedIn?: boolean;
   onCodeRedeemed?: (result: CodeRedeemResult) => Promise<void>;
 }
 
@@ -76,6 +81,7 @@ export interface RedeemCodesOptions {
   gameId: GameIdValue;
   session: ChromeSession;
   credentials: GameLoginCredentials;
+  alreadyLoggedIn?: boolean;
 }
 
 export interface RedeemWithGameEngineOptions {
@@ -83,4 +89,5 @@ export interface RedeemWithGameEngineOptions {
   session: ChromeSession;
   credentials: GameLoginCredentials;
   codes: string[];
+  alreadyLoggedIn?: boolean;
 }

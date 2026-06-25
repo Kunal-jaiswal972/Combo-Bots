@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { GameId, type GameIdValue } from "../config/constants";
+import { GameId, type GameIdValue } from "../constants";
 
 export const credentialsSchema = z.preprocess(
   (value) => {

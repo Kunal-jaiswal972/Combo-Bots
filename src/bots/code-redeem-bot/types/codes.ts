@@ -1,9 +1,6 @@
 import { z } from "zod";
 
-import {
-  type CodeStatusValue,
-  type RedeemStatusValue,
-} from "../config/constants";
+import { type CodeStatusValue, type RedeemStatusValue } from "../constants";
 
 export const scrapedCodeRowSchema = z.object({
   codes: z.array(z.string().min(1)),

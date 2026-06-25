@@ -1,6 +1,6 @@
 import type { ScheduledJobStore } from "@/tools/scheduler";
 
-import type { GameIdValue } from "../config/constants";
+import type { GameIdValue } from "../constants";
 import type { CodeStoreMergeResult, NormalizedScrapedCode } from "./codes";
 import type { CodeRedeemResult, RunHistoryEntry, RunResult } from "./run";
 import type { RedeemTask, RedeemTaskTemplate } from "./task";

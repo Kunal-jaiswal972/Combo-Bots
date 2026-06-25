@@ -69,9 +69,13 @@ export async function promptTimeOfDay(port: PromptPort): Promise<string> {
     }
 
     try {
-      const period = await port.choose<"AM" | "PM">("AM or PM?", PERIOD_CHOICES, {
-        allowBack: true,
-      });
+      const period = await port.choose<"AM" | "PM">(
+        "AM or PM?",
+        PERIOD_CHOICES,
+        {
+          allowBack: true,
+        },
+      );
       const at = formatTimeOfDayString({
         hours: to24Hour(hour12, period),
         minutes: minute,

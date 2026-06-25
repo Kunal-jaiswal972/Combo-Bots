@@ -5,7 +5,7 @@ import {
 } from "@/tools/scheduler";
 import { formatSchedulerInstant } from "@/utils";
 
-import { getGameModule } from "../engine/gameRegistry";
+import { getGameModule } from "../functions/gameRegistry";
 import type { ScheduledTask } from "../types";
 
 export function buildScheduledTaskCard(task: ScheduledTask): DisplayCard {

@@ -1,12 +1,7 @@
 import { z } from "zod";
 
-import {
-  GameId,
-  type GameIdValue,
-  GenshinServer,
-} from "../../config/constants";
+import { GameId, type GameIdValue, HoyoServer } from "../../constants";
 import type { GameLoginCredentials } from "../../types";
-import { HsrServer } from "../hsr/constants";
 
 export interface ServerPromptChoice {
   readonly value: string;
@@ -16,45 +11,25 @@ export interface ServerPromptChoice {
 const usernameSchema = z.string().min(1, "Username is required.");
 const passwordSchema = z.string().min(1, "Password is required.");
 
-const genshinServerValues = [
-  GenshinServer.AMERICA,
-  GenshinServer.EUROPE,
-  GenshinServer.ASIA,
-  GenshinServer.TW_HK_MO,
+/** All Hoyoverse gift pages share the same four server regions. */
+const hoyoServerValues = [
+  HoyoServer.AMERICA,
+  HoyoServer.EUROPE,
+  HoyoServer.ASIA,
+  HoyoServer.TW_HK_MO,
 ] as const;
 
-const hsrServerValues = [
-  HsrServer.AMERICA,
-  HsrServer.EUROPE,
-  HsrServer.ASIA,
-  HsrServer.TW_HK_MO,
-] as const;
-
-const genshinCredentialsSchema = z.object({
+const hoyoCredentialsSchema = z.object({
   username: usernameSchema,
   password: passwordSchema,
-  server: z.enum(genshinServerValues),
+  server: z.enum(hoyoServerValues),
 });
 
-const hsrCredentialsSchema = z.object({
-  username: usernameSchema,
-  password: passwordSchema,
-  server: z.enum(hsrServerValues),
-});
-
+/** Server choices are identical across Hoyoverse games; `gameId` is accepted for symmetry. */
 export function getServerPromptChoices(
-  gameId: GameIdValue,
+  _gameId: GameIdValue,
 ): ServerPromptChoice[] {
-  switch (gameId) {
-    case GameId.GENSHIN:
-      return genshinServerValues.map((value) => ({ value, label: value }));
-    case GameId.HSR:
-      return hsrServerValues.map((value) => ({ value, label: value }));
-    default: {
-      const exhaustive: never = gameId;
-      throw new Error(`Unsupported game: ${exhaustive}`);
-    }
-  }
+  return hoyoServerValues.map((value) => ({ value, label: value }));
 }
 
 export function validateGameCredentials(
@@ -69,9 +44,8 @@ export function validateGameCredentials(
 
   switch (gameId) {
     case GameId.GENSHIN:
-      return genshinCredentialsSchema.parse(normalized);
     case GameId.HSR:
-      return hsrCredentialsSchema.parse(normalized);
+      return hoyoCredentialsSchema.parse(normalized);
     default: {
       const exhaustive: never = gameId;
       throw new Error(`Unsupported game: ${exhaustive}`);
